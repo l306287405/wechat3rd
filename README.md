@@ -15,7 +15,7 @@
     * WechatErrorer: 错误信息的处理
 
     // 除Config外的其它参数传nil则使用默认配置.  该处代码你应该使用单例模式或服务池方式来管理
-    service,err:=open_wechat.NewService(open_wechat.Config{
+    service,err:=wechat3rd.NewService(wechat3rd.Config{
         AppID:     os.Getenv("WX_OPEN_APP_ID"), //第三方平台appid
         AppSecret: os.Getenv("WX_OPEN_APP_SECRET"), //第三方平台app_secret
         AESKey:    os.Getenv("WX_AES_KEY"), //第三方平台消息加解密Key
