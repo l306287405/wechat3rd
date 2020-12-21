@@ -231,19 +231,19 @@ func (s *Server) AESDecryptData(cipherText , iv []byte)(rawData []byte,err error
 	return util.AESDecryptData(cipherText,s.getAESKey(),iv)
 }
 
-type Jscode2SessionResp struct {
+type Jscode2sessionResp struct {
 	Openid string `json:"openid,omitempty"`
 	SessionKey string `json:"session_key,omitempty"`
 	Errcode string `json:"errcode,omitempty"`
 	Errmsg string `json:"errmsg,omitempty"`
 }
 
-func (s *Server) Jscode2Session(appId ,jsCode string) (resp *Jscode2SessionResp,err error){
+func (s *Server) Jscode2session(appId ,jsCode string) (resp *Jscode2sessionResp,err error){
 	var(
 		req = make(url.Values)
 		u = "https://api.weixin.qq.com/sns/component/jscode2session?"
 	)
-	resp = &Jscode2SessionResp{}
+	resp = &Jscode2sessionResp{}
 	req.Set("appid",appId)
 	req.Set("js_code",jsCode)
 	req.Set("grant_type","authorization_code")
