@@ -6,6 +6,11 @@ import (
 	"fmt"
 )
 
+const (
+	BLOCK_SIZE = 32             // PKCS#7
+	BLOCK_MASK = BLOCK_SIZE - 1 // BLOCK_SIZE 为 2^n 时, 可以用 mask 获取针对 BLOCK_SIZE 的余数
+)
+
 // 把整数 n 格式化成 4 字节的网络字节序
 func encodeNetworkByteOrder(b []byte, n uint32) {
 	b[0] = byte(n >> 24)
@@ -24,11 +29,6 @@ func decodeNetworkByteOrder(b []byte) (n uint32) {
 
 // ciphertext = AES_Encrypt[random(16B) + msg_len(4B) + rawXMLMsg + appId]
 func AESEncryptMsg(random, rawXMLMsg []byte, appId string, aesKey []byte) (ciphertext []byte) {
-	const (
-		BLOCK_SIZE = 32             // PKCS#7
-		BLOCK_MASK = BLOCK_SIZE - 1 // BLOCK_SIZE 为 2^n 时, 可以用 mask 获取针对 BLOCK_SIZE 的余数
-	)
-
 	appIdOffset := 20 + len(rawXMLMsg)
 	contentLen := appIdOffset + len(appId)
 	amountToPad := BLOCK_SIZE - contentLen&BLOCK_MASK
@@ -61,11 +61,6 @@ func AESEncryptMsg(random, rawXMLMsg []byte, appId string, aesKey []byte) (ciphe
 
 // ciphertext = AES_Encrypt[random(16B) + msg_len(4B) + rawXMLMsg + appId]
 func AESDecryptMsg(ciphertext []byte, aesKey []byte) (random, rawXMLMsg, appId []byte, err error) {
-	const (
-		BLOCK_SIZE = 32             // PKCS#7
-		BLOCK_MASK = BLOCK_SIZE - 1 // BLOCK_SIZE 为 2^n 时, 可以用 mask 获取针对 BLOCK_SIZE 的余数
-	)
-
 	if len(ciphertext) < BLOCK_SIZE {
 		err = fmt.Errorf("the length of ciphertext too short: %d", len(ciphertext))
 		return
@@ -116,13 +111,7 @@ func AESDecryptMsg(ciphertext []byte, aesKey []byte) (random, rawXMLMsg, appId [
 	return
 }
 
-func AESDecryptData(cipherText []byte, aesKey []byte, iv []byte) (rawData []byte, err error) {
-
-	const (
-		BLOCK_SIZE = 32             // PKCS#7
-		BLOCK_MASK = BLOCK_SIZE - 1 // BLOCK_SIZE 为 2^n 时, 可以用 mask 获取针对 BLOCK_SIZE 的余数
-	)
-
+func AESDecryptData(cipherText, aesKey, iv []byte) (rawData []byte, err error) {
 	if len(cipherText) < BLOCK_SIZE {
 		err = fmt.Errorf("the length of ciphertext too short: %d", len(cipherText))
 		return

@@ -33,7 +33,7 @@ func (srv *Server) PreAuthCode() (*PreAuthCodeResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-	req := PreAuthCodeRequest{
+	req := &PreAuthCodeRequest{
 		ComponentAppid: srv.cfg.AppID,
 	}
 	resp := &PreAuthCodeResponse{}
@@ -77,7 +77,7 @@ func (srv *Server) QueryAuth(code string) (*QueryAuthResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-	req := QueryAuthRequest{
+	req := &QueryAuthRequest{
 		ComponentAppid:    srv.cfg.AppID,
 		AuthorizationCode: code,
 	}
@@ -107,7 +107,7 @@ func (srv *Server) RefreshToken(appID, refreshToken string) (*RefreshTokenRespon
 	if err != nil {
 		return nil, err
 	}
-	req := RefreshTokenRequest{
+	req := &RefreshTokenRequest{
 		ComponentAppid:         srv.cfg.AppID,
 		AuthorizerAppid:        appID,
 		AuthorizerRefreshToken: refreshToken,
