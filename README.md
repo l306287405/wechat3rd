@@ -137,6 +137,9 @@
     * QueryAuth: 获取授权公众号信息， 注意返回的token,appid等信息需要自行保存，后面带公众号实现业务时使用
     * RefreshToken: 刷新授权用户的token
 
+#### 小程序登陆
+    * Jscode2session: 获取用户openid , session_key
+
 ## todo 
     * 开放平台账号管理
     * 代公众号实现业务
