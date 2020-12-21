@@ -80,7 +80,7 @@ func (srv *Server) AuthorizerInfo(authorizerAppid string) (*AuthorizerInfoRespon
 	if err != nil {
 		return nil, err
 	}
-	req := AuthorizerInfoRequest{
+	req := &AuthorizerInfoRequest{
 		ComponentAppid:  srv.cfg.AppID,
 		AuthorizerAppid: authorizerAppid,
 	}
@@ -120,7 +120,7 @@ func (srv *Server) AuthorizerOption(authorizerAppid string, optionName Authorize
 	if err != nil {
 		return nil, err
 	}
-	req := AuthorizerOptionRequest{
+	req := &AuthorizerOptionRequest{
 		ComponentAppid:  srv.cfg.AppID,
 		AuthorizerAppid: authorizerAppid,
 		OptionName:      optionName,
@@ -148,7 +148,7 @@ func (srv *Server) SetAuthorizerOption(authorizerAppid string, optionName Author
 	if err != nil {
 		return nil, err
 	}
-	req := SetAuthorizerOptionRequest{
+	req := &SetAuthorizerOptionRequest{
 		AuthorizerOptionRequest: AuthorizerOptionRequest{
 			ComponentAppid:  srv.cfg.AppID,
 			AuthorizerAppid: authorizerAppid,
@@ -186,7 +186,7 @@ func (srv *Server) AuthorizerList(offset, count int) (*AuthorizerListResponse, e
 	if err != nil {
 		return nil, err
 	}
-	req := AuthorizerListRequest{
+	req := &AuthorizerListRequest{
 		ComponentAppid: srv.cfg.AppID,
 		Offset:         offset,
 		Count:          count,

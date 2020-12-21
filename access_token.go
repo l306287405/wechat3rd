@@ -24,18 +24,26 @@ type DefaultAccessTokenServer struct {
 
 // token不使用不获取
 func (d *DefaultAccessTokenServer) Token() (token string, err error) {
-	timeUnix := time.Now().Unix()
+	var(
+		ticket string
+		resp *AccessTokenResponse
+	)
+
 	if d.ExpiresIn <= time.Now().Unix()-30 {
-		ticket, err := d.GetTicket()
+		ticket, err = d.GetTicket()
 		if err != nil {
-			return "", nil
+			return
 		}
-		aresp, err := newAccessToken(d.AppID, d.AppSecret, ticket)
+		resp, err = newAccessToken(&AccessTokenRequest{
+			ComponentAppid:        d.AppID,
+			ComponentAppsecret:    d.AppSecret,
+			ComponentVerifyTicket: ticket,
+		})
 		if err != nil {
-			return "", nil
+			return
 		}
-		d.ExpiresIn = timeUnix + aresp.ExpiresIn
-		d.ComponentAccessToken = aresp.ComponentAccessToken
+		d.ExpiresIn = time.Now().Unix() + resp.ExpiresIn
+		d.ComponentAccessToken = resp.ComponentAccessToken
 	}
 	return d.ComponentAccessToken, nil
 }
@@ -53,14 +61,9 @@ type AccessTokenRequest struct {
 }
 
 // 获取第三方应用token
-func newAccessToken(appid, AppSecret, ticket string) (*AccessTokenResponse, error) {
-	req := AccessTokenRequest{
-		ComponentAppid:        appid,
-		ComponentAppsecret:    AppSecret,
-		ComponentVerifyTicket: ticket,
-	}
+func newAccessToken(r *AccessTokenRequest) (*AccessTokenResponse, error) {
 	resp := &AccessTokenResponse{}
-	err := core.PostJson(componentAccessTokenUrl, req, resp)
+	err := core.PostJson(componentAccessTokenUrl, r, resp)
 	if err != nil {
 		return nil, err
 	}

@@ -4,9 +4,11 @@ import (
 	"encoding/base64"
 	"encoding/xml"
 	"errors"
+	"github.com/l306287405/wechat3rd/core"
 	"github.com/l306287405/wechat3rd/util"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"sync"
 )
 
@@ -221,5 +223,33 @@ func (srv *Server) ServeHTTP(r *http.Request) (resp *MixedMsg,err error) {
 	//	return
 	//}
 	//hand(resp)
+	return
+}
+
+//用于解密数据
+func (s *Server) AESDecryptData(cipherText , iv []byte)(rawData []byte,err error){
+	return util.AESDecryptData(cipherText,s.getAESKey(),iv)
+}
+
+type Jscode2SessionResp struct {
+	Openid string `json:"openid,omitempty"`
+	SessionKey string `json:"session_key,omitempty"`
+	Errcode string `json:"errcode,omitempty"`
+	Errmsg string `json:"errmsg,omitempty"`
+}
+
+func (s *Server) Jscode2Session(appId ,jsCode string) (resp *Jscode2SessionResp,err error){
+	var(
+		req = make(url.Values)
+		u = "https://api.weixin.qq.com/sns/component/jscode2session?"
+	)
+	resp = &Jscode2SessionResp{}
+	req.Set("appid",appId)
+	req.Set("js_code",jsCode)
+	req.Set("grant_type","authorization_code")
+	req.Set("component_appid",s.cfg.AppID)
+	req.Set("component_access_token",s.getToken())
+
+	err=core.GetRequest(u,req,resp)
 	return
 }
