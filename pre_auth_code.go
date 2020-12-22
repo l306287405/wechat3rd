@@ -3,6 +3,7 @@ package wechat3rd
 import (
 	"fmt"
 	"github.com/l306287405/wechat3rd/core"
+	"log"
 )
 
 type AuthType string
@@ -36,6 +37,7 @@ func (srv *Server) PreAuthCode() (*PreAuthCodeResponse, error) {
 	req := &PreAuthCodeRequest{
 		ComponentAppid: srv.cfg.AppID,
 	}
+	log.Println("token:",accessToken)
 	resp := &PreAuthCodeResponse{}
 	err = core.PostJson(getCompleteUrl(PreAuthCodeUrl, accessToken), req, resp)
 	if err != nil {

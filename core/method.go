@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"net/http"
 	"net/url"
 	"strings"
@@ -24,7 +23,7 @@ func PostJson(incompleteURL string, request interface{}, response interface{}) e
 	defer httpResp.Body.Close()
 
 	if httpResp.StatusCode != http.StatusOK {
-		return fmt.Errorf("http.Status: %s", httpResp.Status)
+		return errors.New("http.Status:"+httpResp.Status)
 	}
 	return json.NewDecoder(httpResp.Body).Decode(response)
 }
