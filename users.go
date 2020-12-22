@@ -8,7 +8,7 @@ import (
 type Jscode2sessionResp struct {
 	Openid string `json:"openid,omitempty"`
 	SessionKey string `json:"session_key,omitempty"`
-	Errcode string `json:"errcode,omitempty"`
+	Errcode int `json:"errcode,omitempty"`
 	Errmsg string `json:"errmsg,omitempty"`
 }
 
