@@ -1,6 +1,7 @@
 package wechat3rd
 
 import (
+	"fmt"
 	"github.com/l306287405/wechat3rd/core"
 	"net/url"
 )
@@ -23,6 +24,7 @@ func (s *Server) Jscode2session(appId ,jsCode string) (resp *Jscode2sessionResp,
 	req.Set("grant_type","authorization_code")
 	req.Set("component_appid",s.cfg.AppID)
 	req.Set("component_access_token",s.getToken())
+	fmt.Println(req)
 
 	err=core.GetRequest(u,req,resp)
 	return
@@ -56,6 +58,7 @@ func (s *Server) UserInfo(openId string)(resp *UserInfoResp,err error) {
 	resp = &UserInfoResp{}
 	p.Set("access_token",s.getToken())
 	p.Set("openid",openId)
+	fmt.Println(p)
 	err=core.GetRequest(u,p,resp)
 	return
 }
