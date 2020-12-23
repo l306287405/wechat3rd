@@ -43,3 +43,9 @@ func GetRequest(u string, request url.Values, response interface{}) error {
 	}
 	return json.NewDecoder(httpResp.Body).Decode(response)
 }
+
+func AuthTokenUrlValues(authToken string) url.Values{
+	v:=make(url.Values)
+	v.Set("access_token",authToken)
+	return v
+}

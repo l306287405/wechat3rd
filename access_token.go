@@ -26,7 +26,7 @@ type DefaultAccessTokenServer struct {
 func (d *DefaultAccessTokenServer) Token() (token string, err error) {
 	var(
 		ticket string
-		resp *AccessTokenResponse
+		resp *AccessTokenResp
 	)
 
 	if d.ExpiresIn <= time.Now().Unix()-30 {
@@ -34,7 +34,7 @@ func (d *DefaultAccessTokenServer) Token() (token string, err error) {
 		if err != nil {
 			return
 		}
-		resp, err = newAccessToken(&AccessTokenRequest{
+		resp, err = newAccessToken(&AccessTokenReq{
 			ComponentAppid:        d.AppID,
 			ComponentAppsecret:    d.AppSecret,
 			ComponentVerifyTicket: ticket,
@@ -48,21 +48,21 @@ func (d *DefaultAccessTokenServer) Token() (token string, err error) {
 	return d.ComponentAccessToken, nil
 }
 
-type AccessTokenResponse struct {
+type AccessTokenResp struct {
 	core.Error
 	ComponentAccessToken string `json:"component_access_token"`
 	ExpiresIn            int64  `json:"expires_in"`
 }
 
-type AccessTokenRequest struct {
+type AccessTokenReq struct {
 	ComponentAppid        string `json:"component_appid"`
 	ComponentAppsecret    string `json:"component_appsecret"`
 	ComponentVerifyTicket string `json:"component_verify_ticket"`
 }
 
 // 获取第三方应用token
-func newAccessToken(r *AccessTokenRequest) (*AccessTokenResponse, error) {
-	resp := &AccessTokenResponse{}
+func newAccessToken(r *AccessTokenReq) (*AccessTokenResp, error) {
+	resp := &AccessTokenResp{}
 	err := core.PostJson(componentAccessTokenUrl, r, resp)
 	if err != nil {
 		return nil, err
