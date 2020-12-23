@@ -18,25 +18,25 @@ const (
 	PreAuthAuthTypeService AuthType = "1" // 公众号
 )
 
-type PreAuthCodeRequest struct {
+type PreAuthCodeReq struct {
 	ComponentAppid string `json:"component_appid"`
 }
 
-type PreAuthCodeResponse struct {
+type PreAuthCodeResp struct {
 	core.Error
 	PreAuthCode string `json:"pre_auth_code"`
 	ExpiresIn   int    `json:"expires_in"`
 }
 
-func (srv *Server) PreAuthCode() (*PreAuthCodeResponse, error) {
+func (srv *Server) PreAuthCode() (*PreAuthCodeResp, error) {
 	accessToken, err := srv.Token()
 	if err != nil {
 		return nil, err
 	}
-	req := &PreAuthCodeRequest{
+	req := &PreAuthCodeReq{
 		ComponentAppid: srv.cfg.AppID,
 	}
-	resp := &PreAuthCodeResponse{}
+	resp := &PreAuthCodeResp{}
 	err = core.PostJson(getCompleteUrl(PreAuthCodeUrl, accessToken), req, resp)
 	if err != nil {
 		return nil, err
@@ -52,11 +52,11 @@ func (srv *Server) AuthUrl(redirectUri string, authType AuthType) string {
 	return fmt.Sprintf(AuthPageUrl, srv.cfg.AppID, pcode.PreAuthCode, redirectUri, authType)
 }
 
-type QueryAuthRequest struct {
+type QueryAuthReq struct {
 	ComponentAppid    string `json:"component_appid"`
 	AuthorizationCode string `json:"authorization_code"`
 }
-type QueryAuthResponse struct {
+type QueryAuthResp struct {
 	core.Error
 	AuthorizationInfo struct {
 		AuthorizerAppid        string `json:"authorizer_appid"`
@@ -72,16 +72,16 @@ type QueryAuthResponse struct {
 }
 
 // 返回授权数据
-func (srv *Server) QueryAuth(code string) (*QueryAuthResponse, error) {
+func (srv *Server) QueryAuth(code string) (*QueryAuthResp, error) {
 	accessToken, err := srv.Token()
 	if err != nil {
 		return nil, err
 	}
-	req := &QueryAuthRequest{
+	req := &QueryAuthReq{
 		ComponentAppid:    srv.cfg.AppID,
 		AuthorizationCode: code,
 	}
-	resp := &QueryAuthResponse{}
+	resp := &QueryAuthResp{}
 	err = core.PostJson(getCompleteUrl(QueryAuthUrl, accessToken), req, resp)
 	if err != nil {
 		return nil, err
@@ -89,12 +89,12 @@ func (srv *Server) QueryAuth(code string) (*QueryAuthResponse, error) {
 	return resp, nil
 }
 
-type RefreshTokenRequest struct {
+type RefreshTokenReq struct {
 	ComponentAppid         string `json:"component_appid"`
 	AuthorizerAppid        string `json:"authorizer_appid"`
 	AuthorizerRefreshToken string `json:"authorizer_refresh_token"`
 }
-type RefreshTokenResponse struct {
+type RefreshTokenResp struct {
 	core.Error
 	AuthorizerAccessToken  string `json:"authorizer_access_token"`
 	ExpiresIn              int64  `json:"expires_in"`
@@ -102,17 +102,17 @@ type RefreshTokenResponse struct {
 }
 
 // 刷新token
-func (srv *Server) RefreshToken(appID, refreshToken string) (*RefreshTokenResponse, error) {
+func (srv *Server) RefreshToken(appID, refreshToken string) (*RefreshTokenResp, error) {
 	accessToken, err := srv.Token()
 	if err != nil {
 		return nil, err
 	}
-	req := &RefreshTokenRequest{
+	req := &RefreshTokenReq{
 		ComponentAppid:         srv.cfg.AppID,
 		AuthorizerAppid:        appID,
 		AuthorizerRefreshToken: refreshToken,
 	}
-	resp := &RefreshTokenResponse{}
+	resp := &RefreshTokenResp{}
 	err = core.PostJson(getCompleteUrl(RefreshTokenUrl, accessToken), req, resp)
 	if err != nil {
 		return nil, err

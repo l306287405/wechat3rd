@@ -1,18 +1,24 @@
+### 1.简介
+
 微信公众平台-第三方平台（简称第三方平台）开放给所有通过开发者资质认证后的开发者使用。在得到公众号或小程序运营者（简称运营者）授权后，第三方平台开发者可以通过调用微信开放平台的接口能力，为公众号或小程序的运营者提供账号申请、小程序创建、技术开发、行业方案、活动营销、插件能力等全方位服务。同一个账号的运营者可以选择多家适合自己的第三方为其提供产品能力或委托运营。
 
-### 项目基于 [owen-gxz/open-wechat](https://github.com/owen-gxz/open-wechat) 做了减法,并补充使用说明.
+### 2.项目基于 [owen-gxz/open-wechat](https://github.com/owen-gxz/open-wechat) 做了减法,并补充使用说明.
 
-### 主要完成了微信开放平台第三方平台的[接口说明部分](https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/api/component_verify_ticket.html)
+主要完成了微信开放平台第三方平台的[接口说明部分](https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/api/component_verify_ticket.html)
 
-### 1: 引入
+### 3.使用引导
+
+#### 3.1: 引入
+
     go get -u github.com/l306287405/wechat3rd@master
 
-### 2: 使用NewService方法来创建一个service
+#### 3.2: 使用NewService方法来创建一个service
+
     NewService的参数分别是:
-    * Config: 配置信息
-    * TicketServer: 保存微信传输的ticket信息接口
-    * AccessTokenServer: 获取第三方平台的token接口
-    * WechatErrorer: 错误信息的处理
+    Config: 配置信息
+    TicketServer: 保存微信传输的ticket信息接口
+    AccessTokenServer: 获取第三方平台的token接口
+    WechatErrorer: 错误信息的处理
 
     // 除Config外的其它参数传nil则使用默认配置.  该处代码你应该使用单例模式或服务池方式来管理
     service,err:=wechat3rd.NewService(wechat3rd.Config{
@@ -40,7 +46,8 @@
         }
     }
 
-### 3: 使用service来接收并验证票据
+#### 3.3: 使用service来接收并验证票据
+
     // 使用你的Golang框架方法获取 *http.Request 这里用iris演示
     var r = c.Ctx.Request()
     
@@ -63,7 +70,8 @@
     }
     c.Ctx.HTML("success")
 
-### 4: 获取预授权码
+#### 3.4: 获取预授权码
+
     // 获取预授权码并组装链接
     // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/api/pre_auth_code.html
 
@@ -99,7 +107,8 @@
     // 结束
     println(authUrl)
 
-### 5: 预授权回调处理
+#### 3.5: 预授权回调处理
+
     // 预授权链接授权操作之后微信会对回调url发起GET请求.
     // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/api/authorization_info.html
     
@@ -121,26 +130,58 @@
 
 	c.Ctx.HTML("授权成功")
 
-#### Service方法说明：
-    * AddHander: 
+### 4.Service方法说明：
+
+    AddHander: 
         用于微信时间推送的处理方法(unauthorized,updateauthorized,authorized,component_verify_ticket)
         方法会接收context
-    * ServeHTTP: 处理推送事件的
-    * Token: 获取第三方平台的token
-    * AuthorizerInfo: 获取授权详情
-    * AuthorizerOption： 获取选项信息
-    * SetAuthorizerOption： 设置选项
-    * AuthorizerList： 选项列表
-    * PostJson： 提交json数据
-    * PreAuthCode： 获取令牌
-    * AuthUrl： 获取授权连接
-    * QueryAuth: 获取授权公众号信息， 注意返回的token,appid等信息需要自行保存，后面带公众号实现业务时使用
-    * RefreshToken: 刷新授权用户的token
+    ServeHTTP: 处理推送事件的
+    Token: 获取第三方平台的token
+    AuthorizerInfo: 获取授权详情
+    AuthorizerOption： 获取选项信息
+    SetAuthorizerOption： 设置选项
+    AuthorizerList： 选项列表
+    PostJson： 提交json数据
+    PreAuthCode： 获取令牌
+    AuthUrl： 获取授权连接
+    QueryAuth: 获取授权公众号信息， 注意返回的token,appid等信息需要自行保存，后面带公众号实现业务时使用
+    RefreshToken: 刷新授权用户的token
 
-#### 小程序登陆
-    * Jscode2session: 获取用户openid , session_key
+### 5.小程序登陆
 
-## todo 
+    Jscode2session: 获取用户openid , session_key
+
+### 6.代小程序实现业务
+
+    FastRegisterWeapp: 快速创建小程序
+    SearchWeapp: 查询创建任务状态
+
+    * 代码模板库设置
+    GetTemplateDraftList: 获取代码草稿列表
+    AddToTemplate: 将草稿添加到代码模板库
+    GetTemplateList: 获取代码模板列表
+    DeleteTemplate: 删除指定代码模板
+
+**!!!以下接口注意:authToken(authorizerAccessToken)为授权方token!!!**
+
+    * 基础信息设置
+    GetAccountBasicInfo: 获取基本信息
+    ModifyDomain: 设置服务器域名
+    SetWebviewDomain: 设置业务域名
+
+    * 成员管理
+    BindTester: 绑定体验者
+    UnbindTester: 解除绑定体验者
+    Memberauth: 获取体验者列表
+
+    * 代码管理
+    Commit: 上传代码
+    GetPage: 获取已上传的代码的页面列表
+    GetQrcode: 获取体验版二维码
+    SubmitAudit: 提交审核
+
+## todo
+
     * 开放平台账号管理
     * 代公众号实现业务
     * 代小程序实现业务

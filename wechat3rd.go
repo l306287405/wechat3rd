@@ -7,6 +7,7 @@ import (
 	"github.com/l306287405/wechat3rd/util"
 	"io/ioutil"
 	"net/http"
+	"strings"
 	"sync"
 )
 
@@ -64,6 +65,7 @@ const (
 	InfoTypeUpdateAuthorized = "updateauthorized"
 
 	wechatApiUrl = "https://api.weixin.qq.com"
+	CGIUrl= wechatApiUrl+"/cgi-bin"
 )
 
 func (srv *Server) getAESKey() []byte {
@@ -227,4 +229,25 @@ func (srv *Server) ServeHTTP(r *http.Request) (resp *MixedMsg,err error) {
 //用于解密数据
 func (s *Server) AESDecryptData(cipherText , iv []byte)(rawData []byte,err error){
 	return util.AESDecryptData(cipherText,s.getAESKey(),iv)
+}
+
+//url增加后缀
+func (s *Server) AccessToken2url(u string) (string,error){
+	token,err:=s.Token()
+	if err!=nil{
+		return "", err
+	}
+	if !strings.HasSuffix(u,"?"){
+		u+="?"
+	}
+	u+="access_token="+token
+	return u,nil
+}
+
+func (s *Server) AuthToken2url(u string,authToken string) string{
+	if !strings.HasSuffix(u,"?"){
+		u+="?"
+	}
+	u+="access_token="+authToken
+	return u
 }
