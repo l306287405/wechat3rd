@@ -8,8 +8,8 @@ import (
 type Jscode2sessionResp struct {
 	Openid string `json:"openid,omitempty"`
 	SessionKey string `json:"session_key,omitempty"`
-	Errcode int `json:"errcode,omitempty"`
-	Errmsg string `json:"errmsg,omitempty"`
+	ErrCode int `json:"errcode,omitempty"`
+	ErrMsg string `json:"errmsg,omitempty"`
 }
 
 func (s *Server) Jscode2session(appId ,jsCode string) (resp *Jscode2sessionResp,err error){
