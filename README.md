@@ -179,6 +179,12 @@
     GetPage: 获取已上传的代码的页面列表
     GetQrcode: 获取体验版二维码
     SubmitAudit: 提交审核
+    GetAuditStatus: 查询指定发布审核单的审核状态
+    GetLatestAuditStatus: 查询最新一次提交的审核状态
+    UndoCodeAudit: 小程序审核撤回
+    Release: 发布已通过审核的小程序
+    RevertCodeRelease: 版本回退
+    GetPaidUnionId: 支付后获取用户 Unionid 接口
 
 ## todo
 
