@@ -69,7 +69,7 @@ type Template struct {
 	CreateTime  int64  `json:"create_time"`  //被添加为模板的时间
 	UserVersion string `json:"user_version"` //版本号，开发者自定义字段
 	UserDesc    string `json:"user_desc"`    //版本描述   开发者自定义字段
-	TemplateId  string `json:"template_id"`  //模板 id
+	TemplateId  int    `json:"template_id"`  //模板 id
 }
 
 //获取代码模板列表
@@ -91,12 +91,12 @@ func (s *Server) GetTemplateList() (resp *GetTemplateListResp, err error) {
 
 //删除指定代码模板
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code_template/deletetemplate.html
-func (s *Server) DeleteTemplate(templateId string) (resp *core.Error, err error) {
+func (s *Server) DeleteTemplate(templateId int) (resp *core.Error, err error) {
 	var (
 		u     = wechatApiUrl + "/wxa/deletetemplate?"
 		token string
 		req   = &struct {
-			TemplateId string `json:"template_id"`
+			TemplateId int `json:"template_id"`
 		}{TemplateId: templateId}
 	)
 	token, err = s.Token()
@@ -111,7 +111,7 @@ func (s *Server) DeleteTemplate(templateId string) (resp *core.Error, err error)
 }
 
 type CommitReq struct {
-	TemplateId  string `json:"template_id"`  //代码库中的代码模板 ID
+	TemplateId  int    `json:"template_id"`  //代码库中的代码模板 ID
 	ExtJson     string `json:"ext_json"`     //第三方自定义的配置
 	UserVersion string `json:"user_version"` //代码版本号，开发者可自定义（长度不要超过 64 个字符）
 	UserDesc    string `json:"user_desc"`    //代码描述，开发者可自定义
@@ -246,11 +246,11 @@ type GetAuditStatusResp struct {
 
 //查询指定发布审核单的审核状态
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/get_auditstatus.html
-func (s *Server) GetAuditStatus(accessToken string, auditId string) (resp *GetAuditStatusResp, err error) {
+func (s *Server) GetAuditStatus(accessToken string, auditId int) (resp *GetAuditStatusResp, err error) {
 	var (
 		u   = wechatApiUrl + "/wxa/get_auditstatus?"
 		req = &struct {
-			AuditId string `json:"auditid"`
+			AuditId int `json:"auditid"`
 		}{AuditId: auditId}
 	)
 	resp = &GetAuditStatusResp{}
