@@ -11,7 +11,7 @@
 #### 3.1: 引入
     go get -u github.com/l306287405/wechat3rd@master
     or
-    go get -u github.com/l306287405/wechat3rd@v1.1.4 (请选择最新版本)
+    go get -u github.com/l306287405/wechat3rd@v1.1.5 (请选择最新版本)
 
 #### 3.2: 使用NewService方法来创建一个service
 
@@ -187,9 +187,12 @@
     RevertCodeRelease: 版本回退
     GetPaidUnionId: 支付后获取用户 Unionid 接口
 
+    * 素材管理
+    GetMaterial: 获取永久素材
+
 ## todo
 
     * 开放平台账号管理
     * 代公众号实现业务
-    * 代小程序实现业务
+    * 代小程序实现业务(部分完成)
 
