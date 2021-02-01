@@ -174,6 +174,13 @@ func (s *Server) GetQrcode(accessToken string, path *string, saveRoot *string) (
 		saveRoot = new(string)
 		*saveRoot = "/var/tmp/" + httpResp.Header.Get("Content-Type")
 	}
+	_, err = os.Stat(*saveRoot)    //os.Stat获取文件信息
+	if os.IsNotExist(err) {
+		if err = os.MkdirAll(*saveRoot, 0755); err != nil {
+			return
+		}
+	}
+
 	filePath = *saveRoot + "/" + strconv.FormatInt(time.Now().UnixNano(), 10) + ".jpg"
 
 	fp, err = os.Create(filePath)
