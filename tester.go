@@ -40,11 +40,13 @@ func (s *Server) UnbindTester(accessToken string,req *UnbindTesterReq) (resp *co
 	return
 }
 
+type MemberAuthItem struct {
+	Userstr string `json:"userstr"`
+}
+
 type MemberAuthResp struct {
 	core.Error
-	Members []struct{
-		Userstr string `json:"userstr"`
-	} `json:"members"`
+	Members []*MemberAuthItem `json:"members"`
 }
 
 //获取体验者列表
