@@ -19,7 +19,7 @@ type Draft struct {
 	CreateTime  int64  `json:"create_time"`  //开发者上传草稿时间戳
 	UserVersion string `json:"user_version"` //版本号，开发者自定义字段
 	UserDesc    string `json:"user_desc"`    //版本描述   开发者自定义字段
-	DraftId     string `json:"draft_id"`     //草稿 id
+	DraftId     int    `json:"draft_id"`     //草稿 id
 }
 
 //获取代码草稿列表
@@ -41,12 +41,12 @@ func (s *Server) GetTemplateDraftList() (resp *GetTemplateDraftListResp, err err
 
 //将草稿添加到代码模板库
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code_template/addtotemplate.html
-func (s *Server) AddToTemplate(draftId string) (resp *core.Error, err error) {
+func (s *Server) AddToTemplate(draftId int) (resp *core.Error, err error) {
 	var (
 		u     = wechatApiUrl + "/wxa/addtotemplate?"
 		token string
 		req   = &struct {
-			DraftId string `json:"draft_id"`
+			DraftId int `json:"draft_id"`
 		}{DraftId: draftId}
 	)
 	token, err = s.Token()
@@ -325,7 +325,7 @@ type GetPaidUnionIdReq struct {
 
 type GetPaidUnionIdResp struct {
 	UnionId string `json:"unionid,omitempty"`
-	ErrCode int `json:"errcode"`
+	ErrCode int    `json:"errcode"`
 }
 
 //支付后获取用户 Unionid 接口
@@ -337,19 +337,19 @@ func (s *Server) GetPaidUnionId(accessToken string, req *GetPaidUnionIdReq) (res
 	)
 	resp = &GetPaidUnionIdResp{}
 
-	p.Set("openid",req.OpenId)
+	p.Set("openid", req.OpenId)
 
 	if req.TransactionId != nil {
-		p.Set("transaction_id",*req.TransactionId)
-	}else{
-		if req.MchId==nil && req.OutTradeNo==nil{
-			err=errors.New("参数缺失")
+		p.Set("transaction_id", *req.TransactionId)
+	} else {
+		if req.MchId == nil && req.OutTradeNo == nil {
+			err = errors.New("参数缺失")
 			return
 		}
-		p.Set("mch_id",*req.MchId)
-		p.Set("out_trade_no",*req.OutTradeNo)
+		p.Set("mch_id", *req.MchId)
+		p.Set("out_trade_no", *req.OutTradeNo)
 	}
-	u+=p.Encode()
+	u += p.Encode()
 
 	err = core.GetRequest(u, core.AuthTokenUrlValues(accessToken), resp)
 	return
