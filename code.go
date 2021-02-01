@@ -6,9 +6,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"strconv"
 	"strings"
-	"time"
 )
 
 type GetTemplateDraftListResp struct {
@@ -147,9 +145,9 @@ func (s *Server) GetPage(accessToken string) (resp *GetPageResp, err error) {
 	return
 }
 
-//获取体验版二维码 参数saveDir为二维码图片存储路径
+//获取体验版二维码 参数path 为官方参数 ,参数saveDir为二维码图片存储路径 参数fileName 为二维码图片存储名称请勿包含名称
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/get_qrcode.html
-func (s *Server) GetQrcode(accessToken string, path *string, saveDir *string) (filePath string, err error) {
+func (s *Server) GetQrcode(accessToken string, path, saveDir,fileName *string) (filePath string, err error) {
 	var (
 		u        = wechatApiUrl + "/wxa/get_qrcode?"
 		p        = core.AuthTokenUrlValues(accessToken)
@@ -183,7 +181,7 @@ func (s *Server) GetQrcode(accessToken string, path *string, saveDir *string) (f
 		}
 	}
 
-	filePath = *saveDir + "/" + strconv.FormatInt(time.Now().UnixNano(), 10) + ".jpg"
+	filePath = *saveDir + "/" + *fileName + ".jpg"
 
 	fp, err = os.Create(filePath)
 	if err != nil {
