@@ -12,7 +12,7 @@ import (
 
 type GetTemplateDraftListResp struct {
 	core.Error
-	DraftList []Draft `json:"draft_list"` //草稿信息列表
+	DraftList []*Draft `json:"draft_list"` //草稿信息列表
 }
 
 type Draft struct {
@@ -62,7 +62,7 @@ func (s *Server) AddToTemplate(draftId string) (resp *core.Error, err error) {
 
 type GetTemplateListResp struct {
 	core.Error
-	TemplateList []Template `json:"template_list"` //模板信息列表
+	TemplateList []*Template `json:"template_list"` //模板信息列表
 }
 
 type Template struct {
