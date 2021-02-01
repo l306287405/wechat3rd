@@ -119,13 +119,13 @@ type CommitReq struct {
 
 //上传小程序代码
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/commit.html
-func (s *Server) Commit(authToken string, req *CommitReq) (resp *core.Error, err error) {
+func (s *Server) Commit(accessToken string, req *CommitReq) (resp *core.Error, err error) {
 	var (
 		u = wechatApiUrl + "/wxa/commit?"
 	)
 	resp = &core.Error{}
 
-	err = core.PostJson(s.AuthToken2url(u, authToken), req, resp)
+	err = core.PostJson(s.AuthToken2url(u, accessToken), req, resp)
 	return
 }
 
@@ -136,22 +136,22 @@ type GetPageResp struct {
 
 //获取已上传的代码的页面列表
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/get_page.html
-func (s *Server) GetPage(authToken string) (resp *GetPageResp, err error) {
+func (s *Server) GetPage(accessToken string) (resp *GetPageResp, err error) {
 	var (
 		u = wechatApiUrl + "/wxa/get_page?"
 	)
 	resp = &GetPageResp{}
 
-	err = core.GetRequest(u, core.AuthTokenUrlValues(authToken), resp)
+	err = core.GetRequest(u, core.AuthTokenUrlValues(accessToken), resp)
 	return
 }
 
 //获取体验版二维码
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/get_qrcode.html
-func (s *Server) GetQrcode(authToken string, path *string, saveRoot *string) (filePath string, err error) {
+func (s *Server) GetQrcode(accessToken string, path *string, saveRoot *string) (filePath string, err error) {
 	var (
 		u        = wechatApiUrl + "/wxa/get_qrcode?"
-		p        = core.AuthTokenUrlValues(authToken)
+		p        = core.AuthTokenUrlValues(accessToken)
 		httpResp *http.Response
 		fp       *os.File
 	)
@@ -227,13 +227,13 @@ type SubmitAuditResp struct {
 
 //提交审核
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/commit.html
-func (s *Server) SubmitAudit(authToken string, req *SubmitAuditReq) (resp *SubmitAuditResp, err error) {
+func (s *Server) SubmitAudit(accessToken string, req *SubmitAuditReq) (resp *SubmitAuditResp, err error) {
 	var (
 		u = wechatApiUrl + "/wxa/submit_audit?"
 	)
 	resp = &SubmitAuditResp{}
 
-	err = core.PostJson(s.AuthToken2url(u, authToken), req, resp)
+	err = core.PostJson(s.AuthToken2url(u, accessToken), req, resp)
 	return
 }
 
@@ -246,7 +246,7 @@ type GetAuditStatusResp struct {
 
 //查询指定发布审核单的审核状态
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/get_auditstatus.html
-func (s *Server) GetAuditStatus(authToken string, auditId string) (resp *GetAuditStatusResp, err error) {
+func (s *Server) GetAuditStatus(accessToken string, auditId string) (resp *GetAuditStatusResp, err error) {
 	var (
 		u   = wechatApiUrl + "/wxa/get_auditstatus?"
 		req = &struct {
@@ -255,7 +255,7 @@ func (s *Server) GetAuditStatus(authToken string, auditId string) (resp *GetAudi
 	)
 	resp = &GetAuditStatusResp{}
 
-	err = core.PostJson(s.AuthToken2url(u, authToken), req, resp)
+	err = core.PostJson(s.AuthToken2url(u, accessToken), req, resp)
 	return
 }
 
@@ -269,50 +269,50 @@ type GetLatestAuditStatusResp struct {
 
 //查询最新一次提交的审核状态
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/get_latest_auditstatus.html
-func (s *Server) GetLatestAuditStatus(authToken string) (resp *GetLatestAuditStatusResp, err error) {
+func (s *Server) GetLatestAuditStatus(accessToken string) (resp *GetLatestAuditStatusResp, err error) {
 	var (
 		u = wechatApiUrl + "/wxa/get_latest_auditstatus?"
 	)
 	resp = &GetLatestAuditStatusResp{}
 
-	err = core.GetRequest(u, core.AuthTokenUrlValues(authToken), resp)
+	err = core.GetRequest(u, core.AuthTokenUrlValues(accessToken), resp)
 	return
 }
 
 //小程序审核撤回
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/undocodeaudit.html
-func (s *Server) UndoCodeAudit(authToken string) (resp *core.Error, err error) {
+func (s *Server) UndoCodeAudit(accessToken string) (resp *core.Error, err error) {
 	var (
 		u = wechatApiUrl + "/wxa/undocodeaudit?"
 	)
 	resp = &core.Error{}
 
-	err = core.GetRequest(u, core.AuthTokenUrlValues(authToken), resp)
+	err = core.GetRequest(u, core.AuthTokenUrlValues(accessToken), resp)
 	return
 }
 
 //发布已通过审核的小程序
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/release.html
-func (s *Server) Release(authToken string) (resp *core.Error, err error) {
+func (s *Server) Release(accessToken string) (resp *core.Error, err error) {
 	var (
 		u   = wechatApiUrl + "/wxa/release?"
 		req = &struct{}{}
 	)
 	resp = &core.Error{}
 
-	err = core.PostJson(s.AuthToken2url(u, authToken), req, resp)
+	err = core.PostJson(s.AuthToken2url(u, accessToken), req, resp)
 	return
 }
 
 //版本回退
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/revertcoderelease.html
-func (s *Server) RevertCodeRelease(authToken string) (resp *core.Error, err error) {
+func (s *Server) RevertCodeRelease(accessToken string) (resp *core.Error, err error) {
 	var (
 		u = wechatApiUrl + "/wxa/revertcoderelease?"
 	)
 	resp = &core.Error{}
 
-	err = core.GetRequest(u, core.AuthTokenUrlValues(authToken), resp)
+	err = core.GetRequest(u, core.AuthTokenUrlValues(accessToken), resp)
 	return
 }
 
@@ -330,7 +330,7 @@ type GetPaidUnionIdResp struct {
 
 //支付后获取用户 Unionid 接口
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/User_Management.html
-func (s *Server) GetPaidUnionId(authToken string, req *GetPaidUnionIdReq) (resp *GetPaidUnionIdResp, err error) {
+func (s *Server) GetPaidUnionId(accessToken string, req *GetPaidUnionIdReq) (resp *GetPaidUnionIdResp, err error) {
 	var (
 		u = wechatApiUrl + "/wxa/getpaidunionid?"
 		p = make(url.Values)
@@ -351,6 +351,6 @@ func (s *Server) GetPaidUnionId(authToken string, req *GetPaidUnionIdReq) (resp 
 	}
 	u+=p.Encode()
 
-	err = core.GetRequest(u, core.AuthTokenUrlValues(authToken), resp)
+	err = core.GetRequest(u, core.AuthTokenUrlValues(accessToken), resp)
 	return
 }

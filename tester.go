@@ -12,14 +12,14 @@ type BindTesterResp struct {
 }
 
 //设置业务域名
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/setwebviewdomain.html
-func (s *Server) BindTester(authToken string,req *BindTesterReq) (resp *BindTesterResp,err error){
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/Admin.html
+func (s *Server) BindTester(accessToken string,req *BindTesterReq) (resp *BindTesterResp,err error){
 	var(
 		u = wechatApiUrl+"/wxa/bind_tester?"
 	)
 	resp = &BindTesterResp{}
 
-	err=core.PostJson(s.AuthToken2url(u,authToken),req,resp)
+	err=core.PostJson(s.AuthToken2url(u,accessToken),req,resp)
 	return
 }
 
@@ -30,13 +30,13 @@ type UnbindTesterReq struct {
 
 //解除绑定体验者
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/unbind_tester.html
-func (s *Server) UnbindTester(authToken string,req *UnbindTesterReq) (resp *core.Error,err error){
+func (s *Server) UnbindTester(accessToken string,req *UnbindTesterReq) (resp *core.Error,err error){
 	var(
 		u = wechatApiUrl+"/wxa/unbind_tester?"
 	)
 	resp = &core.Error{}
 
-	err=core.PostJson(s.AuthToken2url(u,authToken),req,resp)
+	err=core.PostJson(s.AuthToken2url(u,accessToken),req,resp)
 	return
 }
 
@@ -47,9 +47,9 @@ type MemberAuthResp struct {
 	} `json:"members"`
 }
 
-//解除绑定体验者
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/unbind_tester.html
-func (s *Server) MemberAuth(authToken string) (resp *MemberAuthResp,err error){
+//获取体验者列表
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/memberauth.html
+func (s *Server) MemberAuth(accessToken string) (resp *MemberAuthResp,err error){
 	var(
 		u = wechatApiUrl+"/wxa/memberauth?"
 		req = &struct {
@@ -57,6 +57,6 @@ func (s *Server) MemberAuth(authToken string) (resp *MemberAuthResp,err error){
 		}{Action: "get_experiencer"}
 	)
 	resp = &MemberAuthResp{}
-	err=core.PostJson(s.AuthToken2url(u,authToken),req,resp)
+	err=core.PostJson(s.AuthToken2url(u,accessToken),req,resp)
 	return
 }
