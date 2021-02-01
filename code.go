@@ -147,7 +147,7 @@ func (s *Server) GetPage(accessToken string) (resp *GetPageResp, err error) {
 
 //获取体验版二维码 参数path 为官方参数 ,参数saveDir为二维码图片存储路径 参数fileName 为二维码图片存储名称请勿包含名称
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/get_qrcode.html
-func (s *Server) GetQrcode(accessToken string, path, saveDir,fileName *string) (filePath string, err error) {
+func (s *Server) GetQrcode(accessToken string, path, saveDir, fileName *string) (filePath string, err error) {
 	var (
 		u        = wechatApiUrl + "/wxa/get_qrcode?"
 		p        = core.AuthTokenUrlValues(accessToken)
@@ -173,8 +173,8 @@ func (s *Server) GetQrcode(accessToken string, path, saveDir,fileName *string) (
 		saveDir = new(string)
 		*saveDir = "/var/tmp/" + httpResp.Header.Get("Content-Type")
 	}
-	*saveDir=strings.TrimRight(*saveDir,"/")
-	_, err = os.Stat(*saveDir)    //os.Stat获取文件信息
+	*saveDir = strings.TrimRight(*saveDir, "/")
+	_, err = os.Stat(*saveDir) //os.Stat获取文件信息
 	if os.IsNotExist(err) {
 		if err = os.MkdirAll(*saveDir, 0755); err != nil {
 			return
@@ -229,11 +229,11 @@ type SubmitAuditItem struct {
 
 type SubmitAuditResp struct {
 	core.Error
-	AuditId int64 `json:"auditid"`
+	AuditId int `json:"auditid"`
 }
 
 //提交审核
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/commit.html
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/submit_audit.html
 func (s *Server) SubmitAudit(accessToken string, req *SubmitAuditReq) (resp *SubmitAuditResp, err error) {
 	var (
 		u = wechatApiUrl + "/wxa/submit_audit?"
@@ -268,7 +268,7 @@ func (s *Server) GetAuditStatus(accessToken string, auditId int) (resp *GetAudit
 
 type GetLatestAuditStatusResp struct {
 	core.Error
-	AuditId    int `json:"auditid"`
+	AuditId    int    `json:"auditid"`
 	Status     int8   `json:"status"`
 	Reason     string `json:"reason"`
 	ScreenShot string `json:"screen_shot"`
