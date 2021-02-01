@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -146,9 +147,9 @@ func (s *Server) GetPage(accessToken string) (resp *GetPageResp, err error) {
 	return
 }
 
-//获取体验版二维码
+//获取体验版二维码 参数saveDir为二维码图片存储路径
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/get_qrcode.html
-func (s *Server) GetQrcode(accessToken string, path *string, saveRoot *string) (filePath string, err error) {
+func (s *Server) GetQrcode(accessToken string, path *string, saveDir *string) (filePath string, err error) {
 	var (
 		u        = wechatApiUrl + "/wxa/get_qrcode?"
 		p        = core.AuthTokenUrlValues(accessToken)
@@ -170,18 +171,19 @@ func (s *Server) GetQrcode(accessToken string, path *string, saveRoot *string) (
 		return
 	}
 
-	if saveRoot == nil {
-		saveRoot = new(string)
-		*saveRoot = "/var/tmp/" + httpResp.Header.Get("Content-Type")
+	if saveDir == nil {
+		saveDir = new(string)
+		*saveDir = "/var/tmp/" + httpResp.Header.Get("Content-Type")
 	}
-	_, err = os.Stat(*saveRoot)    //os.Stat获取文件信息
+	*saveDir=strings.TrimRight(*saveDir,"/")
+	_, err = os.Stat(*saveDir)    //os.Stat获取文件信息
 	if os.IsNotExist(err) {
-		if err = os.MkdirAll(*saveRoot, 0755); err != nil {
+		if err = os.MkdirAll(*saveDir, 0755); err != nil {
 			return
 		}
 	}
 
-	filePath = *saveRoot + "/" + strconv.FormatInt(time.Now().UnixNano(), 10) + ".jpg"
+	filePath = *saveDir + "/" + strconv.FormatInt(time.Now().UnixNano(), 10) + ".jpg"
 
 	fp, err = os.Create(filePath)
 	if err != nil {
