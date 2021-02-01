@@ -268,7 +268,7 @@ func (s *Server) GetAuditStatus(accessToken string, auditId int) (resp *GetAudit
 
 type GetLatestAuditStatusResp struct {
 	core.Error
-	AuditId    string `json:"auditid"`
+	AuditId    int `json:"auditid"`
 	Status     int8   `json:"status"`
 	Reason     string `json:"reason"`
 	ScreenShot string `json:"screen_shot"`
