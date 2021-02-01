@@ -55,7 +55,7 @@ func (s *Server) MemberAuth(accessToken string) (resp *MemberAuthResp,err error)
 	var(
 		u = wechatApiUrl+"/wxa/memberauth?"
 		req = &struct {
-			Action string
+			Action string `json:"action"`
 		}{Action: "get_experiencer"}
 	)
 	resp = &MemberAuthResp{}
