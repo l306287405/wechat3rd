@@ -6,7 +6,7 @@ type MixedMsg struct {
 	FromUserName string   `xml:"FromUserName" json:"FromUserName"`
 	CreateTime   int64    `xml:"CreateTime"   json:"CreateTime"`
 	MsgType      string   `xml:"MsgType"      json:"MsgType"`
-	EventType string `xml:"Event" json:"Event"`
+	Event        string   `xml:"Event" json:"Event"`
 
 	//echo
 	EchoStr string `xml:"-" json:"-"`
