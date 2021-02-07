@@ -68,7 +68,7 @@ type ModifyDomainResp struct {
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/Server_Address_Configuration.html
 func (s *Server) ModifyDomain(authToken string,req *ModifyDomainReq)(resp *ModifyDomainResp,err error){
 	var(
-		u = wechatApiUrl+"/wxa/modify_domain?"
+		u = WECHAT_API_URL+"/wxa/modify_domain?"
 	)
 	resp = &ModifyDomainResp{}
 	err=core.PostJson(s.AuthToken2url(u,authToken),req,resp)
@@ -84,7 +84,7 @@ type SetWebviewDomainReq struct {
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/setwebviewdomain.html
 func (s *Server) SetWebviewDomain(authToken string,req *SetWebviewDomainReq) (resp *core.Error,err error){
 	var(
-		u = wechatApiUrl+"/wxa/setwebviewdomain?"
+		u = WECHAT_API_URL+"/wxa/setwebviewdomain?"
 	)
 	resp = &core.Error{}
 

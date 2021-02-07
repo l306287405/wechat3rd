@@ -64,8 +64,9 @@ const (
 	// InfoTypeUpdateAuthorized 更新授权
 	InfoTypeUpdateAuthorized = "updateauthorized"
 
-	wechatApiUrl = "https://api.weixin.qq.com"
-	CGIUrl= wechatApiUrl+"/cgi-bin"
+	WECHAT_API_URL = "https://api.weixin.qq.com"
+	WECHAT_MP_URL = "https://mp.weixin.qq.com"
+	CGIUrl= WECHAT_API_URL+"/cgi-bin"
 )
 
 func (srv *Server) getAESKey() []byte {

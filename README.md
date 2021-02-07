@@ -8,10 +8,13 @@
 
 ### 3.使用引导
 
+首先请认真阅读 [官方文档](https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Third_party_platform_appid.html)  
+有任何问题请提issue, 我会尽快解决.
+
 #### 3.1: 引入
     go get -u github.com/l306287405/wechat3rd@master
     or
-    go get -u github.com/l306287405/wechat3rd@v1.1.8 (请选择最新版本)
+    go get -u github.com/l306287405/wechat3rd@v1.2.0 (请选择最新版本)
 
 #### 3.2: 使用NewService方法来创建一个service
 
@@ -39,7 +42,7 @@
     //      请求中带有12小时有效期的 component_verify_ticket 是服务使用加解密的必备参数.
     //      当服务重启时该参数会丢失从而导致服务请求失败,被动的方式是等下一次微信发起授权事件的请求并设置ticket,
     //      主动的方式则是将微信发起的ticket缓存起来并在服务启动时获取并设置.
-    ticket:=cache.Get("cachekey_of_wechat3rd_ticket").String()
+    ticket:=cache.Get("cachekey_of_wechat3rd_ticket").Val()
     if ticket!=""{
         err=service.SetTicket(ticket)
         if err!=nil{
@@ -71,12 +74,14 @@
     }
     c.Ctx.HTML("success")
 
-#### 3.4: 获取预授权码
-
+#### 3.4: 使用service获取预授权码与授权链接
     // 获取预授权码并组装链接
     // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/api/pre_auth_code.html
 
-    // 该处service应该是从你的单例方法或者服务池中获取
+    // 方式一: 直接获取授权链接
+    authurl,err:=service.AuthUrl(true,"你的授权回调url",wechat3rd.PREAUTH_AUTH_TYPE_MINIAPP,nil)
+    
+    // 方式二: 你也可以自行获取预授权码并手动拼接授权链接 例如以下代码
 	resp,err:=service.PreAuthCode()
 	if err!=nil{
 		log.Error("获取授权链接失败:",err.Error())
@@ -93,19 +98,18 @@
 	r.Add("component_appid",os.Getenv("WX_OPEN_APP_ID"))
 	r.Add("pre_auth_code",resp.PreAuthCode)
 	r.Add("redirect_uri","你的回调url")
-	r.Add("auth_type",strconv.Itoa(2))
+	r.Add("auth_type",wechat3rd.PREAUTH_AUTH_TYPE_MINIAPP)
 
-    // 方式一：授权注册页面扫码授权 方式二选一
+    // 网页方式授权：授权注册页面扫码授权
     authUrl := "https://mp.weixin.qq.com/cgi-bin/componentloginpage?"
     authUrl += r.Encode()
+    println(authUrl)
 
-    // 方式二：点击移动端链接快速授权 方式二选一
+    // 移动设备方式授权：点击移动端链接快速授权
     r.Add("action","bindcomponent")
     r.Add("no_scan",strconv.Itoa(1))
     authUrl := "https://mp.weixin.qq.com/safe/bindcomponent?"
     authUrl += r.Encode()+"#wechat_redirect"
-
-    // 结束
     println(authUrl)
 
 #### 3.5: 预授权回调处理

@@ -1,6 +1,7 @@
 package wechat3rd
 
 import (
+	"errors"
 	"fmt"
 	"github.com/l306287405/wechat3rd/core"
 )
@@ -8,14 +9,15 @@ import (
 type AuthType string
 
 const (
-	PreAuthCodeUrl  = wechatApiUrl + "/cgi-bin/component/api_create_preauthcode?component_access_token=%s"
-	AuthPageUrl     = wechatApiUrl + "/cgi-bin/componentloginpage?component_appid=%s&pre_auth_code=%s&redirect_uri=%s&auth_type=%s"
-	QueryAuthUrl    = wechatApiUrl + "/cgi-bin/component/api_query_auth?component_access_token=%s"
-	RefreshTokenUrl = wechatApiUrl + "/cgi-bin/component/api_authorizer_token?component_access_token=%s"
+	PREAUTH_CODE_URL  = WECHAT_API_URL + "/cgi-bin/component/api_create_preauthcode?component_access_token=%s"
+	WEB_AUTH_URL     = WECHAT_MP_URL + "/cgi-bin/componentloginpage?component_appid=%s&pre_auth_code=%s&redirect_uri=%s&auth_type=%s"
+	MOBILE_AUTH_URL     = WECHAT_MP_URL + "/safe/bindcomponent?action=bindcomponent&no_scan=1&component_appid=%s&pre_auth_code=%s&redirect_uri=%s&auth_type=%s"
+	QUERY_AUTH_URL    = WECHAT_API_URL + "/cgi-bin/component/api_query_auth?component_access_token=%s"
+	REFRESH_TOKEN_URL = WECHAT_API_URL + "/cgi-bin/component/api_authorizer_token?component_access_token=%s"
 
-	PreAuthAuthTypeAll     AuthType = "3" // 全部
-	PreAuthAuthTypeMinapp  AuthType = "2" // 小程序
-	PreAuthAuthTypeService AuthType = "1" // 公众号
+	PREAUTH_AUTH_TYPE_All     AuthType = "3" // 全部
+	PREAUTH_AUTH_TYPE_MINIAPP  AuthType = "2" // 小程序
+	PREAUTH_AUTH_TYPE_Service AuthType = "1" // 公众号
 )
 
 type PreAuthCodeReq struct {
@@ -37,19 +39,38 @@ func (srv *Server) PreAuthCode() (*PreAuthCodeResp, error) {
 		ComponentAppid: srv.cfg.AppID,
 	}
 	resp := &PreAuthCodeResp{}
-	err = core.PostJson(getCompleteUrl(PreAuthCodeUrl, accessToken), req, resp)
+	err = core.PostJson(getCompleteUrl(PREAUTH_CODE_URL, accessToken), req, resp)
 	if err != nil {
 		return nil, err
 	}
 	return resp, nil
 }
 
-func (srv *Server) AuthUrl(redirectUri string, authType AuthType) string {
-	pcode, err := srv.PreAuthCode()
+//说明
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Authorization_Process_Technical_Description.html
+func (srv *Server) AuthUrl(isWebAuth bool,redirectUri string, authType AuthType,bizAppid *string) (u string,err error) {
+	var(
+		resp *PreAuthCodeResp
+	)
+	resp, err = srv.PreAuthCode()
 	if err != nil {
-		return ""
+		return "",err
 	}
-	return fmt.Sprintf(AuthPageUrl, srv.cfg.AppID, pcode.PreAuthCode, redirectUri, authType)
+	if resp.ErrCode!=0{
+		err=errors.New(resp.ErrMsg)
+		return
+	}
+	if isWebAuth{
+		u = fmt.Sprintf(WEB_AUTH_URL, srv.cfg.AppID, resp.PreAuthCode, redirectUri, authType)
+	}else{
+		u = fmt.Sprintf(MOBILE_AUTH_URL, srv.cfg.AppID, resp.PreAuthCode, redirectUri, authType)
+		if bizAppid!=nil && *bizAppid!=""{
+			u=u+"&biz_appid="+*bizAppid
+		}
+		u+="#wechat_redirect"
+	}
+
+	return u,nil
 }
 
 type QueryAuthReq struct {
@@ -82,7 +103,7 @@ func (srv *Server) QueryAuth(code string) (*QueryAuthResp, error) {
 		AuthorizationCode: code,
 	}
 	resp := &QueryAuthResp{}
-	err = core.PostJson(getCompleteUrl(QueryAuthUrl, accessToken), req, resp)
+	err = core.PostJson(getCompleteUrl(QUERY_AUTH_URL, accessToken), req, resp)
 	if err != nil {
 		return nil, err
 	}
@@ -113,7 +134,7 @@ func (srv *Server) RefreshToken(appID, refreshToken string) (*RefreshTokenResp, 
 		AuthorizerRefreshToken: refreshToken,
 	}
 	resp := &RefreshTokenResp{}
-	err = core.PostJson(getCompleteUrl(RefreshTokenUrl, accessToken), req, resp)
+	err = core.PostJson(getCompleteUrl(REFRESH_TOKEN_URL, accessToken), req, resp)
 	if err != nil {
 		return nil, err
 	}

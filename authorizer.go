@@ -4,10 +4,10 @@ import "github.com/l306287405/wechat3rd/core"
 
 // 授权方信息
 const (
-	AuthorizerInfoUrl      = wechatApiUrl + "/cgi-bin/component/api_get_authorizer_info?component_access_token=%s"
-	AuthorizerOptionUrl    = wechatApiUrl + "/cgi-bin/component/api_get_authorizer_option?component_access_token=%s"
-	SetAuthorizerOptionUrl = wechatApiUrl + "/cgi-bin/component/api_set_authorizer_option?component_access_token=%s"
-	AuthorizerListUrl      = wechatApiUrl + "/cgi-bin/component/api_get_authorizer_list?component_access_token=%s"
+	AuthorizerInfoUrl      = WECHAT_API_URL + "/cgi-bin/component/api_get_authorizer_info?component_access_token=%s"
+	AuthorizerOptionUrl    = WECHAT_API_URL + "/cgi-bin/component/api_get_authorizer_option?component_access_token=%s"
+	SetAuthorizerOptionUrl = WECHAT_API_URL + "/cgi-bin/component/api_set_authorizer_option?component_access_token=%s"
+	AuthorizerListUrl      = WECHAT_API_URL + "/cgi-bin/component/api_get_authorizer_list?component_access_token=%s"
 )
 
 type AuthorizerInfo struct {
