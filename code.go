@@ -25,7 +25,7 @@ type Draft struct {
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code_template/gettemplatedraftlist.html
 func (s *Server) GetTemplateDraftList() (resp *GetTemplateDraftListResp, err error) {
 	var (
-		u     = wechatApiUrl + "/wxa/gettemplatedraftlist?"
+		u     = WECHAT_API_URL + "/wxa/gettemplatedraftlist?"
 		token string
 	)
 	token, err = s.Token()
@@ -42,7 +42,7 @@ func (s *Server) GetTemplateDraftList() (resp *GetTemplateDraftListResp, err err
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code_template/addtotemplate.html
 func (s *Server) AddToTemplate(draftId int) (resp *core.Error, err error) {
 	var (
-		u     = wechatApiUrl + "/wxa/addtotemplate?"
+		u     = WECHAT_API_URL + "/wxa/addtotemplate?"
 		token string
 		req   = &struct {
 			DraftId int `json:"draft_id"`
@@ -75,7 +75,7 @@ type Template struct {
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code_template/gettemplatelist.html
 func (s *Server) GetTemplateList() (resp *GetTemplateListResp, err error) {
 	var (
-		u     = wechatApiUrl + "/wxa/gettemplatelist?"
+		u     = WECHAT_API_URL + "/wxa/gettemplatelist?"
 		token string
 	)
 	token, err = s.Token()
@@ -92,7 +92,7 @@ func (s *Server) GetTemplateList() (resp *GetTemplateListResp, err error) {
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code_template/deletetemplate.html
 func (s *Server) DeleteTemplate(templateId int) (resp *core.Error, err error) {
 	var (
-		u     = wechatApiUrl + "/wxa/deletetemplate?"
+		u     = WECHAT_API_URL + "/wxa/deletetemplate?"
 		token string
 		req   = &struct {
 			TemplateId int `json:"template_id"`
@@ -120,7 +120,7 @@ type CommitReq struct {
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/commit.html
 func (s *Server) Commit(accessToken string, req *CommitReq) (resp *core.Error, err error) {
 	var (
-		u = wechatApiUrl + "/wxa/commit?"
+		u = WECHAT_API_URL + "/wxa/commit?"
 	)
 	resp = &core.Error{}
 
@@ -137,7 +137,7 @@ type GetPageResp struct {
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/get_page.html
 func (s *Server) GetPage(accessToken string) (resp *GetPageResp, err error) {
 	var (
-		u = wechatApiUrl + "/wxa/get_page?"
+		u = WECHAT_API_URL + "/wxa/get_page?"
 	)
 	resp = &GetPageResp{}
 
@@ -149,7 +149,7 @@ func (s *Server) GetPage(accessToken string) (resp *GetPageResp, err error) {
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/get_qrcode.html
 func (s *Server) GetQrcode(accessToken string, path, saveDir, fileName *string) (filePath string, err error) {
 	var (
-		u        = wechatApiUrl + "/wxa/get_qrcode?"
+		u        = WECHAT_API_URL + "/wxa/get_qrcode?"
 		p        = core.AuthTokenUrlValues(accessToken)
 		httpResp *http.Response
 		fp       *os.File
@@ -236,7 +236,7 @@ type SubmitAuditResp struct {
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/submit_audit.html
 func (s *Server) SubmitAudit(accessToken string, req *SubmitAuditReq) (resp *SubmitAuditResp, err error) {
 	var (
-		u = wechatApiUrl + "/wxa/submit_audit?"
+		u = WECHAT_API_URL + "/wxa/submit_audit?"
 	)
 	resp = &SubmitAuditResp{}
 
@@ -255,7 +255,7 @@ type GetAuditStatusResp struct {
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/get_auditstatus.html
 func (s *Server) GetAuditStatus(accessToken string, auditId int) (resp *GetAuditStatusResp, err error) {
 	var (
-		u   = wechatApiUrl + "/wxa/get_auditstatus?"
+		u   = WECHAT_API_URL + "/wxa/get_auditstatus?"
 		req = &struct {
 			AuditId int `json:"auditid"`
 		}{AuditId: auditId}
@@ -278,7 +278,7 @@ type GetLatestAuditStatusResp struct {
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/get_latest_auditstatus.html
 func (s *Server) GetLatestAuditStatus(accessToken string) (resp *GetLatestAuditStatusResp, err error) {
 	var (
-		u = wechatApiUrl + "/wxa/get_latest_auditstatus?"
+		u = WECHAT_API_URL + "/wxa/get_latest_auditstatus?"
 	)
 	resp = &GetLatestAuditStatusResp{}
 
@@ -290,7 +290,7 @@ func (s *Server) GetLatestAuditStatus(accessToken string) (resp *GetLatestAuditS
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/undocodeaudit.html
 func (s *Server) UndoCodeAudit(accessToken string) (resp *core.Error, err error) {
 	var (
-		u = wechatApiUrl + "/wxa/undocodeaudit?"
+		u = WECHAT_API_URL + "/wxa/undocodeaudit?"
 	)
 	resp = &core.Error{}
 
@@ -302,7 +302,7 @@ func (s *Server) UndoCodeAudit(accessToken string) (resp *core.Error, err error)
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/release.html
 func (s *Server) Release(accessToken string) (resp *core.Error, err error) {
 	var (
-		u   = wechatApiUrl + "/wxa/release?"
+		u   = WECHAT_API_URL + "/wxa/release?"
 		req = &struct{}{}
 	)
 	resp = &core.Error{}
@@ -315,7 +315,7 @@ func (s *Server) Release(accessToken string) (resp *core.Error, err error) {
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/revertcoderelease.html
 func (s *Server) RevertCodeRelease(accessToken string) (resp *core.Error, err error) {
 	var (
-		u = wechatApiUrl + "/wxa/revertcoderelease?"
+		u = WECHAT_API_URL + "/wxa/revertcoderelease?"
 	)
 	resp = &core.Error{}
 
@@ -339,7 +339,7 @@ type GetPaidUnionIdResp struct {
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/User_Management.html
 func (s *Server) GetPaidUnionId(accessToken string, req *GetPaidUnionIdReq) (resp *GetPaidUnionIdResp, err error) {
 	var (
-		u = wechatApiUrl + "/wxa/getpaidunionid?"
+		u = WECHAT_API_URL + "/wxa/getpaidunionid?"
 		p = make(url.Values)
 	)
 	resp = &GetPaidUnionIdResp{}

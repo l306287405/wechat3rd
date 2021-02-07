@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	componentAccessTokenUrl = wechatApiUrl + "/cgi-bin/component/api_component_token"
+	componentAccessTokenUrl = WECHAT_API_URL + "/cgi-bin/component/api_component_token"
 )
 
 type AccessTokenServer interface {

@@ -15,7 +15,7 @@ type BindTesterResp struct {
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/Admin.html
 func (s *Server) BindTester(accessToken string,req *BindTesterReq) (resp *BindTesterResp,err error){
 	var(
-		u = wechatApiUrl+"/wxa/bind_tester?"
+		u = WECHAT_API_URL+"/wxa/bind_tester?"
 	)
 	resp = &BindTesterResp{}
 
@@ -32,7 +32,7 @@ type UnbindTesterReq struct {
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/unbind_tester.html
 func (s *Server) UnbindTester(accessToken string,req *UnbindTesterReq) (resp *core.Error,err error){
 	var(
-		u = wechatApiUrl+"/wxa/unbind_tester?"
+		u = WECHAT_API_URL+"/wxa/unbind_tester?"
 	)
 	resp = &core.Error{}
 
@@ -53,7 +53,7 @@ type MemberAuthResp struct {
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/memberauth.html
 func (s *Server) MemberAuth(accessToken string) (resp *MemberAuthResp,err error){
 	var(
-		u = wechatApiUrl+"/wxa/memberauth?"
+		u = WECHAT_API_URL+"/wxa/memberauth?"
 		req = &struct {
 			Action string `json:"action"`
 		}{Action: "get_experiencer"}
