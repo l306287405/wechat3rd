@@ -76,13 +76,13 @@ type CategoryKeyword struct {
 
 //获取模板标题下的关键词库
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/subscribe_template/library_get.html
-func (s *Server) GetPubTemplateKeywords(accessToken string, tid string) (resp *GetPubTemplateKeywordsResp, err error) {
+func (s *Server) GetPubTemplateKeywords(accessToken string, tid int) (resp *GetPubTemplateKeywordsResp, err error) {
 	var (
 		u = WECHAT_API_URL + "/wxaapi/newtmpl/getpubtemplatetitles?"
 		v = core.AuthTokenUrlValues(accessToken)
 	)
 	resp = &GetPubTemplateKeywordsResp{}
-	v.Set("tid", tid)
+	v.Set("tid", strconv.Itoa(tid))
 
 	err = core.GetRequest(u, v, resp)
 	return
