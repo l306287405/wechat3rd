@@ -14,7 +14,7 @@
 #### 3.1: 引入
     go get -u github.com/l306287405/wechat3rd@master
     or
-    go get -u github.com/l306287405/wechat3rd@v1.2.0 (请选择最新版本)
+    go get -u github.com/l306287405/wechat3rd@v1.3.0 (请选择最新版本)
 
 #### 3.2: 使用NewService方法来创建一个service
 
@@ -167,7 +167,7 @@
     GetTemplateList: 获取代码模板列表
     DeleteTemplate: 删除指定代码模板
 
-**!!!以下接口注意:authToken(authorizerAccessToken)为授权方token!!!**
+**!!!以下接口注意:accessToken(authorizerAccessToken)为授权方token!!!**
 
     * 基础信息设置
     GetAccountBasicInfo: 获取基本信息
@@ -190,6 +190,15 @@
     Release: 发布已通过审核的小程序
     RevertCodeRelease: 版本回退
     GetPaidUnionId: 支付后获取用户 Unionid 接口
+
+    * 订阅消息设置
+    GetCategory: 获取当前帐号所设置的类目信息
+    GetPubTemplateTitles: 获取模板标题列表
+    GetPubTemplateKeywords: 获取模板标题下的关键词库
+    AddTemplate: 组合模板并添加到个人模板库
+    GetTemplate: 获取帐号下的模板列表
+    DelTemplate: 删除帐号下的某个模板
+    SubscribeSend: 发送订阅消息
 
     * 素材管理
     GetMaterial: 获取永久素材
