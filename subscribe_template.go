@@ -78,7 +78,7 @@ type CategoryKeyword struct {
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/subscribe_template/library_get.html
 func (s *Server) GetPubTemplateKeywords(accessToken string, tid int) (resp *GetPubTemplateKeywordsResp, err error) {
 	var (
-		u = WECHAT_API_URL + "/wxaapi/newtmpl/getpubtemplatetitles?"
+		u = WECHAT_API_URL + "/wxaapi/newtmpl/getpubtemplatekeywords?"
 		v = core.AuthTokenUrlValues(accessToken)
 	)
 	resp = &GetPubTemplateKeywordsResp{}
