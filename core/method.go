@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"log"
 	"net/http"
 	"net/url"
 	"strings"
@@ -33,6 +34,7 @@ func GetRequest(u string, request url.Values, response interface{}) error {
 		u+="?"
 	}
 	httpResp, err := http.Get(u+request.Encode())
+	log.Println("发起请求:"+u+request.Encode())
 	if err != nil {
 		return err
 	}
