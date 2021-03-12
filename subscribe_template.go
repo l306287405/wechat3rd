@@ -2,7 +2,6 @@ package wechat3rd
 
 import (
 	"github.com/l306287405/wechat3rd/core"
-	"log"
 	"strconv"
 )
 
@@ -152,20 +151,25 @@ func (s *Server) DelTemplate(accessToken, priTmplId string) (resp *core.Error, e
 	return
 }
 
-type sendMsg struct {
-	Value string `json:"value"`
-}
-
 type SubscribeSendReq struct {
 	Touser           string            `json:"touser"`
 	TemplateId       string            `json:"template_id"`
-	Data             map[string]string `json:"-"`
+	Data             map[string]string `json:"data"`
 	Page             *string           `json:"page,omitempty,omitempty"`
 	MiniProgramState *string           `json:"miniprogram_state,omitempty"`
 	Lang             *string           `json:"lang,omitempty"`
+}
 
-	//请勿填写该参数,并无视它
-	DataSource map[string]*sendMsg `json:"data"`
+type sendMsg struct {
+	Value string `json:"value"`
+}
+type subscribeSendReq struct {
+	Touser           string              `json:"touser"`
+	TemplateId       string              `json:"template_id"`
+	Data             map[string]*sendMsg `json:"data"`
+	Page             *string             `json:"page,omitempty,omitempty"`
+	MiniProgramState *string             `json:"miniprogram_state,omitempty"`
+	Lang             *string             `json:"lang,omitempty"`
 }
 
 //发送订阅消息
@@ -173,17 +177,24 @@ type SubscribeSendReq struct {
 func (s *Server) SubscribeSend(accessToken string, req *SubscribeSendReq) (resp *core.Error, err error) {
 	var (
 		u = CGIUrl + "/message/subscribe/send?"
+		reqs= &subscribeSendReq{
+			Touser:           req.Touser,
+			TemplateId:       req.TemplateId,
+			Page:             req.Page,
+			MiniProgramState: req.MiniProgramState,
+			Lang:             req.Lang,
+		}
+
 	)
 	resp = &core.Error{}
-	if req.Data!=nil{
-		req.DataSource=make(map[string]*sendMsg)
+	if req.Data != nil {
+		reqs.Data = make(map[string]*sendMsg)
 
-		for k,v:=range req.Data{
-			req.DataSource[k]= &sendMsg{Value: v}
-			log.Println("k:",k," v:",v," mixed:",*req.DataSource[k])
+		for k, v := range req.Data {
+			reqs.Data[k] = &sendMsg{Value: v}
 		}
 	}
 
-	err = core.PostJson(s.AuthToken2url(u, accessToken), req, resp)
+	err = core.PostJson(s.AuthToken2url(u, accessToken), reqs, resp)
 	return
 }
