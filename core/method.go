@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"log"
 	"net/http"
 	"net/url"
 	"strings"
@@ -17,6 +18,7 @@ func PostJson(incompleteURL string, request interface{}, response interface{}) e
 		return err
 	}
 	httpResp, err := http.Post(incompleteURL,"application/json; charset=utf-8", &buf)
+	log.Println("postJsonParams:"+buf.String())
 	if err != nil {
 		return err
 	}
