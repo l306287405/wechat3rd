@@ -11,14 +11,17 @@ import (
 )
 
 func PostJson(incompleteURL string, request interface{}, response interface{}) error {
+
+	log.Println(json.Marshal(request))
+
 	var buf bytes.Buffer
 	encoder := json.NewEncoder(&buf)
 	encoder.SetEscapeHTML(false)
 	if err := encoder.Encode(request); err != nil {
 		return err
 	}
+	log.Println("内容:",buf.String())
 	httpResp, err := http.Post(incompleteURL,"application/json; charset=utf-8", &buf)
-	log.Println("postJsonParams:"+buf.String())
 	if err != nil {
 		return err
 	}
