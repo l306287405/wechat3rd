@@ -160,13 +160,13 @@ type SubscribeSendReq struct {
 	Lang             *string           `json:"lang,omitempty"`
 }
 
-type sendMsg struct {
+type SendMsg struct {
 	Value string `json:"value"`
 }
 type subscribeSendReq struct {
 	Touser           string              `json:"touser"`
 	TemplateId       string              `json:"template_id"`
-	Data             map[string]*sendMsg `json:"data"`
+	Data             map[string]*SendMsg `json:"data"`
 	Page             *string             `json:"page,omitempty,omitempty"`
 	MiniProgramState *string             `json:"miniprogram_state,omitempty"`
 	Lang             *string             `json:"lang,omitempty"`
@@ -188,10 +188,10 @@ func (s *Server) SubscribeSend(accessToken string, req *SubscribeSendReq) (resp 
 	)
 	resp = &core.Error{}
 	if req.Data != nil {
-		reqs.Data = make(map[string]*sendMsg)
+		reqs.Data = make(map[string]*SendMsg)
 
 		for k, v := range req.Data {
-			reqs.Data[k] = &sendMsg{Value: v}
+			reqs.Data[k] = &SendMsg{Value: v}
 		}
 	}
 
