@@ -2,6 +2,7 @@ package wechat3rd
 
 import (
 	"github.com/l306287405/wechat3rd/core"
+	"log"
 	"strconv"
 )
 
@@ -179,6 +180,7 @@ func (s *Server) SubscribeSend(accessToken string, req *SubscribeSendReq) (resp 
 
 		for k,v:=range req.Data{
 			req.DataSource[k]= &sendMsg{Value: v}
+			log.Println("k:",k," v:",v," mixed:",*req.DataSource[k])
 		}
 	}
 
