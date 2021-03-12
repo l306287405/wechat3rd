@@ -151,16 +151,20 @@ func (s *Server) DelTemplate(accessToken, priTmplId string) (resp *core.Error, e
 	return
 }
 
+type sendMsg struct {
+	Value string `json:"value"`
+}
+
 type SubscribeSendReq struct {
 	Touser           string            `json:"touser"`
 	TemplateId       string            `json:"template_id"`
-	Data             map[string]string `json:"dataSimple,omitempty"`
+	Data             map[string]string `json:"-"`
 	Page             *string           `json:"page,omitempty,omitempty"`
 	MiniProgramState *string           `json:"miniprogram_state,omitempty"`
 	Lang             *string           `json:"lang,omitempty"`
 
 	//请勿填写该参数,并无视它
-	DataSource map[string]struct {Value string `json:"value"`} `json:"data"`
+	DataSource map[string]*sendMsg `json:"data"`
 }
 
 //发送订阅消息
@@ -171,10 +175,10 @@ func (s *Server) SubscribeSend(accessToken string, req *SubscribeSendReq) (resp 
 	)
 	resp = &core.Error{}
 	if req.Data!=nil{
-		req.DataSource=make(map[string]struct{Value string `json:"value"`})
+		req.DataSource=make(map[string]*sendMsg)
 
 		for k,v:=range req.Data{
-			req.DataSource[k]= struct{ Value string `json:"value"`}{Value: v}
+			req.DataSource[k]= &sendMsg{Value: v}
 		}
 	}
 
