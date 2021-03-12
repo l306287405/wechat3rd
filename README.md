@@ -14,7 +14,7 @@
 #### 3.1: 引入
     go get -u github.com/l306287405/wechat3rd@master
     or
-    go get -u github.com/l306287405/wechat3rd@v1.3.4 (请选择最新版本)
+    go get -u github.com/l306287405/wechat3rd@v1.3.6 (请选择最新版本)
 
 #### 3.2: 使用NewService方法来创建一个service
 
