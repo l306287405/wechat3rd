@@ -14,7 +14,7 @@
 #### 3.1: 引入
     go get -u github.com/l306287405/wechat3rd@master
     or
-    go get -u github.com/l306287405/wechat3rd@v1.4.2 (请选择最新版本)
+    go get -u github.com/l306287405/wechat3rd@v1.4.3 (请选择最新版本)
 
 #### 3.2: 使用NewService方法来创建一个service
 
@@ -156,7 +156,7 @@
 ### 5.小程序登陆
 
     Jscode2session: 获取用户openid , session_key
-    AESDecryptDataForUser: 用于解密用户数据, 例如解密前端获取手机号时获取的加密信息
+    AESCBCDecrypt: 用于解密用户数据, 例如解密前端获取手机号时获取的加密信息
 
 ### 6.代小程序实现业务
 
