@@ -20,21 +20,21 @@ type Config struct {
 	//RedirectUrl    string
 }
 
-func (c *Config) check() error{
+func (c *Config) check() error {
 	if len(c.AESKey) != 43 {
 		//log.Fatalln("the length of base64AESKey must equal to 43")
 		return errors.New("the length of base64AESKey must equal to 43")
 	}
 
-	if len(c.Token) != 32{
+	if len(c.Token) != 32 {
 		return errors.New("token was not set for Server, see NewServer function or Server.SetToken method")
 	}
 
-	if c.AppID == ""{
+	if c.AppID == "" {
 		return errors.New("appid was not set for Server")
 	}
 
-	if c.AppSecret == ""{
+	if c.AppSecret == "" {
 		return errors.New("app secret was not set for Server!")
 	}
 	return nil
@@ -44,14 +44,13 @@ func (c *Config) check() error{
 
 type Server struct {
 	sync.Mutex
-	cfg          Config
+	cfg Config
 	//handlerMap   map[string]Handler //方法处理
 	DecodeAesKey []byte
-	errorHandler WechatErrorer           // 错误处理
-	TicketServer // ticket存储
+	errorHandler WechatErrorer // 错误处理
+	TicketServer               // ticket存储
 	// 获取token
 	AccessTokenServer
-
 }
 
 const (
@@ -65,8 +64,8 @@ const (
 	InfoTypeUpdateAuthorized = "updateauthorized"
 
 	WECHAT_API_URL = "https://api.weixin.qq.com"
-	WECHAT_MP_URL = "https://mp.weixin.qq.com"
-	CGIUrl= WECHAT_API_URL+"/cgi-bin"
+	WECHAT_MP_URL  = "https://mp.weixin.qq.com"
+	CGIUrl         = WECHAT_API_URL + "/cgi-bin"
 )
 
 func (srv *Server) getAESKey() []byte {
@@ -83,9 +82,9 @@ type cipherRequestHttpBody struct {
 	Base64EncryptedMsg []byte   `xml:"Encrypt"`
 }
 
-func NewService(cfg Config, ticket TicketServer, tokenService AccessTokenServer, errHandler WechatErrorer) (s *Server,err error) {
-	err=cfg.check()
-	if err!=nil{
+func NewService(cfg Config, ticket TicketServer, tokenService AccessTokenServer, errHandler WechatErrorer) (s *Server, err error) {
+	err = cfg.check()
+	if err != nil {
 		return nil, err
 	}
 
@@ -99,32 +98,32 @@ func NewService(cfg Config, ticket TicketServer, tokenService AccessTokenServer,
 		tokenService = &DefaultAccessTokenServer{TicketServer: ticket, AppID: cfg.AppID, AppSecret: cfg.AppSecret}
 	}
 	s = &Server{
-		cfg:               cfg,
-		errorHandler:      errHandler,
+		cfg:          cfg,
+		errorHandler: errHandler,
 		//handlerMap:        make(map[string]Handler),
 		TicketServer:      ticket,
 		AccessTokenServer: tokenService,
 	}
-	s.DecodeAesKey,err=base64.StdEncoding.DecodeString(s.cfg.AESKey + "=")
+	s.DecodeAesKey, err = base64.StdEncoding.DecodeString(s.cfg.AESKey + "=")
 	if err != nil {
-		return nil, errors.New("Decode base64AESKey failed: "+err.Error())
+		return nil, errors.New("Decode base64AESKey failed: " + err.Error())
 	}
 
-	return s,nil
+	return s, nil
 }
 
 //func (srv *Server) AddHander(t string, hander Handler) {
 //	srv.handlerMap[t] = hander
 //}
 
-func (srv *Server) ServeHTTP(r *http.Request) (resp *MixedMsg,err error) {
-	var(
-		query=r.URL.Query()
+func (srv *Server) ServeHTTP(r *http.Request) (resp *MixedMsg, err error) {
+	var (
+		query = r.URL.Query()
 
 		wantSignature string
 		haveSignature = query.Get("signature")
-		timestamp = query.Get("timestamp")
-		nonce = query.Get("nonce")
+		timestamp     = query.Get("timestamp")
+		nonce         = query.Get("nonce")
 
 		//get
 		echostr = query.Get("echostr")
@@ -132,40 +131,40 @@ func (srv *Server) ServeHTTP(r *http.Request) (resp *MixedMsg,err error) {
 		//post
 		wantMsgSignature string
 		haveMsgSignature = query.Get("msg_signature")
-		encryptType = query.Get("encrypt_type")
+		encryptType      = query.Get("encrypt_type")
 
 		//handle vars
-		data []byte
-		requestHttpBody = &cipherRequestHttpBody{}
-		encryptedMsg []byte
-		encryptedMsgLen int
+		data                         []byte
+		requestHttpBody              = &cipherRequestHttpBody{}
+		encryptedMsg                 []byte
+		encryptedMsgLen              int
 		msgPlaintext, haveAppIdBytes []byte
 		//hand Handler
 		//exist bool
 	)
 
 	if haveSignature == "" {
-		err=errors.New("not found signature query parameter")
+		err = errors.New("not found signature query parameter")
 		return
 	}
 	if timestamp == "" {
-		err=errors.New("not found timestamp query parameter")
+		err = errors.New("not found timestamp query parameter")
 		return
 	}
 	if nonce == "" {
-		err=errors.New("not found nonce query parameter")
+		err = errors.New("not found nonce query parameter")
 		return
 	}
 
 	wantSignature = util.Sign(srv.getToken(), timestamp, nonce)
 	if haveSignature != wantSignature {
-		return nil,errors.New("sign error")
+		return nil, errors.New("sign error")
 	}
 
 	//如果是验证url有效性 则echo即可
-	if r.Method == "GET"{
+	if r.Method == "GET" {
 		if echostr == "" {
-			err=errors.New("not found echostr query parameter")
+			err = errors.New("not found echostr query parameter")
 			return
 		}
 		resp = &MixedMsg{EchoStr: echostr}
@@ -173,12 +172,12 @@ func (srv *Server) ServeHTTP(r *http.Request) (resp *MixedMsg,err error) {
 	}
 
 	//进入事件执行
-	if encryptType!="aes"{
-		err=errors.New("unknown encrypt_type: "+encryptType)
+	if encryptType != "aes" {
+		err = errors.New("unknown encrypt_type: " + encryptType)
 		return
 	}
 	if haveMsgSignature == "" {
-		err=errors.New("not found msg_signature query parameter")
+		err = errors.New("not found msg_signature query parameter")
 		return
 	}
 
@@ -192,8 +191,8 @@ func (srv *Server) ServeHTTP(r *http.Request) (resp *MixedMsg,err error) {
 	}
 
 	wantMsgSignature = util.MsgSign(srv.getToken(), timestamp, nonce, string(requestHttpBody.Base64EncryptedMsg))
-	if haveMsgSignature!=wantMsgSignature {
-		err= errors.New("check msg_signature failed, have: "+haveMsgSignature+", want: "+wantMsgSignature)
+	if haveMsgSignature != wantMsgSignature {
+		err = errors.New("check msg_signature failed, have: " + haveMsgSignature + ", want: " + wantMsgSignature)
 		return
 	}
 
@@ -209,11 +208,11 @@ func (srv *Server) ServeHTTP(r *http.Request) (resp *MixedMsg,err error) {
 		return
 	}
 
-	if string(haveAppIdBytes)!=srv.cfg.AppID {
-		err = errors.New("the message AppId mismatch, have: "+string(haveAppIdBytes)+", want: "+srv.cfg.AppID)
+	if string(haveAppIdBytes) != srv.cfg.AppID {
+		err = errors.New("the message AppId mismatch, have: " + string(haveAppIdBytes) + ", want: " + srv.cfg.AppID)
 		return
 	}
-	resp=&MixedMsg{}
+	resp = &MixedMsg{}
 	if err = xml.Unmarshal(msgPlaintext, resp); err != nil {
 		return
 	}
@@ -228,27 +227,32 @@ func (srv *Server) ServeHTTP(r *http.Request) (resp *MixedMsg,err error) {
 }
 
 //用于解密数据
-func (s *Server) AESDecryptData(cipherText , iv []byte)(rawData []byte,err error){
-	return util.AESDecryptData(cipherText,s.getAESKey(),iv)
+func (s *Server) AESDecryptData(cipherText, iv []byte) (rawData []byte, err error) {
+	return util.AESDecryptData(cipherText, s.getAESKey(), iv)
+}
+
+//用于解密微信用户数据
+func (s *Server) AESDecryptDataForUser(cipherText, sessionKey, iv []byte) (rawData []byte, err error) {
+	return util.AESDecryptData(cipherText, sessionKey, iv)
 }
 
 //url增加后缀
-func (s *Server) AccessToken2url(u string) (string,error){
-	token,err:=s.Token()
-	if err!=nil{
+func (s *Server) AccessToken2url(u string) (string, error) {
+	token, err := s.Token()
+	if err != nil {
 		return "", err
 	}
-	if !strings.HasSuffix(u,"?"){
-		u+="?"
+	if !strings.HasSuffix(u, "?") {
+		u += "?"
 	}
-	u+="access_token="+token
-	return u,nil
+	u += "access_token=" + token
+	return u, nil
 }
 
-func (s *Server) AuthToken2url(u string,authToken string) string{
-	if !strings.HasSuffix(u,"?"){
-		u+="?"
+func (s *Server) AuthToken2url(u string, authToken string) string {
+	if !strings.HasSuffix(u, "?") {
+		u += "?"
 	}
-	u+="access_token="+authToken
+	u += "access_token=" + authToken
 	return u
 }

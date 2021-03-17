@@ -14,7 +14,7 @@
 #### 3.1: 引入
     go get -u github.com/l306287405/wechat3rd@master
     or
-    go get -u github.com/l306287405/wechat3rd@v1.4.0 (请选择最新版本)
+    go get -u github.com/l306287405/wechat3rd@v1.4.2 (请选择最新版本)
 
 #### 3.2: 使用NewService方法来创建一个service
 
@@ -151,11 +151,12 @@
     AuthUrl： 获取授权连接
     QueryAuth: 获取授权公众号信息， 注意返回的token,appid等信息需要自行保存，后面带公众号实现业务时使用
     RefreshToken: 刷新授权用户的token
-    AESDecryptData: 用于解密数据, 例如解密前端获取手机号时获取的加密信息
+    AESDecryptData: 用于解密数据
 
 ### 5.小程序登陆
 
     Jscode2session: 获取用户openid , session_key
+    AESDecryptDataForUser: 用于解密用户数据, 例如解密前端获取手机号时获取的加密信息
 
 ### 6.代小程序实现业务
 

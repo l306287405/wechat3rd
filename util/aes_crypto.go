@@ -4,8 +4,6 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"fmt"
-	"log"
-	"strconv"
 )
 
 const (
@@ -126,7 +124,6 @@ func AESDecryptData(cipherText, aesKey, iv []byte) (rawData []byte, err error) {
 	if err != nil {
 		panic(err)
 	}
-	log.Println("block_length:"+strconv.Itoa(block.BlockSize())+" iv_length:"+strconv.Itoa(len(iv)))
 	mode := cipher.NewCBCDecrypter(block, iv)
 	mode.CryptBlocks(plaintext, cipherText)
 
