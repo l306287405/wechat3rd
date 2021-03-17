@@ -10,13 +10,13 @@ type AuthType string
 
 const (
 	PREAUTH_CODE_URL  = WECHAT_API_URL + "/cgi-bin/component/api_create_preauthcode?component_access_token=%s"
-	WEB_AUTH_URL     = WECHAT_MP_URL + "/cgi-bin/componentloginpage?component_appid=%s&pre_auth_code=%s&redirect_uri=%s&auth_type=%s"
-	MOBILE_AUTH_URL     = WECHAT_MP_URL + "/safe/bindcomponent?action=bindcomponent&no_scan=1&component_appid=%s&pre_auth_code=%s&redirect_uri=%s&auth_type=%s"
+	WEB_AUTH_URL      = WECHAT_MP_URL + "/cgi-bin/componentloginpage?component_appid=%s&pre_auth_code=%s&redirect_uri=%s&auth_type=%s"
+	MOBILE_AUTH_URL   = WECHAT_MP_URL + "/safe/bindcomponent?action=bindcomponent&no_scan=1&component_appid=%s&pre_auth_code=%s&redirect_uri=%s&auth_type=%s"
 	QUERY_AUTH_URL    = WECHAT_API_URL + "/cgi-bin/component/api_query_auth?component_access_token=%s"
 	REFRESH_TOKEN_URL = WECHAT_API_URL + "/cgi-bin/component/api_authorizer_token?component_access_token=%s"
 
 	PREAUTH_AUTH_TYPE_All     AuthType = "3" // 全部
-	PREAUTH_AUTH_TYPE_MINIAPP  AuthType = "2" // 小程序
+	PREAUTH_AUTH_TYPE_MINIAPP AuthType = "2" // 小程序
 	PREAUTH_AUTH_TYPE_Service AuthType = "1" // 公众号
 )
 
@@ -48,29 +48,29 @@ func (srv *Server) PreAuthCode() (*PreAuthCodeResp, error) {
 
 //说明
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Authorization_Process_Technical_Description.html
-func (srv *Server) AuthUrl(isWebAuth bool,redirectUri string, authType AuthType,bizAppid *string) (u string,err error) {
-	var(
+func (srv *Server) AuthUrl(isWebAuth bool, redirectUri string, authType AuthType, bizAppid *string) (u string, err error) {
+	var (
 		resp *PreAuthCodeResp
 	)
 	resp, err = srv.PreAuthCode()
 	if err != nil {
-		return "",err
+		return "", err
 	}
-	if resp.ErrCode!=0{
-		err=errors.New(resp.ErrMsg)
+	if resp.ErrCode != 0 {
+		err = errors.New(resp.ErrMsg)
 		return
 	}
-	if isWebAuth{
+	if isWebAuth {
 		u = fmt.Sprintf(WEB_AUTH_URL, srv.cfg.AppID, resp.PreAuthCode, redirectUri, authType)
-	}else{
+	} else {
 		u = fmt.Sprintf(MOBILE_AUTH_URL, srv.cfg.AppID, resp.PreAuthCode, redirectUri, authType)
-		if bizAppid!=nil && *bizAppid!=""{
-			u=u+"&biz_appid="+*bizAppid
+		if bizAppid != nil && *bizAppid != "" {
+			u = u + "&biz_appid=" + *bizAppid
 		}
-		u+="#wechat_redirect"
+		u += "#wechat_redirect"
 	}
 
-	return u,nil
+	return u, nil
 }
 
 type QueryAuthReq struct {
