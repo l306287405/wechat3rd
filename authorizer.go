@@ -38,8 +38,8 @@ type AuthorizerInfoResp struct {
 
 		// 都存在的
 		//昵称
-		NickName        string `json:"nick_name"`
-		HeadImg         string `json:"head_img"`
+		NickName string `json:"nick_name"`
+		HeadImg  string `json:"head_img"`
 		//公众号类型  --公众号独有
 		ServiceTypeInfo struct {
 			ID int `json:"id"`
@@ -49,18 +49,18 @@ type AuthorizerInfoResp struct {
 			ID int `json:"id"`
 		} `json:"verify_type_info"`
 		//原始 ID
-		UserName      string `json:"user_name"`
+		UserName string `json:"user_name"`
 		// 主题名称
 		PrincipalName string `json:"principal_name"`
 		//用以了解功能的开通状况（0代表未开通，1代表已开通），详见business_info 说明
-		BusinessInfo  struct {
+		BusinessInfo struct {
 			OpenStore int `json:"open_store"`
 			OpenScan  int `json:"open_scan"`
 			OpenPay   int `json:"open_pay"`
 			OpenCard  int `json:"open_card"`
 			OpenShake int `json:"open_shake"`
 		} `json:"business_info"`
-		Alias     string `json:"alias"`
+		Alias string `json:"alias"`
 		//二维码图片的 URL，开发者最好自行也进行保存
 		QrcodeURL string `json:"qrcode_url"`
 	} `json:"authorizer_info"`
