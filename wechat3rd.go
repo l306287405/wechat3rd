@@ -231,11 +231,6 @@ func (s *Server) AESDecryptData(cipherText, iv []byte) (rawData []byte, err erro
 	return util.AESDecryptData(cipherText, s.getAESKey(), iv)
 }
 
-//用于解密微信用户数据
-func (s *Server) AESDecryptDataForUser(cipherText, sessionKey, iv []byte) (rawData []byte, err error) {
-	return util.AESDecryptData(cipherText, sessionKey, iv)
-}
-
 //url增加后缀
 func (s *Server) AccessToken2url(u string) (string, error) {
 	token, err := s.Token()
