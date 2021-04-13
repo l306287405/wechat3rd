@@ -60,9 +60,9 @@
     // 该处service应该是从你的单例方法或者服务池中获取
     resp,err:=service.ServeHTTP(r)
 	if err!=nil{
-		log.Error("微信第三方开放平台component_verify_ticket获取失败:",err.Error())
-		c.Ctx.HTML("error")
-		return
+        log.Error("微信第三方开放平台component_verify_ticket获取失败:",err.Error())
+        c.Ctx.HTML("error")
+        return
 	}
 
     // 将ticket缓存,并在服务重启时取用.
@@ -86,12 +86,12 @@
     // 方式二: 你也可以自行获取预授权码并手动拼接授权链接 例如以下代码
 	resp,err:=service.PreAuthCode()
 	if err!=nil{
-		log.Error("获取授权链接失败:",err.Error())
-		return
+        log.Error("获取授权链接失败:",err.Error())
+        return
 	}
 	if resp.ErrCode!=0{
-		log.Error("获取授权链接失败:",resp.ErrMsg)
-		return
+        log.Error("获取授权链接失败:",resp.ErrMsg)
+        return
 	}
 
     r := url.Values{}
@@ -125,11 +125,11 @@
     // 该处service应该是从你的单例方法或者服务池中获取
     rsp,err:=service.QueryAuth(authCode)
     if err!=nil{
-		log.Error("换取token失败:",resp.ErrMsg)
+        log.Error("换取token失败:",resp.ErrMsg)
         return err
     }
 	if rsp.ErrCode!=0{
-		return errors.New("换取token失败:"+rsp.ErrMsg)
+        return errors.New("换取token失败:"+rsp.ErrMsg)
 	}
     
     //授权方(也就是小程序持有方,非第三方)令牌信息
