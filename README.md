@@ -139,9 +139,6 @@
 
 ### 3.Service方法说明：
 
-    AddHander: 
-        用于微信时间推送的处理方法(unauthorized,updateauthorized,authorized,component_verify_ticket)
-        方法会接收context
     ServeHTTP: 处理推送事件的
     Token: 获取第三方平台的token
     AuthorizerInfo: 获取授权详情
