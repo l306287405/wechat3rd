@@ -131,9 +131,13 @@
 	if rsp.ErrCode!=0{
 		return errors.New("换取token失败:"+rsp.ErrMsg)
 	}
-
-    // 做你想做的
+    
+    //授权方(也就是小程序持有方,非第三方)令牌信息
     info:=rsp.AuthorizationInfo
+	//info.AuthorizerRefreshToken 授权方的刷新token
+	//info.AuthorizerAccessToken 授权方的authAccessToken
+
+    //接下来做你想做的,例如缓存授权方的token,存储授权方的刷新token等
 
 	c.Ctx.HTML("授权成功")
 
