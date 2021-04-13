@@ -152,7 +152,7 @@
     PostJson： 提交json数据
     PreAuthCode： 获取令牌
     AuthUrl： 获取授权连接
-    QueryAuth: 获取授权公众号信息， 注意返回的token,appid等信息需要自行保存，后面带公众号实现业务时使用
+    QueryAuth: 获取授权公众号信息， 注意返回的token,appid等信息需要自行保存，后面代小程序或公众号实现业务时使用
     RefreshToken: 刷新授权用户的token
     AESDecryptData: 用于解密数据
 
