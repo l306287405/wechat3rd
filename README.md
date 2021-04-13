@@ -1,22 +1,24 @@
+### 项目地址
+[l306287405/wechat3rd](https://github.com/l306287405/wechat3rd)
+
+### 感谢
+项目基于 [owen-gxz/open-wechat](https://github.com/owen-gxz/open-wechat) 做了原方法改动以及添加对新接口的支持并补充使用说明.
+
 ### 1.简介
 
 微信公众平台-第三方平台（简称第三方平台）开放给所有通过开发者资质认证后的开发者使用。在得到公众号或小程序运营者（简称运营者）授权后，第三方平台开发者可以通过调用微信开放平台的接口能力，为公众号或小程序的运营者提供账号申请、小程序创建、技术开发、行业方案、活动营销、插件能力等全方位服务。同一个账号的运营者可以选择多家适合自己的第三方为其提供产品能力或委托运营。
 
-### 2.项目基于 [owen-gxz/open-wechat](https://github.com/owen-gxz/open-wechat) 做了原方法改动以及添加对新接口的支持并补充使用说明.
-
-主要完成了微信开放平台第三方平台的[接口说明部分](https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/api/component_verify_ticket.html)
-
-### 3.使用引导
+### 2.使用引导
 
 首先请认真阅读 [官方文档](https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Third_party_platform_appid.html)  
 有任何问题请提issue, 我会尽快解决.
 
-#### 3.1: 引入
+#### 2.1: 引入
     go get -u github.com/l306287405/wechat3rd@master
     or
-    go get -u github.com/l306287405/wechat3rd@v1.4.4 (请选择最新版本)
+    go get -u github.com/l306287405/wechat3rd@v1.4.5 (请选择最新版本)
 
-#### 3.2: 使用NewService方法来创建一个service
+#### 2.2: 使用NewService方法来创建一个service
 
     NewService的参数分别是:
     Config: 配置信息
@@ -50,7 +52,7 @@
         }
     }
 
-#### 3.3: 使用service来接收并验证票据
+#### 2.3: 使用service来接收并验证票据
 
     // 使用你的Golang框架方法获取 *http.Request 这里用iris演示
     var r = c.Ctx.Request()
@@ -74,7 +76,7 @@
     }
     c.Ctx.HTML("success")
 
-#### 3.4: 使用service获取预授权码与授权链接
+#### 2.4: 使用service获取预授权码与授权链接
     // 获取预授权码并组装链接
     // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/api/pre_auth_code.html
 
@@ -112,7 +114,7 @@
     authUrl += r.Encode()+"#wechat_redirect"
     println(authUrl)
 
-#### 3.5: 预授权回调处理
+#### 2.5: 预授权回调处理
 
     // 预授权链接授权操作之后微信会对回调url发起GET请求.
     // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/api/authorization_info.html
@@ -135,7 +137,7 @@
 
 	c.Ctx.HTML("授权成功")
 
-### 4.Service方法说明：
+### 3.Service方法说明：
 
     AddHander: 
         用于微信时间推送的处理方法(unauthorized,updateauthorized,authorized,component_verify_ticket)
@@ -153,12 +155,12 @@
     RefreshToken: 刷新授权用户的token
     AESDecryptData: 用于解密数据
 
-### 5.小程序登陆
+### 4.小程序登陆
 
     Jscode2session: 获取用户openid , session_key
     AESCBCDecrypt: 用于解密用户数据, 例如解密前端获取手机号时获取的加密信息
 
-### 6.代小程序实现业务
+### 5.代小程序实现业务
 
     FastRegisterWeapp: 快速创建小程序
     SearchWeapp: 查询创建任务状态
@@ -190,6 +192,7 @@
     GetLatestAuditStatus: 查询最新一次提交的审核状态
     UndoCodeAudit: 小程序审核撤回
     Release: 发布已通过审核的小程序
+    GetRevertCodeRelease: 获取可回退的小程序版本
     RevertCodeRelease: 版本回退
     GetPaidUnionId: 支付后获取用户 Unionid 接口
 
