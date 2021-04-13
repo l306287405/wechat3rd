@@ -323,6 +323,31 @@ func (s *Server) RevertCodeRelease(accessToken string) (resp *core.Error, err er
 	return
 }
 
+type GetRevertCodeReleaseResp struct {
+	core.Error
+	TemplateList []*RevertTemplate `json:"template_list"` //模板信息列表
+}
+
+type RevertTemplate struct {
+	CommitTime  int64  `json:"commit_time"`  //更新时间，时间戳
+	UserVersion string `json:"user_version"` //版本号，开发者自定义字段
+	UserDesc    string `json:"user_desc"`    //版本描述   开发者自定义字段
+	AppVersion  int    `json:"app_version"`  //小程序版本
+}
+
+//获取可回退的小程序版本
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/get_history_version.html
+func (s *Server) GetRevertCodeRelease(accessToken string) (resp *GetRevertCodeReleaseResp, err error) {
+	var (
+		u = WECHAT_API_URL + "/wxa/revertcoderelease?"
+		params = core.AuthTokenUrlValues(accessToken)
+	)
+	params.Set("action","get_history_version")
+	resp = &GetRevertCodeReleaseResp{}
+	err = core.GetRequest(u, params, resp)
+	return
+}
+
 type GetPaidUnionIdReq struct {
 	OpenId        string  `json:"openid"`
 	TransactionId *string `json:"transaction_id,omitempty"`
