@@ -6,7 +6,9 @@
 
 ### 1.简介
 
-微信公众平台-第三方平台（简称第三方平台）开放给所有通过开发者资质认证后的开发者使用。在得到公众号或小程序运营者（简称运营者）授权后，第三方平台开发者可以通过调用微信开放平台的接口能力，为公众号或小程序的运营者提供账号申请、小程序创建、技术开发、行业方案、活动营销、插件能力等全方位服务。同一个账号的运营者可以选择多家适合自己的第三方为其提供产品能力或委托运营。
+微信公众平台-第三方平台（简称第三方平台）开放给所有通过开发者资质认证后的开发者使用。  
+在得到公众号或小程序运营者（简称运营者）授权后，第三方平台开发者可以通过调用微信开放平台的接口能力，为公众号或小程序的运营者提供账号申请、小程序创建、技术开发、行业方案、活动营销、插件能力等全方位服务。  
+同一个账号的运营者可以选择多家适合自己的第三方为其提供产品能力或委托运营。
 
 ### 2.使用引导
 
@@ -16,7 +18,7 @@
 #### 2.1: 引入
     go get -u github.com/l306287405/wechat3rd@master
     or
-    go get -u github.com/l306287405/wechat3rd@v1.4.5 (请选择最新版本)
+    go get -u github.com/l306287405/wechat3rd@v1.5.0 (请选择最新版本)
 
 #### 2.2: 使用NewService方法来创建一个service
 
@@ -166,7 +168,7 @@
     FastRegisterWeapp: 快速创建小程序
     SearchWeapp: 查询创建任务状态
 
-    * 代码模板库设置
+    * 代码模板库设置 (全部完成)
     GetTemplateDraftList: 获取代码草稿列表
     AddToTemplate: 将草稿添加到代码模板库
     GetTemplateList: 获取代码模板列表
@@ -174,17 +176,17 @@
 
 **!!!以下接口注意:accessToken(authorizerAccessToken)为授权方token!!!**
 
-    * 基础信息设置
+    * 基础信息设置 (部分完成)
     GetAccountBasicInfo: 获取基本信息
     ModifyDomain: 设置服务器域名
     SetWebviewDomain: 设置业务域名
 
-    * 成员管理
+    * 成员管理 (全部完成)
     BindTester: 绑定体验者
     UnbindTester: 解除绑定体验者
     Memberauth: 获取体验者列表
 
-    * 代码管理
+    * 代码管理 (全部完成)
     Commit: 上传代码
     GetPage: 获取已上传的代码的页面列表
     GetQrcode: 获取体验版二维码
@@ -193,11 +195,18 @@
     GetLatestAuditStatus: 查询最新一次提交的审核状态
     UndoCodeAudit: 小程序审核撤回
     Release: 发布已通过审核的小程序
+    RevertCodeRelease: 小程序版本回退
     GetRevertCodeRelease: 获取可回退的小程序版本
-    RevertCodeRelease: 版本回退
-    GetPaidUnionId: 支付后获取用户 Unionid 接口
+    GrayRelease: 分阶段发布(灰度发布)
+    GetGrayReleasePlan: 查询当前分阶段发布详情
+    RevertGrayRelease: 取消分阶段发布
+    ChangeVisitStatus: 修改小程序服务状态
+    GetWeappSupportVersion: 查询当前设置的最低基础库版本及各版本用户占比
+    SetWeappSupportVersion: 设置最低基础库版本
+    QueryQuota: 查询服务商的当月提审限额（quota）和加急次数
+    SpeedupAudit: 加急审核申请
 
-    * 订阅消息设置
+    * 订阅消息设置  (全部完成)
     GetCategory: 获取当前帐号所设置的类目信息
     GetPubTemplateTitles: 获取模板标题列表
     GetPubTemplateKeywords: 获取模板标题下的关键词库
@@ -206,6 +215,9 @@
     DelTemplate: 删除帐号下的某个模板
     SubscribeSend: 发送订阅消息
 
+    * 支付后获取 Unionid
+    GetPaidUnionId: 支付后获取用户 Unionid 接口
+
     * 素材管理
     GetMaterial: 获取永久素材
 
@@ -213,5 +225,3 @@
 
     * 开放平台账号管理
     * 代公众号实现业务
-    * 代小程序实现业务(部分完成)
-

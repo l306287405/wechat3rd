@@ -339,10 +339,10 @@ type RevertTemplate struct {
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/get_history_version.html
 func (s *Server) GetRevertCodeRelease(accessToken string) (resp *GetRevertCodeReleaseResp, err error) {
 	var (
-		u = WECHAT_API_URL + "/wxa/revertcoderelease?"
+		u      = WECHAT_API_URL + "/wxa/revertcoderelease?"
 		params = core.AuthTokenUrlValues(accessToken)
 	)
-	params.Set("action","get_history_version")
+	params.Set("action", "get_history_version")
 	resp = &GetRevertCodeReleaseResp{}
 	err = core.GetRequest(u, params, resp)
 	return
@@ -384,5 +384,150 @@ func (s *Server) GetPaidUnionId(accessToken string, req *GetPaidUnionIdReq) (res
 	u += p.Encode()
 
 	err = core.GetRequest(u, core.AuthTokenUrlValues(accessToken), resp)
+	return
+}
+
+//分阶段发布
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/grayrelease.html
+func (s *Server) GrayRelease(accessToken string, grayPercentage int8) (resp *core.Error, err error) {
+	var (
+		u   = WECHAT_API_URL + "/wxa/grayrelease?"
+		req = &struct {
+			GrayPercentage int8 `json:"gray_percentage"`
+		}{GrayPercentage: grayPercentage}
+	)
+	resp = &core.Error{}
+
+	err = core.PostJson(s.AuthToken2url(u, accessToken), req, resp)
+	return
+}
+
+type GetGrayReleasePlanResp struct {
+	core.Error
+	GrayReleasePlan *GrayReleasePlan `json:"gray_release_plan"` //模板信息列表
+}
+
+type GrayReleasePlan struct {
+	Status          int8  `json:"status"`           //0:初始状态 1:执行中 2:暂停中 3:执行完毕 4:被删除
+	CreateTimestamp int64 `json:"create_timestamp"` //分阶段发布计划的创建事件
+	GrayPercentage  int8  `json:"gray_percentage"`  //当前的灰度比例
+}
+
+//查询当前分阶段发布详情
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/getgrayreleaseplan.html
+func (s *Server) GetGrayReleasePlan(accessToken string) (resp *GetGrayReleasePlanResp, err error) {
+	var (
+		u = WECHAT_API_URL + "/wxa/getgrayreleaseplan?"
+	)
+	resp = &GetGrayReleasePlanResp{}
+	err = core.GetRequest(u, core.AuthTokenUrlValues(accessToken), resp)
+	return
+}
+
+//取消分阶段发布
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/revertgrayrelease.html
+func (s *Server) RevertGrayRelease(accessToken string) (resp *core.Error, err error) {
+	var (
+		u = WECHAT_API_URL + "/wxa/revertgrayrelease?"
+	)
+	resp = &core.Error{}
+	err = core.GetRequest(u, core.AuthTokenUrlValues(accessToken), resp)
+	return
+}
+
+//修改小程序服务状态
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/change_visitstatus.html
+func (s *Server) ChangeVisitStatus(accessToken string, action string) (resp *core.Error, err error) {
+	var (
+		u   = WECHAT_API_URL + "/wxa/change_visitstatus?"
+		req = &struct {
+			Action string `json:"action"`
+		}{Action: action}
+	)
+
+	if action != "open" && action != "close" {
+		err = errors.New("action must be 'open' or 'close'")
+		return
+	}
+
+	resp = &core.Error{}
+
+	err = core.PostJson(s.AuthToken2url(u, accessToken), req, resp)
+	return
+}
+
+type GetWeappSupportVersionResp struct {
+	core.Error
+	NowVersion string `json:"now_version"` //当前版本
+	UvInfo     *struct { //版本的用户占比列表
+		Items []*struct {
+			Percentage float64 `json:"percentage"` //百分比
+			Version    string  `json:"version"`    //基础库版本号
+		} `json:"items"`
+	} `json:"uv_info"`
+}
+
+//查询当前设置的最低基础库版本及各版本用户占比
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/getweappsupportversion.html
+func (s *Server) GetWeappSupportVersion(accessToken string) (resp *GetWeappSupportVersionResp, err error) {
+	var (
+		u   = CGIUrl + "/wxopen/getweappsupportversion?"
+		req = &struct{}{}
+	)
+
+	resp = &GetWeappSupportVersionResp{}
+
+	err = core.PostJson(s.AuthToken2url(u, accessToken), req, resp)
+	return
+}
+
+//设置最低基础库版本
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/setweappsupportversion.html
+func (s *Server) SetWeappSupportVersion(accessToken string, version string) (resp *core.Error, err error) {
+	var (
+		u   = CGIUrl + "/wxopen/setweappsupportversion?"
+		req = &struct {
+			Version string `json:"version"`
+		}{Version: version}
+	)
+
+	resp = &core.Error{}
+
+	err = core.PostJson(s.AuthToken2url(u, accessToken), req, resp)
+	return
+}
+
+type QueryQuotaResp struct {
+	core.Error
+	Rest         int `json:"rest"`          //quota剩余值
+	Limit        int `json:"limit"`         //当月分配quota
+	SpeedupRest  int `json:"speedup_rest"`  //剩余加急次数
+	SpeedupLimit int `json:"speedup_limit"` //当月分配加急次数
+}
+
+//查询服务商的当月提审限额（quota）和加急次数
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/query_quota.html
+func (s *Server) QueryQuota(accessToken string) (resp *QueryQuotaResp, err error) {
+	var (
+		u = WECHAT_API_URL + "/wxa/queryquota?"
+	)
+	resp = &QueryQuotaResp{}
+	err = core.GetRequest(u, core.AuthTokenUrlValues(accessToken), resp)
+	return
+}
+
+//加急审核申请
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/speedup_audit.html
+func (s *Server) SpeedupAudit(accessToken string, auditId int) (resp *core.Error, err error) {
+	var (
+		u   = WECHAT_API_URL + "/wxa/speedupaudit?"
+		req = &struct {
+			AuditId int `json:"auditid"`
+		}{AuditId: auditId}
+	)
+
+	resp = &core.Error{}
+
+	err = core.PostJson(s.AuthToken2url(u, accessToken), req, resp)
 	return
 }
