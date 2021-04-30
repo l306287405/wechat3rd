@@ -507,14 +507,12 @@ type QueryQuotaResp struct {
 
 //查询服务商的当月提审限额（quota）和加急次数
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/query_quota.html
-func (s *Server) QueryQuota() (resp *QueryQuotaResp, err error) {
+func (s *Server) QueryQuota(accessToken string) (resp *QueryQuotaResp, err error) {
 	var (
 		u = WECHAT_API_URL + "/wxa/queryquota?"
-		token string
 	)
-	token, err = s.Token()
 	resp = &QueryQuotaResp{}
-	err = core.GetRequest(u, core.AuthTokenUrlValues(token), resp)
+	err = core.GetRequest(u, core.AuthTokenUrlValues(accessToken), resp)
 	return
 }
 
