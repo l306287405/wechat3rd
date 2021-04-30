@@ -18,7 +18,7 @@
 #### 2.1: 引入
     go get -u github.com/l306287405/wechat3rd@master
     or
-    go get -u github.com/l306287405/wechat3rd@v1.5.0 (请选择最新版本)
+    go get -u github.com/l306287405/wechat3rd@v1.5.1 (请选择最新版本)
 
 #### 2.2: 使用NewService方法来创建一个service
 
@@ -136,6 +136,7 @@
     
     //授权方(也就是小程序持有方,非第三方)令牌信息
     info:=rsp.AuthorizationInfo
+    //info.AuthorizerAppid 授权方的appid
 	//info.AuthorizerRefreshToken 授权方的刷新token
 	//info.AuthorizerAccessToken 授权方的authAccessToken
 
@@ -223,5 +224,6 @@
 
 ## todo
 
+    * 代小程序实现业务(部分完成)
     * 开放平台账号管理
     * 代公众号实现业务
