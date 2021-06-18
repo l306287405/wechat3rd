@@ -1,6 +1,8 @@
 package wechat3rd
 
 import (
+	"errors"
+	"fmt"
 	"github.com/l306287405/wechat3rd/core"
 	"time"
 )
@@ -24,9 +26,9 @@ type DefaultAccessTokenServer struct {
 
 // token不使用不获取
 func (d *DefaultAccessTokenServer) Token() (token string, err error) {
-	var(
+	var (
 		ticket string
-		resp *AccessTokenResp
+		resp   *AccessTokenResp
 	)
 
 	if d.ExpiresIn <= time.Now().Unix()-30 {
@@ -40,6 +42,10 @@ func (d *DefaultAccessTokenServer) Token() (token string, err error) {
 			ComponentVerifyTicket: ticket,
 		})
 		if err != nil {
+			return
+		}
+		if resp != nil && resp.ErrCode != 0 {
+			err = errors.New(fmt.Sprintf("get component_access_token errcode: %d,errmsg: %s", resp.ErrCode, resp.ErrMsg))
 			return
 		}
 		d.ExpiresIn = time.Now().Unix() + resp.ExpiresIn
