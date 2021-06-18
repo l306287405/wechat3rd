@@ -10,52 +10,53 @@ import (
 )
 
 type Jscode2sessionResp struct {
-	Openid string `json:"openid,omitempty"`
+	core.Error
+	Openid     string `json:"openid,omitempty"`
 	SessionKey string `json:"session_key,omitempty"`
-	ErrCode int `json:"errcode,omitempty"`
-	ErrMsg string `json:"errmsg,omitempty"`
 }
 
-func (s *Server) Jscode2session(appId ,jsCode string) (resp *Jscode2sessionResp,err error){
-	var(
-		req = make(url.Values)
-		u = "https://api.weixin.qq.com/sns/component/jscode2session?"
+func (s *Server) Jscode2session(appId, jsCode string) (resp *Jscode2sessionResp) {
+	var (
+		req         = make(url.Values)
+		u           = "https://api.weixin.qq.com/sns/component/jscode2session?"
 		accessToken string
+		err         error
 	)
-	accessToken,err=s.Token()
-	if err!=nil{
+	resp = &Jscode2sessionResp{}
+	accessToken, err = s.Token()
+	if err != nil {
+		resp.Err(err)
 		return
 	}
-	resp = &Jscode2sessionResp{}
-	req.Set("appid",appId)
-	req.Set("js_code",jsCode)
-	req.Set("grant_type","authorization_code")
-	req.Set("component_appid",s.cfg.AppID)
-	req.Set("component_access_token",accessToken)
+	req.Set("appid", appId)
+	req.Set("js_code", jsCode)
+	req.Set("grant_type", "authorization_code")
+	req.Set("component_appid", s.cfg.AppID)
+	req.Set("component_access_token", accessToken)
 
-	err=core.GetRequest(u,req,resp)
+	resp.Err(core.GetRequest(u, req, resp))
 	return
 }
 
 // 解密用户信息
-func (s *Server) AESCBCDecrypt(encryptData, key, iv string) (data []byte,err error) {
-	var(
+func (s *Server) AESCBCDecrypt(encryptData, key, iv string) (data []byte, err error) {
+	var (
 		encBytes []byte
 		keyBytes []byte
-		ivBytes []byte
-		block cipher.Block
-		mode cipher.BlockMode
+		ivBytes  []byte
+		block    cipher.Block
+		mode     cipher.BlockMode
 	)
 	encBytes, err = base64.StdEncoding.DecodeString(encryptData)
-	if err!=nil{
+	if err != nil {
 		return
 	}
 	keyBytes, err = base64.StdEncoding.DecodeString(key)
-	if err!=nil{
+	if err != nil {
 		return
 	}
 	ivBytes, err = base64.StdEncoding.DecodeString(iv)
-	if err!=nil{
+	if err != nil {
 		return
 	}
 
@@ -64,11 +65,11 @@ func (s *Server) AESCBCDecrypt(encryptData, key, iv string) (data []byte,err err
 		return
 	}
 	if len(encBytes) < block.BlockSize() {
-		err=errors.New("ciphertext too short")
+		err = errors.New("ciphertext too short")
 		return
 	}
 	if len(encBytes)%block.BlockSize() != 0 {
-		err=errors.New("ciphertext is not a multiple of the block size")
+		err = errors.New("ciphertext is not a multiple of the block size")
 		return
 	}
 	mode = cipher.NewCBCDecrypter(block, ivBytes)

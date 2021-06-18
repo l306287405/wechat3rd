@@ -30,20 +30,18 @@ type PreAuthCodeResp struct {
 	ExpiresIn   int    `json:"expires_in"`
 }
 
-func (srv *Server) PreAuthCode() (*PreAuthCodeResp, error) {
+func (srv *Server) PreAuthCode() (resp *PreAuthCodeResp) {
+	resp = &PreAuthCodeResp{}
 	accessToken, err := srv.Token()
 	if err != nil {
-		return nil, err
+		resp.Err(err)
+		return
 	}
 	req := &PreAuthCodeReq{
 		ComponentAppid: srv.cfg.AppID,
 	}
-	resp := &PreAuthCodeResp{}
-	err = core.PostJson(getCompleteUrl(PREAUTH_CODE_URL, accessToken), req, resp)
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
+	resp.Err(core.PostJson(getCompleteUrl(PREAUTH_CODE_URL, accessToken), req, resp))
+	return
 }
 
 //说明
@@ -52,11 +50,8 @@ func (srv *Server) AuthUrl(isWebAuth bool, redirectUri string, authType AuthType
 	var (
 		resp *PreAuthCodeResp
 	)
-	resp, err = srv.PreAuthCode()
-	if err != nil {
-		return "", err
-	}
-	if resp.ErrCode != 0 {
+	resp = srv.PreAuthCode()
+	if !resp.Success() {
 		err = errors.New(resp.ErrMsg)
 		return
 	}
@@ -93,21 +88,19 @@ type QueryAuthResp struct {
 }
 
 // 返回授权数据
-func (srv *Server) QueryAuth(code string) (*QueryAuthResp, error) {
+func (srv *Server) QueryAuth(code string) (resp *QueryAuthResp) {
+	resp = &QueryAuthResp{}
 	accessToken, err := srv.Token()
 	if err != nil {
-		return nil, err
+		resp.Err(err)
+		return
 	}
 	req := &QueryAuthReq{
 		ComponentAppid:    srv.cfg.AppID,
 		AuthorizationCode: code,
 	}
-	resp := &QueryAuthResp{}
-	err = core.PostJson(getCompleteUrl(QUERY_AUTH_URL, accessToken), req, resp)
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
+	resp.Err(core.PostJson(getCompleteUrl(QUERY_AUTH_URL, accessToken), req, resp))
+	return
 }
 
 type RefreshTokenReq struct {
@@ -123,22 +116,20 @@ type RefreshTokenResp struct {
 }
 
 // 刷新token
-func (srv *Server) RefreshToken(appID, refreshToken string) (*RefreshTokenResp, error) {
+func (srv *Server) RefreshToken(appID, refreshToken string) (resp *RefreshTokenResp) {
+	resp = &RefreshTokenResp{}
 	accessToken, err := srv.Token()
 	if err != nil {
-		return nil, err
+		resp.Err(err)
+		return
 	}
 	req := &RefreshTokenReq{
 		ComponentAppid:         srv.cfg.AppID,
 		AuthorizerAppid:        appID,
 		AuthorizerRefreshToken: refreshToken,
 	}
-	resp := &RefreshTokenResp{}
-	err = core.PostJson(getCompleteUrl(REFRESH_TOKEN_URL, accessToken), req, resp)
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
+	resp.Err(core.PostJson(getCompleteUrl(REFRESH_TOKEN_URL, accessToken), req, resp))
+	return
 }
 
 func getCompleteUrl(uri, token string) string {

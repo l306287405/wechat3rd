@@ -18,7 +18,8 @@
 #### 2.1: 引入
     go get -u github.com/l306287405/wechat3rd@master
     or
-    go get -u github.com/l306287405/wechat3rd@v1.5.3 (请选择最新版本)
+    go get -u github.com/l306287405/wechat3rd@v2.0.0 (请选择最新版本)
+    v2.0.0版本开始Service提供的所有方法仅在resp返回对象中提供错误信息
 
 #### 2.2: 使用NewService方法来创建一个service
 
@@ -86,12 +87,8 @@
     authurl,err:=service.AuthUrl(true,"你的授权回调url",wechat3rd.PREAUTH_AUTH_TYPE_MINIAPP,nil)
     
     // 方式二: 你也可以自行获取预授权码并手动拼接授权链接 例如以下代码
-	resp,err:=service.PreAuthCode()
-	if err!=nil{
-        log.Error("获取授权链接失败:",err.Error())
-        return
-	}
-	if resp.ErrCode!=0{
+	resp:=service.PreAuthCode()
+	if !resp.Success(){
         log.Error("获取授权链接失败:",resp.ErrMsg)
         return
 	}
@@ -125,12 +122,8 @@
     authCode := c.Ctx.URLParam("auth_code")
 
     // 该处service应该是从你的单例方法或者服务池中获取
-    rsp,err:=service.QueryAuth(authCode)
-    if err!=nil{
-        log.Error("换取token失败:",resp.ErrMsg)
-        return err
-    }
-	if rsp.ErrCode!=0{
+    rsp:=service.QueryAuth(authCode)
+	if !rsp.Success(){
         return errors.New("换取token失败:"+rsp.ErrMsg)
 	}
     

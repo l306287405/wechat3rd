@@ -13,7 +13,6 @@ type defaultTicketServer struct {
 
 var defaultTicketServerHander TicketServer = &defaultTicketServer{}
 
-
 var _ TicketServer = (*defaultTicketServer)(nil)
 
 func (cts *defaultTicketServer) GetTicket() (string, error) {

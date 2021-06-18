@@ -17,13 +17,12 @@ type Category struct {
 
 //获取当前帐号所设置的类目信息
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/subscribe_template/get_category.html
-func (s *Server) GetCategory(accessToken string) (resp *GetcategoryResp, err error) {
+func (s *Server) GetCategory(accessToken string) (resp *GetcategoryResp) {
 	var (
 		u = WECHAT_API_URL + "/wxaapi/newtmpl/getcategory?"
 	)
 	resp = &GetcategoryResp{}
-
-	err = core.GetRequest(u, core.AuthTokenUrlValues(accessToken), resp)
+	resp.Err(core.GetRequest(u, core.AuthTokenUrlValues(accessToken), resp))
 	return
 }
 
@@ -48,7 +47,7 @@ type CategoryTitle struct {
 
 //获取模板标题列表
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/subscribe_template/library_list.html
-func (s *Server) GetPubTemplateTitles(accessToken string, req *GetPubTemplateTitlesReq) (resp *GetPubTemplateTitlesResp, err error) {
+func (s *Server) GetPubTemplateTitles(accessToken string, req *GetPubTemplateTitlesReq) (resp *GetPubTemplateTitlesResp) {
 	var (
 		u = WECHAT_API_URL + "/wxaapi/newtmpl/getpubtemplatetitles?"
 		v = core.AuthTokenUrlValues(accessToken)
@@ -57,8 +56,7 @@ func (s *Server) GetPubTemplateTitles(accessToken string, req *GetPubTemplateTit
 	v.Set("ids", req.Ids)
 	v.Set("start", strconv.Itoa(req.Start))
 	v.Set("limit", strconv.Itoa(req.Limit))
-
-	err = core.GetRequest(u, v, resp)
+	resp.Err(core.GetRequest(u, v, resp))
 	return
 }
 
@@ -76,15 +74,14 @@ type CategoryKeyword struct {
 
 //获取模板标题下的关键词库
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/subscribe_template/library_get.html
-func (s *Server) GetPubTemplateKeywords(accessToken string, tid int) (resp *GetPubTemplateKeywordsResp, err error) {
+func (s *Server) GetPubTemplateKeywords(accessToken string, tid int) (resp *GetPubTemplateKeywordsResp) {
 	var (
 		u = WECHAT_API_URL + "/wxaapi/newtmpl/getpubtemplatekeywords?"
 		v = core.AuthTokenUrlValues(accessToken)
 	)
 	resp = &GetPubTemplateKeywordsResp{}
 	v.Set("tid", strconv.Itoa(tid))
-
-	err = core.GetRequest(u, v, resp)
+	resp.Err(core.GetRequest(u, v, resp))
 	return
 }
 
@@ -101,13 +98,12 @@ type AddTemplateResp struct {
 
 //组合模板并添加到个人模板库
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/subscribe_template/add_template.html
-func (s *Server) AddTemplate(accessToken string, req *AddTemplateReq) (resp *AddTemplateResp, err error) {
+func (s *Server) AddTemplate(accessToken string, req *AddTemplateReq) (resp *AddTemplateResp) {
 	var (
 		u = WECHAT_API_URL + "/wxaapi/newtmpl/addtemplate?"
 	)
 	resp = &AddTemplateResp{}
-
-	err = core.PostJson(s.AuthToken2url(u, accessToken), req, resp)
+	resp.Err(core.PostJson(s.AuthToken2url(u, accessToken), req, resp))
 	return
 }
 
@@ -126,19 +122,18 @@ type PriTemplate struct {
 
 //获取帐号下的模板列表
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/subscribe_template/list_template.html
-func (s *Server) GetTemplate(accessToken string) (resp *GetTemplateResp, err error) {
+func (s *Server) GetTemplate(accessToken string) (resp *GetTemplateResp) {
 	var (
 		u = WECHAT_API_URL + "/wxaapi/newtmpl/gettemplate?"
 	)
 	resp = &GetTemplateResp{}
-
-	err = core.GetRequest(u, core.AuthTokenUrlValues(accessToken), resp)
+	resp.Err(core.GetRequest(u, core.AuthTokenUrlValues(accessToken), resp))
 	return
 }
 
 //删除帐号下的某个模板
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/subscribe_template/del_template.html
-func (s *Server) DelTemplate(accessToken, priTmplId string) (resp *core.Error, err error) {
+func (s *Server) DelTemplate(accessToken, priTmplId string) (resp *core.Error) {
 	var (
 		u   = WECHAT_API_URL + "/wxaapi/newtmpl/deltemplate?"
 		req = &struct {
@@ -146,8 +141,7 @@ func (s *Server) DelTemplate(accessToken, priTmplId string) (resp *core.Error, e
 		}{PriTmplId: priTmplId}
 	)
 	resp = &core.Error{}
-
-	err = core.PostJson(s.AuthToken2url(u, accessToken), req, resp)
+	resp.Err(core.PostJson(s.AuthToken2url(u, accessToken), req, resp))
 	return
 }
 
@@ -160,24 +154,29 @@ type SubscribeSendReq struct {
 	Lang             *string           `json:"lang,omitempty"`
 
 	//请勿填写该参数,并无视它
-	DataSource map[string]struct {Value string `json:"value"`} `json:"data"`
+	DataSource map[string]struct {
+		Value string `json:"value"`
+	} `json:"data"`
 }
 
 //发送订阅消息
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/subscribe_template/subscribeMessage.send.html
-func (s *Server) SubscribeSend(accessToken string, req *SubscribeSendReq) (resp *core.Error, err error) {
+func (s *Server) SubscribeSend(accessToken string, req *SubscribeSendReq) (resp *core.Error) {
 	var (
 		u = CGIUrl + "/message/subscribe/send?"
 	)
 	resp = &core.Error{}
-	if req.Data!=nil{
-		req.DataSource=make(map[string]struct{Value string `json:"value"`})
+	if req.Data != nil {
+		req.DataSource = make(map[string]struct {
+			Value string `json:"value"`
+		})
 
-		for k,v:=range req.Data{
-			req.DataSource[k]= struct{ Value string `json:"value"`}{Value: v}
+		for k, v := range req.Data {
+			req.DataSource[k] = struct {
+				Value string `json:"value"`
+			}{Value: v}
 		}
 	}
-
-	err = core.PostJson(s.AuthToken2url(u, accessToken), req, resp)
+	resp.Err(core.PostJson(s.AuthToken2url(u, accessToken), req, resp))
 	return
 }

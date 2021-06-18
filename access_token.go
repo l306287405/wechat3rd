@@ -36,15 +36,12 @@ func (d *DefaultAccessTokenServer) Token() (token string, err error) {
 		if err != nil {
 			return
 		}
-		resp, err = newAccessToken(&AccessTokenReq{
+		resp = newAccessToken(&AccessTokenReq{
 			ComponentAppid:        d.AppID,
 			ComponentAppsecret:    d.AppSecret,
 			ComponentVerifyTicket: ticket,
 		})
-		if err != nil {
-			return
-		}
-		if resp != nil && resp.ErrCode != 0 {
+		if !resp.Success() {
 			err = errors.New(fmt.Sprintf("get component_access_token errcode: %d,errmsg: %s", resp.ErrCode, resp.ErrMsg))
 			return
 		}
@@ -67,11 +64,8 @@ type AccessTokenReq struct {
 }
 
 // 获取第三方应用token
-func newAccessToken(r *AccessTokenReq) (*AccessTokenResp, error) {
+func newAccessToken(r *AccessTokenReq) *AccessTokenResp {
 	resp := &AccessTokenResp{}
-	err := core.PostJson(componentAccessTokenUrl, r, resp)
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
+	resp.Err(core.PostJson(componentAccessTokenUrl, r, resp))
+	return resp
 }

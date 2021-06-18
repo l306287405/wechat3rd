@@ -23,39 +23,42 @@ type Draft struct {
 
 //获取代码草稿列表
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code_template/gettemplatedraftlist.html
-func (s *Server) GetTemplateDraftList() (resp *GetTemplateDraftListResp, err error) {
+func (s *Server) GetTemplateDraftList() (resp *GetTemplateDraftListResp) {
 	var (
 		u     = WECHAT_API_URL + "/wxa/gettemplatedraftlist?"
 		token string
+		err   error
 	)
+	resp = &GetTemplateDraftListResp{}
 	token, err = s.Token()
 	if err != nil {
+		resp.Err(err)
 		return
 	}
-	resp = &GetTemplateDraftListResp{}
 
-	err = core.GetRequest(u, core.AuthTokenUrlValues(token), resp)
+	resp.Err(core.GetRequest(u, core.AuthTokenUrlValues(token), resp))
 	return
 }
 
 //将草稿添加到代码模板库
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code_template/addtotemplate.html
-func (s *Server) AddToTemplate(draftId int) (resp *core.Error, err error) {
+func (s *Server) AddToTemplate(draftId int) (resp *core.Error) {
 	var (
 		u     = WECHAT_API_URL + "/wxa/addtotemplate?"
 		token string
 		req   = &struct {
 			DraftId int `json:"draft_id"`
 		}{DraftId: draftId}
+		err error
 	)
+	resp = &core.Error{}
 	token, err = s.Token()
 	if err != nil {
+		resp.Err(err)
 		return
 	}
 
-	resp = &core.Error{}
-
-	err = core.PostJson(s.AuthToken2url(u, token), req, resp)
+	resp.Err(core.PostJson(s.AuthToken2url(u, token), req, resp))
 	return
 }
 
@@ -73,39 +76,42 @@ type Template struct {
 
 //获取代码模板列表
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code_template/gettemplatelist.html
-func (s *Server) GetTemplateList() (resp *GetTemplateListResp, err error) {
+func (s *Server) GetTemplateList() (resp *GetTemplateListResp) {
 	var (
 		u     = WECHAT_API_URL + "/wxa/gettemplatelist?"
 		token string
+		err   error
 	)
+	resp = &GetTemplateListResp{}
 	token, err = s.Token()
 	if err != nil {
+		resp.Err(err)
 		return
 	}
-	resp = &GetTemplateListResp{}
 
-	err = core.GetRequest(u, core.AuthTokenUrlValues(token), resp)
+	resp.Err(core.GetRequest(u, core.AuthTokenUrlValues(token), resp))
 	return
 }
 
 //删除指定代码模板
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code_template/deletetemplate.html
-func (s *Server) DeleteTemplate(templateId int) (resp *core.Error, err error) {
+func (s *Server) DeleteTemplate(templateId int) (resp *core.Error) {
 	var (
 		u     = WECHAT_API_URL + "/wxa/deletetemplate?"
 		token string
 		req   = &struct {
 			TemplateId int `json:"template_id"`
 		}{TemplateId: templateId}
+		err error
 	)
+	resp = &core.Error{}
 	token, err = s.Token()
 	if err != nil {
+		resp.Err(err)
 		return
 	}
 
-	resp = &core.Error{}
-
-	err = core.PostJson(s.AuthToken2url(u, token), req, resp)
+	resp.Err(core.PostJson(s.AuthToken2url(u, token), req, resp))
 	return
 }
 
@@ -118,13 +124,12 @@ type CommitReq struct {
 
 //上传小程序代码
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/commit.html
-func (s *Server) Commit(accessToken string, req *CommitReq) (resp *core.Error, err error) {
+func (s *Server) Commit(accessToken string, req *CommitReq) (resp *core.Error) {
 	var (
 		u = WECHAT_API_URL + "/wxa/commit?"
 	)
 	resp = &core.Error{}
-
-	err = core.PostJson(s.AuthToken2url(u, accessToken), req, resp)
+	resp.Err(core.PostJson(s.AuthToken2url(u, accessToken), req, resp))
 	return
 }
 
@@ -135,13 +140,12 @@ type GetPageResp struct {
 
 //获取已上传的代码的页面列表
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/get_page.html
-func (s *Server) GetPage(accessToken string) (resp *GetPageResp, err error) {
+func (s *Server) GetPage(accessToken string) (resp *GetPageResp) {
 	var (
 		u = WECHAT_API_URL + "/wxa/get_page?"
 	)
 	resp = &GetPageResp{}
-
-	err = core.GetRequest(u, core.AuthTokenUrlValues(accessToken), resp)
+	resp.Err(core.GetRequest(u, core.AuthTokenUrlValues(accessToken), resp))
 	return
 }
 
@@ -234,13 +238,12 @@ type SubmitAuditResp struct {
 
 //提交审核
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/submit_audit.html
-func (s *Server) SubmitAudit(accessToken string, req *SubmitAuditReq) (resp *SubmitAuditResp, err error) {
+func (s *Server) SubmitAudit(accessToken string, req *SubmitAuditReq) (resp *SubmitAuditResp) {
 	var (
 		u = WECHAT_API_URL + "/wxa/submit_audit?"
 	)
 	resp = &SubmitAuditResp{}
-
-	err = core.PostJson(s.AuthToken2url(u, accessToken), req, resp)
+	resp.Err(core.PostJson(s.AuthToken2url(u, accessToken), req, resp))
 	return
 }
 
@@ -253,7 +256,7 @@ type GetAuditStatusResp struct {
 
 //查询指定发布审核单的审核状态
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/get_auditstatus.html
-func (s *Server) GetAuditStatus(accessToken string, auditId int) (resp *GetAuditStatusResp, err error) {
+func (s *Server) GetAuditStatus(accessToken string, auditId int) (resp *GetAuditStatusResp) {
 	var (
 		u   = WECHAT_API_URL + "/wxa/get_auditstatus?"
 		req = &struct {
@@ -261,8 +264,7 @@ func (s *Server) GetAuditStatus(accessToken string, auditId int) (resp *GetAudit
 		}{AuditId: auditId}
 	)
 	resp = &GetAuditStatusResp{}
-
-	err = core.PostJson(s.AuthToken2url(u, accessToken), req, resp)
+	resp.Err(core.PostJson(s.AuthToken2url(u, accessToken), req, resp))
 	return
 }
 
@@ -276,50 +278,46 @@ type GetLatestAuditStatusResp struct {
 
 //查询最新一次提交的审核状态
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/get_latest_auditstatus.html
-func (s *Server) GetLatestAuditStatus(accessToken string) (resp *GetLatestAuditStatusResp, err error) {
+func (s *Server) GetLatestAuditStatus(accessToken string) (resp *GetLatestAuditStatusResp) {
 	var (
 		u = WECHAT_API_URL + "/wxa/get_latest_auditstatus?"
 	)
 	resp = &GetLatestAuditStatusResp{}
-
-	err = core.GetRequest(u, core.AuthTokenUrlValues(accessToken), resp)
+	resp.Err(core.GetRequest(u, core.AuthTokenUrlValues(accessToken), resp))
 	return
 }
 
 //小程序审核撤回
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/undocodeaudit.html
-func (s *Server) UndoCodeAudit(accessToken string) (resp *core.Error, err error) {
+func (s *Server) UndoCodeAudit(accessToken string) (resp *core.Error) {
 	var (
 		u = WECHAT_API_URL + "/wxa/undocodeaudit?"
 	)
 	resp = &core.Error{}
-
-	err = core.GetRequest(u, core.AuthTokenUrlValues(accessToken), resp)
+	resp.Err(core.GetRequest(u, core.AuthTokenUrlValues(accessToken), resp))
 	return
 }
 
 //发布已通过审核的小程序
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/release.html
-func (s *Server) Release(accessToken string) (resp *core.Error, err error) {
+func (s *Server) Release(accessToken string) (resp *core.Error) {
 	var (
 		u   = WECHAT_API_URL + "/wxa/release?"
 		req = &struct{}{}
 	)
 	resp = &core.Error{}
-
-	err = core.PostJson(s.AuthToken2url(u, accessToken), req, resp)
+	resp.Err(core.PostJson(s.AuthToken2url(u, accessToken), req, resp))
 	return
 }
 
 //版本回退
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/revertcoderelease.html
-func (s *Server) RevertCodeRelease(accessToken string) (resp *core.Error, err error) {
+func (s *Server) RevertCodeRelease(accessToken string) (resp *core.Error) {
 	var (
 		u = WECHAT_API_URL + "/wxa/revertcoderelease?"
 	)
 	resp = &core.Error{}
-
-	err = core.GetRequest(u, core.AuthTokenUrlValues(accessToken), resp)
+	resp.Err(core.GetRequest(u, core.AuthTokenUrlValues(accessToken), resp))
 	return
 }
 
@@ -337,14 +335,14 @@ type RevertTemplate struct {
 
 //获取可回退的小程序版本
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/get_history_version.html
-func (s *Server) GetRevertCodeRelease(accessToken string) (resp *GetRevertCodeReleaseResp, err error) {
+func (s *Server) GetRevertCodeRelease(accessToken string) (resp *GetRevertCodeReleaseResp) {
 	var (
 		u      = WECHAT_API_URL + "/wxa/revertcoderelease?"
 		params = core.AuthTokenUrlValues(accessToken)
 	)
 	params.Set("action", "get_history_version")
 	resp = &GetRevertCodeReleaseResp{}
-	err = core.GetRequest(u, params, resp)
+	resp.Err(core.GetRequest(u, params, resp))
 	return
 }
 
@@ -356,13 +354,13 @@ type GetPaidUnionIdReq struct {
 }
 
 type GetPaidUnionIdResp struct {
+	core.Error
 	UnionId string `json:"unionid,omitempty"`
-	ErrCode int    `json:"errcode"`
 }
 
 //支付后获取用户 Unionid 接口
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/User_Management.html
-func (s *Server) GetPaidUnionId(accessToken string, req *GetPaidUnionIdReq) (resp *GetPaidUnionIdResp, err error) {
+func (s *Server) GetPaidUnionId(accessToken string, req *GetPaidUnionIdReq) (resp *GetPaidUnionIdResp) {
 	var (
 		u = WECHAT_API_URL + "/wxa/getpaidunionid?"
 		p = make(url.Values)
@@ -375,7 +373,7 @@ func (s *Server) GetPaidUnionId(accessToken string, req *GetPaidUnionIdReq) (res
 		p.Set("transaction_id", *req.TransactionId)
 	} else {
 		if req.MchId == nil && req.OutTradeNo == nil {
-			err = errors.New("参数缺失")
+			resp.Err(errors.New("参数缺失"))
 			return
 		}
 		p.Set("mch_id", *req.MchId)
@@ -383,13 +381,13 @@ func (s *Server) GetPaidUnionId(accessToken string, req *GetPaidUnionIdReq) (res
 	}
 	u += p.Encode()
 
-	err = core.GetRequest(u, core.AuthTokenUrlValues(accessToken), resp)
+	resp.Err(core.GetRequest(u, core.AuthTokenUrlValues(accessToken), resp))
 	return
 }
 
 //分阶段发布
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/grayrelease.html
-func (s *Server) GrayRelease(accessToken string, grayPercentage int8) (resp *core.Error, err error) {
+func (s *Server) GrayRelease(accessToken string, grayPercentage int8) (resp *core.Error) {
 	var (
 		u   = WECHAT_API_URL + "/wxa/grayrelease?"
 		req = &struct {
@@ -397,8 +395,7 @@ func (s *Server) GrayRelease(accessToken string, grayPercentage int8) (resp *cor
 		}{GrayPercentage: grayPercentage}
 	)
 	resp = &core.Error{}
-
-	err = core.PostJson(s.AuthToken2url(u, accessToken), req, resp)
+	resp.Err(core.PostJson(s.AuthToken2url(u, accessToken), req, resp))
 	return
 }
 
@@ -415,29 +412,29 @@ type GrayReleasePlan struct {
 
 //查询当前分阶段发布详情
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/getgrayreleaseplan.html
-func (s *Server) GetGrayReleasePlan(accessToken string) (resp *GetGrayReleasePlanResp, err error) {
+func (s *Server) GetGrayReleasePlan(accessToken string) (resp *GetGrayReleasePlanResp) {
 	var (
 		u = WECHAT_API_URL + "/wxa/getgrayreleaseplan?"
 	)
 	resp = &GetGrayReleasePlanResp{}
-	err = core.GetRequest(u, core.AuthTokenUrlValues(accessToken), resp)
+	resp.Err(core.GetRequest(u, core.AuthTokenUrlValues(accessToken), resp))
 	return
 }
 
 //取消分阶段发布
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/revertgrayrelease.html
-func (s *Server) RevertGrayRelease(accessToken string) (resp *core.Error, err error) {
+func (s *Server) RevertGrayRelease(accessToken string) (resp *core.Error) {
 	var (
 		u = WECHAT_API_URL + "/wxa/revertgrayrelease?"
 	)
 	resp = &core.Error{}
-	err = core.GetRequest(u, core.AuthTokenUrlValues(accessToken), resp)
+	resp.Err(core.GetRequest(u, core.AuthTokenUrlValues(accessToken), resp))
 	return
 }
 
 //修改小程序服务状态
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/change_visitstatus.html
-func (s *Server) ChangeVisitStatus(accessToken string, action string) (resp *core.Error, err error) {
+func (s *Server) ChangeVisitStatus(accessToken string, action string) (resp *core.Error) {
 	var (
 		u   = WECHAT_API_URL + "/wxa/change_visitstatus?"
 		req = &struct {
@@ -446,13 +443,12 @@ func (s *Server) ChangeVisitStatus(accessToken string, action string) (resp *cor
 	)
 
 	if action != "open" && action != "close" {
-		err = errors.New("action must be 'open' or 'close'")
+		resp.Err(errors.New("action must be 'open' or 'close'"))
 		return
 	}
 
 	resp = &core.Error{}
-
-	err = core.PostJson(s.AuthToken2url(u, accessToken), req, resp)
+	resp.Err(core.PostJson(s.AuthToken2url(u, accessToken), req, resp))
 	return
 }
 
@@ -469,21 +465,20 @@ type GetWeappSupportVersionResp struct {
 
 //查询当前设置的最低基础库版本及各版本用户占比
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/getweappsupportversion.html
-func (s *Server) GetWeappSupportVersion(accessToken string) (resp *GetWeappSupportVersionResp, err error) {
+func (s *Server) GetWeappSupportVersion(accessToken string) (resp *GetWeappSupportVersionResp) {
 	var (
 		u   = CGIUrl + "/wxopen/getweappsupportversion?"
 		req = &struct{}{}
 	)
 
 	resp = &GetWeappSupportVersionResp{}
-
-	err = core.PostJson(s.AuthToken2url(u, accessToken), req, resp)
+	resp.Err(core.PostJson(s.AuthToken2url(u, accessToken), req, resp))
 	return
 }
 
 //设置最低基础库版本
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/setweappsupportversion.html
-func (s *Server) SetWeappSupportVersion(accessToken string, version string) (resp *core.Error, err error) {
+func (s *Server) SetWeappSupportVersion(accessToken string, version string) (resp *core.Error) {
 	var (
 		u   = CGIUrl + "/wxopen/setweappsupportversion?"
 		req = &struct {
@@ -492,8 +487,7 @@ func (s *Server) SetWeappSupportVersion(accessToken string, version string) (res
 	)
 
 	resp = &core.Error{}
-
-	err = core.PostJson(s.AuthToken2url(u, accessToken), req, resp)
+	resp.Err(core.PostJson(s.AuthToken2url(u, accessToken), req, resp))
 	return
 }
 
@@ -507,18 +501,18 @@ type QueryQuotaResp struct {
 
 //查询服务商的当月提审限额（quota）和加急次数
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/query_quota.html
-func (s *Server) QueryQuota(accessToken string) (resp *QueryQuotaResp, err error) {
+func (s *Server) QueryQuota(accessToken string) (resp *QueryQuotaResp) {
 	var (
 		u = WECHAT_API_URL + "/wxa/queryquota?"
 	)
 	resp = &QueryQuotaResp{}
-	err = core.GetRequest(u, core.AuthTokenUrlValues(accessToken), resp)
+	resp.Err(core.GetRequest(u, core.AuthTokenUrlValues(accessToken), resp))
 	return
 }
 
 //加急审核申请
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/speedup_audit.html
-func (s *Server) SpeedupAudit(accessToken string, auditId int) (resp *core.Error, err error) {
+func (s *Server) SpeedupAudit(accessToken string, auditId int) (resp *core.Error) {
 	var (
 		u   = WECHAT_API_URL + "/wxa/speedupaudit?"
 		req = &struct {
@@ -527,7 +521,6 @@ func (s *Server) SpeedupAudit(accessToken string, auditId int) (resp *core.Error
 	)
 
 	resp = &core.Error{}
-
-	err = core.PostJson(s.AuthToken2url(u, accessToken), req, resp)
+	resp.Err(core.PostJson(s.AuthToken2url(u, accessToken), req, resp))
 	return
 }

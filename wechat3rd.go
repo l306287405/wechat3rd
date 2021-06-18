@@ -54,15 +54,6 @@ type Server struct {
 }
 
 const (
-	// InfoTypeVerifyTicket 返回ticket
-	InfoTypeVerifyTicket = "component_verify_ticket"
-	// InfoTypeAuthorized 授权
-	InfoTypeAuthorized = "authorized"
-	// InfoTypeUnauthorized 取消授权
-	InfoTypeUnauthorized = "unauthorized"
-	// InfoTypeUpdateAuthorized 更新授权
-	InfoTypeUpdateAuthorized = "updateauthorized"
-
 	WECHAT_API_URL = "https://api.weixin.qq.com"
 	WECHAT_MP_URL  = "https://mp.weixin.qq.com"
 	CGIUrl         = WECHAT_API_URL + "/cgi-bin"
@@ -111,10 +102,6 @@ func NewService(cfg Config, ticket TicketServer, tokenService AccessTokenServer,
 
 	return s, nil
 }
-
-//func (srv *Server) AddHander(t string, hander Handler) {
-//	srv.handlerMap[t] = hander
-//}
 
 func (srv *Server) ServeHTTP(r *http.Request) (resp *MixedMsg, err error) {
 	var (

@@ -38,13 +38,12 @@ type GetAccountBasicInfoResp struct {
 
 //获取基本信息
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/Mini_Program_Information_Settings.html
-func (s *Server) GetAccountBasicInfo(authToken string) (resp *GetAccountBasicInfoResp, err error) {
+func (s *Server) GetAccountBasicInfo(authToken string) (resp *GetAccountBasicInfoResp) {
 	var (
 		u = CGIUrl + "/account/getaccountbasicinfo?"
 	)
 	resp = &GetAccountBasicInfoResp{}
-
-	err = core.GetRequest(u, core.AuthTokenUrlValues(authToken), resp)
+	resp.Err(core.GetRequest(u, core.AuthTokenUrlValues(authToken), resp))
 	return
 }
 
@@ -66,12 +65,12 @@ type ModifyDomainResp struct {
 
 //设置服务器域名
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/Server_Address_Configuration.html
-func (s *Server) ModifyDomain(authToken string, req *ModifyDomainReq) (resp *ModifyDomainResp, err error) {
+func (s *Server) ModifyDomain(authToken string, req *ModifyDomainReq) (resp *ModifyDomainResp) {
 	var (
 		u = WECHAT_API_URL + "/wxa/modify_domain?"
 	)
 	resp = &ModifyDomainResp{}
-	err = core.PostJson(s.AuthToken2url(u, authToken), req, resp)
+	resp.Err(core.PostJson(s.AuthToken2url(u, authToken), req, resp))
 	return
 }
 
@@ -82,12 +81,11 @@ type SetWebviewDomainReq struct {
 
 //设置业务域名
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/setwebviewdomain.html
-func (s *Server) SetWebviewDomain(authToken string, req *SetWebviewDomainReq) (resp *core.Error, err error) {
+func (s *Server) SetWebviewDomain(authToken string, req *SetWebviewDomainReq) (resp *core.Error) {
 	var (
 		u = WECHAT_API_URL + "/wxa/setwebviewdomain?"
 	)
 	resp = &core.Error{}
-
-	err = core.PostJson(s.AuthToken2url(u, authToken), req, resp)
+	resp.Err(core.PostJson(s.AuthToken2url(u, authToken), req, resp))
 	return
 }
