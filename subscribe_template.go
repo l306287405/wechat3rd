@@ -16,7 +16,7 @@ type Category struct {
 }
 
 //获取当前帐号所设置的类目信息
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/subscribe_template/get_category.html
+//https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/subscribe-message/subscribeMessage.getCategory.html
 func (s *Server) GetCategory(accessToken string) (resp *GetcategoryResp) {
 	var (
 		u = WECHAT_API_URL + "/wxaapi/newtmpl/getcategory?"
@@ -46,7 +46,7 @@ type CategoryTitle struct {
 }
 
 //获取模板标题列表
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/subscribe_template/library_list.html
+//https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/subscribe-message/subscribeMessage.getPubTemplateTitleList.html
 func (s *Server) GetPubTemplateTitles(accessToken string, req *GetPubTemplateTitlesReq) (resp *GetPubTemplateTitlesResp) {
 	var (
 		u = WECHAT_API_URL + "/wxaapi/newtmpl/getpubtemplatetitles?"
@@ -73,7 +73,7 @@ type CategoryKeyword struct {
 }
 
 //获取模板标题下的关键词库
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/subscribe_template/library_get.html
+//https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/subscribe-message/subscribeMessage.getPubTemplateKeyWordsById.html
 func (s *Server) GetPubTemplateKeywords(accessToken string, tid int) (resp *GetPubTemplateKeywordsResp) {
 	var (
 		u = WECHAT_API_URL + "/wxaapi/newtmpl/getpubtemplatekeywords?"
@@ -97,7 +97,7 @@ type AddTemplateResp struct {
 }
 
 //组合模板并添加到个人模板库
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/subscribe_template/add_template.html
+//https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/subscribe-message/subscribeMessage.addTemplate.html
 func (s *Server) AddTemplate(accessToken string, req *AddTemplateReq) (resp *AddTemplateResp) {
 	var (
 		u = WECHAT_API_URL + "/wxaapi/newtmpl/addtemplate?"
@@ -121,7 +121,7 @@ type PriTemplate struct {
 }
 
 //获取帐号下的模板列表
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/subscribe_template/list_template.html
+//https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/subscribe-message/subscribeMessage.getTemplateList.html
 func (s *Server) GetTemplate(accessToken string) (resp *GetTemplateResp) {
 	var (
 		u = WECHAT_API_URL + "/wxaapi/newtmpl/gettemplate?"
@@ -132,7 +132,7 @@ func (s *Server) GetTemplate(accessToken string) (resp *GetTemplateResp) {
 }
 
 //删除帐号下的某个模板
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/subscribe_template/del_template.html
+//https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/subscribe-message/subscribeMessage.deleteTemplate.html
 func (s *Server) DelTemplate(accessToken, priTmplId string) (resp *core.Error) {
 	var (
 		u   = WECHAT_API_URL + "/wxaapi/newtmpl/deltemplate?"
@@ -160,7 +160,7 @@ type SubscribeSendReq struct {
 }
 
 //发送订阅消息
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/subscribe_template/subscribeMessage.send.html
+//https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/subscribe-message/subscribeMessage.send.html
 func (s *Server) SubscribeSend(accessToken string, req *SubscribeSendReq) (resp *core.Error) {
 	var (
 		u = CGIUrl + "/message/subscribe/send?"

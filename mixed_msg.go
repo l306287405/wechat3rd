@@ -79,4 +79,10 @@ type MixedMsg struct {
 	AuthorizationCode            string `json:"AuthorizationCode" xml:"AuthorizationCode"`
 	AuthorizationCodeExpiredTime string `json:"AuthorizationCodeExpiredTime" xml:"AuthorizationCodeExpiredTime"`
 	PreAuthCode                  string `json:"PreAuthCode" xml:"PreAuthCode"`
+
+	// category 类目
+	First  string `json:"first" xml:"first"`
+	Second string `json:"second" xml:"second"`
+	Ret    int8   `json:"ret" xml:"ret"`
+	Reason string `json:"reason" xml:"reason"`
 }

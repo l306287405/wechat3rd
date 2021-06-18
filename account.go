@@ -37,7 +37,7 @@ type GetAccountBasicInfoResp struct {
 }
 
 //获取基本信息
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/Mini_Program_Information_Settings.html
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Mini_Program_Basic_Info/Mini_Program_Information_Settings.html
 func (s *Server) GetAccountBasicInfo(authToken string) (resp *GetAccountBasicInfoResp) {
 	var (
 		u = CGIUrl + "/account/getaccountbasicinfo?"
@@ -64,7 +64,7 @@ type ModifyDomainResp struct {
 }
 
 //设置服务器域名
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/Server_Address_Configuration.html
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Mini_Program_Basic_Info/Server_Address_Configuration.html
 func (s *Server) ModifyDomain(authToken string, req *ModifyDomainReq) (resp *ModifyDomainResp) {
 	var (
 		u = WECHAT_API_URL + "/wxa/modify_domain?"
@@ -80,7 +80,7 @@ type SetWebviewDomainReq struct {
 }
 
 //设置业务域名
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/setwebviewdomain.html
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Mini_Program_Basic_Info/setwebviewdomain.html
 func (s *Server) SetWebviewDomain(authToken string, req *SetWebviewDomainReq) (resp *core.Error) {
 	var (
 		u = WECHAT_API_URL + "/wxa/setwebviewdomain?"
