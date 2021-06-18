@@ -18,7 +18,7 @@
 #### 2.1: 引入
     go get -u github.com/l306287405/wechat3rd@master
     or
-    go get -u github.com/l306287405/wechat3rd@v1.5.2 (请选择最新版本)
+    go get -u github.com/l306287405/wechat3rd@v1.5.3 (请选择最新版本)
 
 #### 2.2: 使用NewService方法来创建一个service
 
@@ -226,7 +226,7 @@
     Plugin: 小程序插件管理
 
 ## todo
-
+    * 错误反馈简化
     * 代小程序实现业务(部分完成)
     * 开放平台账号管理
     * 代公众号实现业务
