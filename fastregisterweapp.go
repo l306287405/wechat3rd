@@ -17,7 +17,7 @@ type FastRegisterWeappReq struct {
 }
 
 //快速注册小程序
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/Fast_Registration_Interface_document.html
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Register_Mini_Programs/Fast_Registration_Interface_document.html
 func (s *Server) FastRegisterWeapp(req *FastRegisterWeappReq) (resp *core.Error) {
 	var (
 		p     = make(url.Values)
@@ -44,7 +44,7 @@ type SearchWeappReq struct {
 }
 
 //查询创建任务状态
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/Fast_Registration_Interface_document.html
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Register_Mini_Programs/Fast_Registration_Interface_document.html
 func (s *Server) SearchWeapp(req *SearchWeappReq) (resp *core.Error) {
 	var (
 		p     = make(url.Values)

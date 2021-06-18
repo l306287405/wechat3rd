@@ -12,14 +12,14 @@
 
 ### 2.使用引导
 
-首先请认真阅读 [官方文档](https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Third_party_platform_appid.html)  
+首先请认真阅读 [官方文档](https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/product/Third_party_platform_appid.html)  
 有任何问题请提issue, 我会尽快解决.
 
 #### 2.1: 引入
     go get -u github.com/l306287405/wechat3rd@master
     or
-    go get -u github.com/l306287405/wechat3rd@v2.0.0 (请选择最新版本)
-    v2.0.0版本开始Service提供的所有方法仅在resp返回对象中提供错误信息
+    go get -u github.com/l306287405/wechat3rd@v1.6.0 (请选择最新版本)
+    v1.6.0版本开始Service提供的所有方法仅在resp返回对象中提供错误信息
 
 #### 2.2: 使用NewService方法来创建一个service
 
@@ -42,7 +42,7 @@
     }
 
     // 设置第三方平台的ticket 注意该处为示例代码 请替换缓存为自己的缓存服务.
-    // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/api/component_verify_ticket.html
+    // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/ThirdParty/token/component_verify_ticket.html
     // 解释: 当第三方平台应用被创建时,微信每隔10分钟会向用户填写的 授权事件接收URL 发起POST请求,
     //      请求中带有12小时有效期的 component_verify_ticket 是服务使用加解密的必备参数.
     //      当服务重启时该参数会丢失从而导致服务请求失败,被动的方式是等下一次微信发起授权事件的请求并设置ticket,
@@ -81,7 +81,7 @@
 
 #### 2.4: 使用service获取预授权码与授权链接
     // 获取预授权码并组装链接
-    // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/api/pre_auth_code.html
+    // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/ThirdParty/token/pre_auth_code.html
 
     // 方式一: 直接获取授权链接
     authurl,err:=service.AuthUrl(true,"你的授权回调url",wechat3rd.PREAUTH_AUTH_TYPE_MINIAPP,nil)
@@ -116,7 +116,7 @@
 #### 2.5: 预授权回调处理
 
     // 预授权链接授权操作之后微信会对回调url发起GET请求.
-    // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/api/authorization_info.html
+    // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/ThirdParty/token/authorization_info.html
     
     // 获取GET auth_code参数 这里用iris做案例
     authCode := c.Ctx.URLParam("auth_code")
@@ -139,7 +139,7 @@
 
 ### 3.Service方法说明：
 
-    ServeHTTP: 处理推送事件的
+    ServeHTTP: 处理消息与事件接收URL的推送 例如:小程序审核,类目审核等结果推送
     Token: 获取第三方平台的token
     AuthorizerInfo: 获取授权详情
     AuthorizerOption： 获取选项信息
@@ -162,7 +162,7 @@
     FastRegisterWeapp: 快速创建小程序
     SearchWeapp: 查询创建任务状态
 
-    * 代码模板库设置 (全部完成)
+    * 小程序模板接口 (全部完成)
     GetTemplateDraftList: 获取代码草稿列表
     AddToTemplate: 将草稿添加到代码模板库
     GetTemplateList: 获取代码模板列表
@@ -174,6 +174,15 @@
     GetAccountBasicInfo: 获取基本信息
     ModifyDomain: 设置服务器域名
     SetWebviewDomain: 设置业务域名
+
+    * 小程序类目管理接口 (全部完成)
+    GetMiniProgramAllCategory: 获取可以设置的所有类目
+    GetMiniProgramCategory: 获取已设置的所有类目
+    GetMiniProgramCategoriesByType: 获取不同主体类型的类目
+    AddMiniProgramCategory: 添加类目
+    DeleteMiniProgramCategory: 删除类目
+    ModifyMiniProgramCategory: 修改类目资质信息
+    GetMiniProgramAuditCategory: 获取审核时可填写的类目信息
 
     * 成员管理 (全部完成)
     BindTester: 绑定体验者
@@ -219,7 +228,6 @@
     Plugin: 小程序插件管理
 
 ## todo
-    * 错误反馈简化
     * 代小程序实现业务(部分完成)
     * 开放平台账号管理
     * 代公众号实现业务

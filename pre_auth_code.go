@@ -45,7 +45,7 @@ func (srv *Server) PreAuthCode() (resp *PreAuthCodeResp) {
 }
 
 //说明
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Authorization_Process_Technical_Description.html
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Before_Develop/Authorization_Process_Technical_Description.html
 func (srv *Server) AuthUrl(isWebAuth bool, redirectUri string, authType AuthType, bizAppid *string) (u string, err error) {
 	var (
 		resp *PreAuthCodeResp

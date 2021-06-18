@@ -22,7 +22,7 @@ type Draft struct {
 }
 
 //获取代码草稿列表
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code_template/gettemplatedraftlist.html
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/ThirdParty/code_template/gettemplatedraftlist.html
 func (s *Server) GetTemplateDraftList() (resp *GetTemplateDraftListResp) {
 	var (
 		u     = WECHAT_API_URL + "/wxa/gettemplatedraftlist?"
@@ -41,7 +41,7 @@ func (s *Server) GetTemplateDraftList() (resp *GetTemplateDraftListResp) {
 }
 
 //将草稿添加到代码模板库
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code_template/addtotemplate.html
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/ThirdParty/code_template/addtotemplate.html
 func (s *Server) AddToTemplate(draftId int) (resp *core.Error) {
 	var (
 		u     = WECHAT_API_URL + "/wxa/addtotemplate?"
@@ -75,7 +75,7 @@ type Template struct {
 }
 
 //获取代码模板列表
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code_template/gettemplatelist.html
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/ThirdParty/code_template/gettemplatelist.html
 func (s *Server) GetTemplateList() (resp *GetTemplateListResp) {
 	var (
 		u     = WECHAT_API_URL + "/wxa/gettemplatelist?"
@@ -94,7 +94,7 @@ func (s *Server) GetTemplateList() (resp *GetTemplateListResp) {
 }
 
 //删除指定代码模板
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code_template/deletetemplate.html
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/ThirdParty/code_template/deletetemplate.html
 func (s *Server) DeleteTemplate(templateId int) (resp *core.Error) {
 	var (
 		u     = WECHAT_API_URL + "/wxa/deletetemplate?"
@@ -123,7 +123,7 @@ type CommitReq struct {
 }
 
 //上传小程序代码
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/commit.html
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/commit.html
 func (s *Server) Commit(accessToken string, req *CommitReq) (resp *core.Error) {
 	var (
 		u = WECHAT_API_URL + "/wxa/commit?"
@@ -139,7 +139,7 @@ type GetPageResp struct {
 }
 
 //获取已上传的代码的页面列表
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/get_page.html
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/get_page.html
 func (s *Server) GetPage(accessToken string) (resp *GetPageResp) {
 	var (
 		u = WECHAT_API_URL + "/wxa/get_page?"
@@ -150,7 +150,7 @@ func (s *Server) GetPage(accessToken string) (resp *GetPageResp) {
 }
 
 //获取体验版二维码 参数path 为官方参数 ,参数saveDir为二维码图片存储路径 参数fileName 为二维码图片存储名称请勿包含名称
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/get_qrcode.html
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/get_qrcode.html
 func (s *Server) GetQrcode(accessToken string, path, saveDir, fileName *string) (filePath string, err error) {
 	var (
 		u        = WECHAT_API_URL + "/wxa/get_qrcode?"
@@ -237,7 +237,7 @@ type SubmitAuditResp struct {
 }
 
 //提交审核
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/submit_audit.html
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/submit_audit.html
 func (s *Server) SubmitAudit(accessToken string, req *SubmitAuditReq) (resp *SubmitAuditResp) {
 	var (
 		u = WECHAT_API_URL + "/wxa/submit_audit?"
@@ -255,7 +255,7 @@ type GetAuditStatusResp struct {
 }
 
 //查询指定发布审核单的审核状态
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/get_auditstatus.html
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/get_auditstatus.html
 func (s *Server) GetAuditStatus(accessToken string, auditId int) (resp *GetAuditStatusResp) {
 	var (
 		u   = WECHAT_API_URL + "/wxa/get_auditstatus?"
@@ -277,7 +277,7 @@ type GetLatestAuditStatusResp struct {
 }
 
 //查询最新一次提交的审核状态
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/get_latest_auditstatus.html
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/get_latest_auditstatus.html
 func (s *Server) GetLatestAuditStatus(accessToken string) (resp *GetLatestAuditStatusResp) {
 	var (
 		u = WECHAT_API_URL + "/wxa/get_latest_auditstatus?"
@@ -288,7 +288,7 @@ func (s *Server) GetLatestAuditStatus(accessToken string) (resp *GetLatestAuditS
 }
 
 //小程序审核撤回
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/undocodeaudit.html
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/undocodeaudit.html
 func (s *Server) UndoCodeAudit(accessToken string) (resp *core.Error) {
 	var (
 		u = WECHAT_API_URL + "/wxa/undocodeaudit?"
@@ -299,7 +299,7 @@ func (s *Server) UndoCodeAudit(accessToken string) (resp *core.Error) {
 }
 
 //发布已通过审核的小程序
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/release.html
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/release.html
 func (s *Server) Release(accessToken string) (resp *core.Error) {
 	var (
 		u   = WECHAT_API_URL + "/wxa/release?"
@@ -311,7 +311,7 @@ func (s *Server) Release(accessToken string) (resp *core.Error) {
 }
 
 //版本回退
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/revertcoderelease.html
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/revertcoderelease.html
 func (s *Server) RevertCodeRelease(accessToken string) (resp *core.Error) {
 	var (
 		u = WECHAT_API_URL + "/wxa/revertcoderelease?"
@@ -334,7 +334,7 @@ type RevertTemplate struct {
 }
 
 //获取可回退的小程序版本
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/get_history_version.html
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/get_history_version.html
 func (s *Server) GetRevertCodeRelease(accessToken string) (resp *GetRevertCodeReleaseResp) {
 	var (
 		u      = WECHAT_API_URL + "/wxa/revertcoderelease?"
@@ -359,7 +359,7 @@ type GetPaidUnionIdResp struct {
 }
 
 //支付后获取用户 Unionid 接口
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/User_Management.html
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/User_Management.html
 func (s *Server) GetPaidUnionId(accessToken string, req *GetPaidUnionIdReq) (resp *GetPaidUnionIdResp) {
 	var (
 		u = WECHAT_API_URL + "/wxa/getpaidunionid?"
@@ -386,7 +386,7 @@ func (s *Server) GetPaidUnionId(accessToken string, req *GetPaidUnionIdReq) (res
 }
 
 //分阶段发布
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/grayrelease.html
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/grayrelease.html
 func (s *Server) GrayRelease(accessToken string, grayPercentage int8) (resp *core.Error) {
 	var (
 		u   = WECHAT_API_URL + "/wxa/grayrelease?"
@@ -411,7 +411,7 @@ type GrayReleasePlan struct {
 }
 
 //查询当前分阶段发布详情
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/getgrayreleaseplan.html
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/getgrayreleaseplan.html
 func (s *Server) GetGrayReleasePlan(accessToken string) (resp *GetGrayReleasePlanResp) {
 	var (
 		u = WECHAT_API_URL + "/wxa/getgrayreleaseplan?"
@@ -422,7 +422,7 @@ func (s *Server) GetGrayReleasePlan(accessToken string) (resp *GetGrayReleasePla
 }
 
 //取消分阶段发布
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/revertgrayrelease.html
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/revertgrayrelease.html
 func (s *Server) RevertGrayRelease(accessToken string) (resp *core.Error) {
 	var (
 		u = WECHAT_API_URL + "/wxa/revertgrayrelease?"
@@ -433,7 +433,7 @@ func (s *Server) RevertGrayRelease(accessToken string) (resp *core.Error) {
 }
 
 //修改小程序服务状态
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/change_visitstatus.html
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/change_visitstatus.html
 func (s *Server) ChangeVisitStatus(accessToken string, action string) (resp *core.Error) {
 	var (
 		u   = WECHAT_API_URL + "/wxa/change_visitstatus?"
@@ -464,7 +464,7 @@ type GetWeappSupportVersionResp struct {
 }
 
 //查询当前设置的最低基础库版本及各版本用户占比
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/getweappsupportversion.html
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/getweappsupportversion.html
 func (s *Server) GetWeappSupportVersion(accessToken string) (resp *GetWeappSupportVersionResp) {
 	var (
 		u   = CGIUrl + "/wxopen/getweappsupportversion?"
@@ -477,7 +477,7 @@ func (s *Server) GetWeappSupportVersion(accessToken string) (resp *GetWeappSuppo
 }
 
 //设置最低基础库版本
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/setweappsupportversion.html
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/setweappsupportversion.html
 func (s *Server) SetWeappSupportVersion(accessToken string, version string) (resp *core.Error) {
 	var (
 		u   = CGIUrl + "/wxopen/setweappsupportversion?"
@@ -500,7 +500,7 @@ type QueryQuotaResp struct {
 }
 
 //查询服务商的当月提审限额（quota）和加急次数
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/query_quota.html
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/query_quota.html
 func (s *Server) QueryQuota(accessToken string) (resp *QueryQuotaResp) {
 	var (
 		u = WECHAT_API_URL + "/wxa/queryquota?"
@@ -511,7 +511,7 @@ func (s *Server) QueryQuota(accessToken string) (resp *QueryQuotaResp) {
 }
 
 //加急审核申请
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/code/speedup_audit.html
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/speedup_audit.html
 func (s *Server) SpeedupAudit(accessToken string, auditId int) (resp *core.Error) {
 	var (
 		u   = WECHAT_API_URL + "/wxa/speedupaudit?"
