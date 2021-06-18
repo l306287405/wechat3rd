@@ -13,30 +13,28 @@ type BindTesterResp struct {
 
 //设置业务域名
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/Admin.html
-func (s *Server) BindTester(accessToken string,req *BindTesterReq) (resp *BindTesterResp,err error){
-	var(
-		u = WECHAT_API_URL+"/wxa/bind_tester?"
+func (s *Server) BindTester(accessToken string, req *BindTesterReq) (resp *BindTesterResp) {
+	var (
+		u = WECHAT_API_URL + "/wxa/bind_tester?"
 	)
 	resp = &BindTesterResp{}
-
-	err=core.PostJson(s.AuthToken2url(u,accessToken),req,resp)
+	resp.Err(core.PostJson(s.AuthToken2url(u, accessToken), req, resp))
 	return
 }
 
 type UnbindTesterReq struct {
 	Wechatid *string `json:"wechatid,omitempty"`
-	Userstr *string `json:"userstr,omitempty"`
+	Userstr  *string `json:"userstr,omitempty"`
 }
 
 //解除绑定体验者
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/unbind_tester.html
-func (s *Server) UnbindTester(accessToken string,req *UnbindTesterReq) (resp *core.Error,err error){
-	var(
-		u = WECHAT_API_URL+"/wxa/unbind_tester?"
+func (s *Server) UnbindTester(accessToken string, req *UnbindTesterReq) (resp *core.Error) {
+	var (
+		u = WECHAT_API_URL + "/wxa/unbind_tester?"
 	)
 	resp = &core.Error{}
-
-	err=core.PostJson(s.AuthToken2url(u,accessToken),req,resp)
+	resp.Err(core.PostJson(s.AuthToken2url(u, accessToken), req, resp))
 	return
 }
 
@@ -51,14 +49,14 @@ type MemberAuthResp struct {
 
 //获取体验者列表
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/Mini_Programs/memberauth.html
-func (s *Server) MemberAuth(accessToken string) (resp *MemberAuthResp,err error){
-	var(
-		u = WECHAT_API_URL+"/wxa/memberauth?"
+func (s *Server) MemberAuth(accessToken string) (resp *MemberAuthResp) {
+	var (
+		u   = WECHAT_API_URL + "/wxa/memberauth?"
 		req = &struct {
 			Action string `json:"action"`
 		}{Action: "get_experiencer"}
 	)
 	resp = &MemberAuthResp{}
-	err=core.PostJson(s.AuthToken2url(u,accessToken),req,resp)
+	resp.Err(core.PostJson(s.AuthToken2url(u, accessToken), req, resp))
 	return
 }

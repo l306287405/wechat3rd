@@ -75,21 +75,19 @@ type AuthorizerInfoResp struct {
 }
 
 // 获取授权法信息
-func (srv *Server) AuthorizerInfo(authorizerAppid string) (*AuthorizerInfoResp, error) {
+func (srv *Server) AuthorizerInfo(authorizerAppid string) (resp *AuthorizerInfoResp) {
+	resp = &AuthorizerInfoResp{}
 	accessToken, err := srv.Token()
 	if err != nil {
-		return nil, err
+		resp.Err(err)
+		return
 	}
 	req := &AuthorizerInfoReq{
 		ComponentAppid:  srv.cfg.AppID,
 		AuthorizerAppid: authorizerAppid,
 	}
-	resp := &AuthorizerInfoResp{}
-	err = core.PostJson(getCompleteUrl(AuthorizerInfoUrl, accessToken), req, resp)
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
+	resp.Err(core.PostJson(getCompleteUrl(AuthorizerInfoUrl, accessToken), req, resp))
+	return
 }
 
 type AuthorizeOption string
@@ -115,22 +113,20 @@ type AuthorizerOptionResp struct {
 }
 
 // 获取选项信息
-func (srv *Server) AuthorizerOption(authorizerAppid string, optionName AuthorizeOption) (*AuthorizerOptionResp, error) {
+func (srv *Server) AuthorizerOption(authorizerAppid string, optionName AuthorizeOption) (resp *AuthorizerOptionResp) {
+	resp = &AuthorizerOptionResp{}
 	accessToken, err := srv.Token()
 	if err != nil {
-		return nil, err
+		resp.Err(err)
+		return
 	}
 	req := &AuthorizerOptionReq{
 		ComponentAppid:  srv.cfg.AppID,
 		AuthorizerAppid: authorizerAppid,
 		OptionName:      optionName,
 	}
-	resp := &AuthorizerOptionResp{}
-	err = core.PostJson(getCompleteUrl(AuthorizerOptionUrl, accessToken), req, resp)
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
+	resp.Err(core.PostJson(getCompleteUrl(AuthorizerOptionUrl, accessToken), req, resp))
+	return
 }
 
 type SetAuthorizerOptionReq struct {
@@ -143,10 +139,12 @@ type SetAuthorizerOptionResp struct {
 }
 
 // 设置选项信息
-func (srv *Server) SetAuthorizerOption(authorizerAppid string, optionName AuthorizeOption, optionValue string) (*SetAuthorizerOptionResp, error) {
+func (srv *Server) SetAuthorizerOption(authorizerAppid string, optionName AuthorizeOption, optionValue string) (resp *SetAuthorizerOptionResp) {
+	resp = &SetAuthorizerOptionResp{}
 	accessToken, err := srv.Token()
 	if err != nil {
-		return nil, err
+		resp.Err(err)
+		return
 	}
 	req := &SetAuthorizerOptionReq{
 		AuthorizerOptionReq: AuthorizerOptionReq{
@@ -156,12 +154,8 @@ func (srv *Server) SetAuthorizerOption(authorizerAppid string, optionName Author
 		},
 		OptionValue: optionValue,
 	}
-	resp := &SetAuthorizerOptionResp{}
-	err = core.PostJson(getCompleteUrl(SetAuthorizerOptionUrl, accessToken), req, resp)
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
+	resp.Err(core.PostJson(getCompleteUrl(SetAuthorizerOptionUrl, accessToken), req, resp))
+	return
 }
 
 type AuthorizerListReq struct {
@@ -181,20 +175,18 @@ type AuthorizerListResp struct {
 }
 
 // 拉取用户授权列表
-func (srv *Server) AuthorizerList(offset, count int) (*AuthorizerListResp, error) {
+func (srv *Server) AuthorizerList(offset, count int) (resp *AuthorizerListResp) {
+	resp = &AuthorizerListResp{}
 	accessToken, err := srv.Token()
 	if err != nil {
-		return nil, err
+		resp.Err(err)
+		return
 	}
 	req := &AuthorizerListReq{
 		ComponentAppid: srv.cfg.AppID,
 		Offset:         offset,
 		Count:          count,
 	}
-	resp := &AuthorizerListResp{}
-	err = core.PostJson(getCompleteUrl(AuthorizerListUrl, accessToken), req, resp)
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
+	resp.Err(core.PostJson(getCompleteUrl(AuthorizerListUrl, accessToken), req, resp))
+	return
 }

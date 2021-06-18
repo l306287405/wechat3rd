@@ -15,7 +15,6 @@ type WechatErrorer interface {
 	ServeError(w http.ResponseWriter, r *http.Request, err error)
 }
 
-
 var DefaultErrorHandler WechatErrorer = ErrorHandlerFunc(defaultErrorHandlerFunc)
 
 type ErrorHandlerFunc func(http.ResponseWriter, *http.Request, error)
