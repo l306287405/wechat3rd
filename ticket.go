@@ -7,22 +7,22 @@ type TicketServer interface {
 	GetTicket() (string, error)
 }
 
-type defaultTicketServer struct {
+type DefaultTicketServer struct {
 	ComponentTicketCache string // *accessToken
 }
 
-var defaultTicketServerHander TicketServer = &defaultTicketServer{}
+var DefaultTicketServerHandler TicketServer = &DefaultTicketServer{}
 
-var _ TicketServer = (*defaultTicketServer)(nil)
+var _ TicketServer = (*DefaultTicketServer)(nil)
 
-func (cts *defaultTicketServer) GetTicket() (string, error) {
+func (cts *DefaultTicketServer) GetTicket() (string, error) {
 	if cts.ComponentTicketCache == "" {
 		return "", errors.New("component ticket is null")
 	}
 	return cts.ComponentTicketCache, nil
 }
 
-func (cts *defaultTicketServer) SetTicket(v string) error {
+func (cts *DefaultTicketServer) SetTicket(v string) error {
 	cts.ComponentTicketCache = v
 	return nil
 }
