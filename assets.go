@@ -1,6 +1,51 @@
 package wechat3rd
 
-import "github.com/l306287405/wechat3rd/core"
+import (
+	"github.com/l306287405/wechat3rd/core"
+	"net/url"
+)
+
+type MediaUploadReq struct {
+	Path string `json:"path"`
+	Type string `json:"type"`
+}
+
+type MediaUploadResp struct {
+	core.Error
+	Type      string `json:"type"`
+	MediaId   string `json:"media_id"`
+	CreatedAt int    `json:"created_at"`
+}
+
+//新增临时素材
+//https://developers.weixin.qq.com/doc/offiaccount/Asset_Management/New_temporary_materials.html
+func (s *Server) MediaUpload(accessToken string, req *MediaUploadReq) (resp *MediaUploadResp) {
+	var (
+		u = CGIUrl + "/media/upload?"
+	)
+	u = s.AuthToken2url(u, accessToken) + "&type=" + req.Type
+	resp = &MediaUploadResp{}
+	resp.Err(core.PostFile(u, req.Path, "media", resp))
+	return
+}
+
+type MediaGetResp struct {
+	core.Error
+	VideoUrl string `json:"video_url"`
+}
+
+//获取临时素材
+//https://developers.weixin.qq.com/doc/offiaccount/Asset_Management/Get_temporary_materials.html
+func (s *Server) MediaGet(accessToken string, mediaId string) (resp *MediaGetResp) {
+	var (
+		u   = CGIUrl + "/media/get?"
+		req = url.Values{}
+	)
+	req.Set("media_id", mediaId)
+	resp = &MediaGetResp{}
+	resp.Err(core.GetRequest(s.AuthToken2url(u, accessToken), req, resp))
+	return
+}
 
 type MaterialItem struct {
 	Title            string `json:"title"`
@@ -24,7 +69,7 @@ type GetMaterialResp struct {
 	DownUrl     *string `json:"downUrl,omitempty"`
 }
 
-//获取已上传的代码的页面列表
+//获取永久素材
 //https://developers.weixin.qq.com/doc/offiaccount/Asset_Management/Adding_Permanent_Assets.html
 func (s *Server) GetMaterial(accessToken string, mediaId string) (resp *GetMaterialResp) {
 	var (
