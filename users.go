@@ -41,9 +41,7 @@ func (s *Server) Jscode2session(appId, jsCode string) (resp *Jscode2sessionResp)
 // 解密用户信息
 func (s *Server) AESCBCDecrypt(encryptData, key, iv string) (data []byte, err error) {
 	var (
-		encBytes []byte
-		keyBytes []byte
-		ivBytes  []byte
+		encBytes, keyBytes, ivBytes  []byte
 		block    cipher.Block
 		mode     cipher.BlockMode
 	)

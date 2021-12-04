@@ -18,7 +18,7 @@
 #### 2.1: 引入
     go get -u github.com/l306287405/wechat3rd@master
     or
-    go get -u github.com/l306287405/wechat3rd@v1.6.0 (请选择最新版本)
+    go get -u github.com/l306287405/wechat3rd@v1.7.0 (请选择最新版本)
     v1.6.0版本开始Service提供的所有方法仅在resp返回对象中提供错误信息
 
 #### 2.2: 使用NewService方法来创建一个service
@@ -139,7 +139,7 @@
 
 ### 3.Service方法说明：
 
-    ServeHTTP: 处理消息与事件接收URL的推送 例如:小程序审核,类目审核等结果推送
+    ServeHTTP: 处理消息与事件接收URL的推送 例如:获取component_verify_ticket, 小程序审核, 类目审核等结果推送
     Token: 获取第三方平台的token
     AuthorizerInfo: 获取授权详情
     AuthorizerOption： 获取选项信息
@@ -174,6 +174,11 @@
     GetAccountBasicInfo: 获取基本信息
     ModifyDomain: 设置服务器域名
     SetWebviewDomain: 设置业务域名
+
+    * 小程序用户隐私保护指引(全部完成)
+    SetPrivacySetting: 设置小程序用户隐私保护指引
+    GetPrivacySetting: 查询小程序用户隐私保护指引
+    UploadPrivacyExtFile: 上传小程序用户隐私保护指引
 
     * 小程序类目管理接口 (全部完成)
     GetMiniProgramAllCategory: 获取可以设置的所有类目
@@ -222,6 +227,8 @@
     GetPaidUnionId: 支付后获取用户 Unionid 接口
 
     * 素材管理
+    MediaUpload: 新增临时素材
+    MediaGet: 获取临时素材
     GetMaterial: 获取永久素材
 
     * 插件管理
