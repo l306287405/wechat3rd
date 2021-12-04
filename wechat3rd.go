@@ -83,7 +83,7 @@ func NewService(cfg Config, ticket TicketServer, tokenService AccessTokenServer,
 		errHandler = DefaultErrorHandler
 	}
 	if ticket == nil {
-		ticket = defaultTicketServerHander
+		ticket = DefaultTicketServerHandler
 	}
 	if tokenService == nil {
 		tokenService = &DefaultAccessTokenServer{TicketServer: ticket, AppID: cfg.AppID, AppSecret: cfg.AppSecret}
