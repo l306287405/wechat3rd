@@ -3,7 +3,7 @@ package wechat3rd
 import "github.com/l306287405/wechat3rd/core"
 
 type SetPrivacySettingReq struct {
-	PrivacyVer   *string             `json:"privacy_ver,omitempty"`
+	PrivacyVer   *int             `json:"privacy_ver,omitempty"`
 	OwnerSetting PrivacyOwnerSetting `json:"owner_setting"`
 	SettingList  []*PrivacySetting   `json:"setting_list,omitempty"`
 }
