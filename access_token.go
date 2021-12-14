@@ -3,8 +3,9 @@ package wechat3rd
 import (
 	"errors"
 	"fmt"
-	"github.com/l306287405/wechat3rd/core"
 	"time"
+
+	"github.com/l306287405/wechat3rd/core"
 )
 
 const (
@@ -13,6 +14,7 @@ const (
 
 type AccessTokenServer interface {
 	Token() (token string, err error)
+	RestoreToken(token string, expiresIn int64) (err error)
 }
 
 type DefaultAccessTokenServer struct {
@@ -49,6 +51,13 @@ func (d *DefaultAccessTokenServer) Token() (token string, err error) {
 		d.ComponentAccessToken = resp.ComponentAccessToken
 	}
 	return d.ComponentAccessToken, nil
+}
+
+// 从别处恢复token
+func (d *DefaultAccessTokenServer) RestoreToken(token string, expiresIn int64) (err error) {
+	d.ExpiresIn = expiresIn
+	d.ComponentAccessToken = token
+	return
 }
 
 type AccessTokenResp struct {
