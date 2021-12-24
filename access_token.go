@@ -61,14 +61,12 @@ func (d *DefaultAccessTokenServer) RestoreToken(token string, expiresIn int64) (
 	return
 }
 
-// 获取当前对象中的token
+// 获取令牌（component_access_token),带有过期时间的时间戳。
 func (d *DefaultAccessTokenServer) GetToken() (token string, expiresIn int64, err error) {
-	if d.ExpiresIn <= time.Now().Unix() {
-		err = errors.New("token expires")
-	} else {
-		token = d.ComponentAccessToken
+	if token, err = d.Token(); err == nil {
 		expiresIn = d.ExpiresIn
 	}
+
 	return
 }
 
