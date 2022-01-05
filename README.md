@@ -72,7 +72,7 @@
 	cache.Set("cachekey_of_wechat3rd_ticket",resp.ComponentVerifyTicket,time.Hour*12)
 	err=service.SetTicket(resp.ComponentVerifyTicket)
 
-    if err==nil{
+    if err!=nil{
         log.Error("微信第三方开放平台component_verify_ticket设置失败:",err.Error())
         c.Ctx.HTML("error")
         return
