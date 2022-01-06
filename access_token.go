@@ -14,6 +14,7 @@ const (
 
 type AccessTokenServer interface {
 	Token() (token string, err error)
+	GetToken() (token string, expiresIn int64, err error)
 	RestoreToken(token string, expiresIn int64) (err error)
 }
 
@@ -57,6 +58,17 @@ func (d *DefaultAccessTokenServer) Token() (token string, err error) {
 func (d *DefaultAccessTokenServer) RestoreToken(token string, expiresIn int64) (err error) {
 	d.ExpiresIn = expiresIn
 	d.ComponentAccessToken = token
+	return
+}
+
+// 获取当前对象中的token
+func (d *DefaultAccessTokenServer) GetToken() (token string, expiresIn int64, err error) {
+	if d.ExpiresIn <= time.Now().Unix() {
+		err = errors.New("token expires")
+	} else {
+		token = d.ComponentAccessToken
+		expiresIn = d.ExpiresIn
+	}
 	return
 }
 
