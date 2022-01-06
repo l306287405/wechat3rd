@@ -53,14 +53,25 @@ type ModifyDomainReq struct {
 	Wsrequestdomain []string `json:"wsrequestdomain"`
 	Uploaddomain    []string `json:"uploaddomain"`
 	Downloaddomain  []string `json:"downloaddomain"`
+	Udpdomain       []string `json:"udpdomain"`
+	Tcpdomain       []string `json:"tcpdomain"`
 }
 
 type ModifyDomainResp struct {
 	core.Error
-	Requestdomain   []string `json:"requestdomain"`
-	Wsrequestdomain []string `json:"wsrequestdomain"`
-	Uploaddomain    []string `json:"uploaddomain"`
-	Downloaddomain  []string `json:"downloaddomain"`
+	Requestdomain          []string `json:"requestdomain"`
+	Wsrequestdomain        []string `json:"wsrequestdomain"`
+	Uploaddomain           []string `json:"uploaddomain"`
+	Downloaddomain         []string `json:"downloaddomain"`
+	Udpdomain              []string `json:"udpdomain"`
+	Tcpdomain              []string `json:"tcpdomain"`
+	InvalidRequestdomain   []string `json:"invalid_requestdomain"`
+	InvalidWsrequestdomain []string `json:"invalid_wsrequestdomain"`
+	InvalidUploaddomain    []string `json:"invalid_uploaddomain"`
+	InvalidDownloaddomain  []string `json:"invalid_downloaddomain"`
+	InvalidUdpdomain       []string `json:"invalid_udpdomain"`
+	InvalidTcpdomain       []string `json:"invalid_tcpdomain"`
+	NoIcpDomain            []string `json:"no_icp_domain"`
 }
 
 //设置服务器域名
