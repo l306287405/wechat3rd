@@ -2,11 +2,12 @@ package wechat3rd
 
 import (
 	"errors"
-	"github.com/l306287405/wechat3rd/core"
 	"net/http"
 	"net/url"
 	"os"
 	"strings"
+
+	"github.com/l306287405/wechat3rd/core"
 )
 
 type GetTemplateDraftListResp struct {
@@ -323,7 +324,7 @@ func (s *Server) RevertCodeRelease(accessToken string) (resp *core.Error) {
 
 type GetRevertCodeReleaseResp struct {
 	core.Error
-	TemplateList []*RevertTemplate `json:"template_list"` //模板信息列表
+	TemplateList []*RevertTemplate `json:"version_list"` //版本信息列表
 }
 
 type RevertTemplate struct {
@@ -454,7 +455,7 @@ func (s *Server) ChangeVisitStatus(accessToken string, action string) (resp *cor
 
 type GetWeappSupportVersionResp struct {
 	core.Error
-	NowVersion string `json:"now_version"` //当前版本
+	NowVersion string    `json:"now_version"` //当前版本
 	UvInfo     *struct { //版本的用户占比列表
 		Items []*struct {
 			Percentage float64 `json:"percentage"` //百分比
