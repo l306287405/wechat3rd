@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/l306287405/wechat3rd/core"
@@ -313,12 +314,17 @@ func (s *Server) Release(accessToken string) (resp *core.Error) {
 
 //版本回退
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/revertcoderelease.html
-func (s *Server) RevertCodeRelease(accessToken string) (resp *core.Error) {
+func (s *Server) RevertCodeRelease(accessToken string, appVersion int) (resp *core.Error) {
 	var (
-		u = WECHAT_API_URL + "/wxa/revertcoderelease?"
+		u      = WECHAT_API_URL + "/wxa/revertcoderelease?"
+		params = core.AuthTokenUrlValues(accessToken)
 	)
+	//版本为零则回退到上一个版本
+	if appVersion != 0 {
+		params.Set("app_version", strconv.Itoa(appVersion))
+	}
 	resp = &core.Error{}
-	resp.Err(core.GetRequest(u, core.AuthTokenUrlValues(accessToken), resp))
+	resp.Err(core.GetRequest(u, params, resp))
 	return
 }
 
