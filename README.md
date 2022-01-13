@@ -170,6 +170,12 @@
 * AuthorizerOption： 获取授权方选项信息
 * SetAuthorizerOption： 设置授权方选项信息
 
+#### 开发平台账号管理
+* OpenCreate: 创建开放平台帐号并绑定公众号/小程序
+* OpenBind: 将公众号/小程序绑定到开放平台帐号下
+* OpenUnbind: 将公众号/小程序从开放平台帐号下解绑
+* OpenGet: 获取公众号/小程序所绑定的开放平台帐号
+
 #### 其他小程序相关接口
 * Jscode2session: 获取用户openid , session_key
 * AESCBCDecrypt: 用于解密用户数据, 例如解密前端获取手机号时获取的加密信息
