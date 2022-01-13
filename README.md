@@ -1,4 +1,4 @@
-### 项目地址
+# 项目地址
 [l306287405/wechat3rd](https://github.com/l306287405/wechat3rd)
 
 ### 感谢
@@ -18,7 +18,7 @@
 #### 2.1: 引入
     go get -u github.com/l306287405/wechat3rd@master
     or
-    go get -u github.com/l306287405/wechat3rd@v1.7.3 (请选择最新版本)
+    go get -u github.com/l306287405/wechat3rd@v1.7.4 (请选择最新版本)
     v1.6.0版本开始Service提供的所有方法仅在resp返回对象中提供错误信息
 
 #### 2.2: 使用NewService方法来创建一个service
@@ -152,87 +152,92 @@
     RefreshToken: 刷新授权用户的token
     AESDecryptData: 用于解密数据
 
-### 4.小程序登陆
+### 4. API实现
+#### openApi管理
+* ClearQuota: 清空api的调用quota
+* QuotaGet: 查询openApi调用quota
+* RidGet: 查询rid信息
 
-    Jscode2session: 获取用户openid , session_key
-    AESCBCDecrypt: 用于解密用户数据, 例如解密前端获取手机号时获取的加密信息
+#### 其他小程序相关接口
+* Jscode2session: 获取用户openid , session_key
+* AESCBCDecrypt: 用于解密用户数据, 例如解密前端获取手机号时获取的加密信息
 
-### 5.代小程序实现业务
+### 5.代平台方实现业务
+* FastRegisterWeapp: 快速创建小程序
+* SearchWeapp: 查询创建任务状态
 
-    FastRegisterWeapp: 快速创建小程序
-    SearchWeapp: 查询创建任务状态
+### 小程序模板接口 (全部完成)
+* GetTemplateDraftList: 获取代码草稿列表
+* AddToTemplate: 将草稿添加到代码模板库
+* GetTemplateList: 获取代码模板列表
+* DeleteTemplate: 删除指定代码模板
 
-    * 小程序模板接口 (全部完成)
-    GetTemplateDraftList: 获取代码草稿列表
-    AddToTemplate: 将草稿添加到代码模板库
-    GetTemplateList: 获取代码模板列表
-    DeleteTemplate: 删除指定代码模板
-
+### 6.代小程序实现业务
 **!!!以下接口注意:accessToken(authorizerAccessToken)为授权方token!!!**
 
-    * 基础信息设置 (部分完成)
-    GetAccountBasicInfo: 获取基本信息
-    ModifyDomain: 设置服务器域名
-    SetWebviewDomain: 设置业务域名
+### 基础信息设置 (部分完成)
+* GetAccountBasicInfo: 获取基本信息
+* ModifyDomain: 设置服务器域名
+* SetWebviewDomain: 设置业务域名
 
-    * 小程序用户隐私保护指引(全部完成)
-    SetPrivacySetting: 设置小程序用户隐私保护指引
-    GetPrivacySetting: 查询小程序用户隐私保护指引
-    UploadPrivacyExtFile: 上传小程序用户隐私保护指引
+### 小程序用户隐私保护指引(全部完成)
+* SetPrivacySetting: 设置小程序用户隐私保护指引
+* GetPrivacySetting: 查询小程序用户隐私保护指引
+* UploadPrivacyExtFile: 上传小程序用户隐私保护指引
 
-    * 小程序类目管理接口 (全部完成)
-    GetMiniProgramAllCategory: 获取可以设置的所有类目
-    GetMiniProgramCategory: 获取已设置的所有类目
-    GetMiniProgramCategoriesByType: 获取不同主体类型的类目
-    AddMiniProgramCategory: 添加类目
-    DeleteMiniProgramCategory: 删除类目
-    ModifyMiniProgramCategory: 修改类目资质信息
-    GetMiniProgramAuditCategory: 获取审核时可填写的类目信息
+### 小程序类目管理接口 (全部完成)
+* GetMiniProgramAllCategory: 获取可以设置的所有类目
+* GetMiniProgramCategory: 获取已设置的所有类目
+* GetMiniProgramCategoriesByType: 获取不同主体类型的类目
+* AddMiniProgramCategory: 添加类目
+* DeleteMiniProgramCategory: 删除类目
+* ModifyMiniProgramCategory: 修改类目资质信息
+* GetMiniProgramAuditCategory: 获取审核时可填写的类目信息
 
-    * 成员管理 (全部完成)
-    BindTester: 绑定体验者
-    UnbindTester: 解除绑定体验者
-    Memberauth: 获取体验者列表
+### 成员管理 (全部完成)
+* BindTester: 绑定体验者
+* UnbindTester: 解除绑定体验者
+* Memberauth: 获取体验者列表
 
-    * 代码管理 (全部完成)
-    Commit: 上传代码
-    GetPage: 获取已上传的代码的页面列表
-    GetQrcode: 获取体验版二维码
-    SubmitAudit: 提交审核
-    GetAuditStatus: 查询指定发布审核单的审核状态
-    GetLatestAuditStatus: 查询最新一次提交的审核状态
-    UndoCodeAudit: 小程序审核撤回
-    Release: 发布已通过审核的小程序
-    RevertCodeRelease: 小程序版本回退
-    GetRevertCodeRelease: 获取可回退的小程序版本
-    GrayRelease: 分阶段发布(灰度发布)
-    GetGrayReleasePlan: 查询当前分阶段发布详情
-    RevertGrayRelease: 取消分阶段发布
-    ChangeVisitStatus: 修改小程序服务状态
-    GetWeappSupportVersion: 查询当前设置的最低基础库版本及各版本用户占比
-    SetWeappSupportVersion: 设置最低基础库版本
-    QueryQuota: 查询服务商的当月提审限额（quota）和加急次数
-    SpeedupAudit: 加急审核申请
+### 代码管理 (全部完成)
+* Commit: 上传代码
+* GetPage: 获取已上传的代码的页面列表
+* GetQrcode: 获取体验版二维码
+* SubmitAudit: 提交审核
+* GetAuditStatus: 查询指定发布审核单的审核状态
+* GetLatestAuditStatus: 查询最新一次提交的审核状态
+* UndoCodeAudit: 小程序审核撤回
+* Release: 发布已通过审核的小程序
+* RevertCodeRelease: 小程序版本回退
+* GetRevertCodeRelease: 获取可回退的小程序版本
+* GrayRelease: 分阶段发布(灰度发布)
+* GetGrayReleasePlan: 查询当前分阶段发布详情
+* RevertGrayRelease: 取消分阶段发布
+* ChangeVisitStatus: 修改小程序服务状态
+* GetWeappSupportVersion: 查询当前设置的最低基础库版本及各版本用户占比
+* SetWeappSupportVersion: 设置最低基础库版本
+* QueryQuota: 查询服务商的当月提审限额（quota）和加急次数
+* SpeedupAudit: 加急审核申请
 
-    * 订阅消息设置  (全部完成)
-    GetCategory: 获取当前帐号所设置的类目信息
-    GetPubTemplateTitles: 获取模板标题列表
-    GetPubTemplateKeywords: 获取模板标题下的关键词库
-    AddTemplate: 组合模板并添加到个人模板库
-    GetTemplate: 获取帐号下的模板列表
-    DelTemplate: 删除帐号下的某个模板
-    SubscribeSend: 发送订阅消息
+### 订阅消息设置  (全部完成)
+* GetCategory: 获取当前帐号所设置的类目信息
+* GetPubTemplateTitles: 获取模板标题列表
+* GetPubTemplateKeywords: 获取模板标题下的关键词库
+* AddTemplate: 组合模板并添加到个人模板库
+* GetTemplate: 获取帐号下的模板列表
+* DelTemplate: 删除帐号下的某个模板
+* SubscribeSend: 发送订阅消息
 
-    * 支付后获取 Unionid
-    GetPaidUnionId: 支付后获取用户 Unionid 接口
+### 支付后获取 Unionid
+* GetPaidUnionId: 支付后获取用户 Unionid 接口
 
-    * 素材管理
-    MediaUpload: 新增临时素材
-    MediaGet: 获取临时素材
-    GetMaterial: 获取永久素材
+### 素材管理
+* MediaUpload: 新增临时素材
+* MediaGet: 获取临时素材
+* GetMaterial: 获取永久素材
 
-    * 插件管理
-    Plugin: 小程序插件管理
+### 插件管理
+* Plugin: 小程序插件管理
 
 ## todo
     * 代小程序实现业务(部分完成)
