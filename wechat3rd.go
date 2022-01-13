@@ -59,11 +59,11 @@ const (
 	CGIUrl         = WECHAT_API_URL + "/cgi-bin"
 )
 
-func (srv *Server) getAESKey() []byte {
-	return srv.DecodeAesKey
+func (s *Server) getAESKey() []byte {
+	return s.DecodeAesKey
 }
-func (srv *Server) getToken() string {
-	return srv.cfg.Token
+func (s *Server) getToken() string {
+	return s.cfg.Token
 }
 
 type cipherRequestHttpBody struct {
@@ -103,7 +103,7 @@ func NewService(cfg Config, ticket TicketServer, tokenService AccessTokenServer,
 	return s, nil
 }
 
-func (srv *Server) ServeHTTP(r *http.Request) (resp *MixedMsg, err error) {
+func (s *Server) ServeHTTP(r *http.Request) (resp *MixedMsg, err error) {
 	var (
 		query = r.URL.Query()
 
@@ -143,7 +143,7 @@ func (srv *Server) ServeHTTP(r *http.Request) (resp *MixedMsg, err error) {
 		return
 	}
 
-	wantSignature = util.Sign(srv.getToken(), timestamp, nonce)
+	wantSignature = util.Sign(s.getToken(), timestamp, nonce)
 	if haveSignature != wantSignature {
 		return nil, errors.New("sign error")
 	}
@@ -177,7 +177,7 @@ func (srv *Server) ServeHTTP(r *http.Request) (resp *MixedMsg, err error) {
 		return
 	}
 
-	wantMsgSignature = util.MsgSign(srv.getToken(), timestamp, nonce, string(requestHttpBody.Base64EncryptedMsg))
+	wantMsgSignature = util.MsgSign(s.getToken(), timestamp, nonce, string(requestHttpBody.Base64EncryptedMsg))
 	if haveMsgSignature != wantMsgSignature {
 		err = errors.New("check msg_signature failed, have: " + haveMsgSignature + ", want: " + wantMsgSignature)
 		return
@@ -190,13 +190,13 @@ func (srv *Server) ServeHTTP(r *http.Request) (resp *MixedMsg, err error) {
 	}
 	encryptedMsg = encryptedMsg[:encryptedMsgLen]
 
-	_, msgPlaintext, haveAppIdBytes, err = util.AESDecryptMsg(encryptedMsg, srv.getAESKey())
+	_, msgPlaintext, haveAppIdBytes, err = util.AESDecryptMsg(encryptedMsg, s.getAESKey())
 	if err != nil {
 		return
 	}
 
-	if string(haveAppIdBytes) != srv.cfg.AppID {
-		err = errors.New("the message AppId mismatch, have: " + string(haveAppIdBytes) + ", want: " + srv.cfg.AppID)
+	if string(haveAppIdBytes) != s.cfg.AppID {
+		err = errors.New("the message AppId mismatch, have: " + string(haveAppIdBytes) + ", want: " + s.cfg.AppID)
 		return
 	}
 	resp = &MixedMsg{}

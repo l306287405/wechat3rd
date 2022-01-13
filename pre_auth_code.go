@@ -30,15 +30,15 @@ type PreAuthCodeResp struct {
 	ExpiresIn   int    `json:"expires_in"`
 }
 
-func (srv *Server) PreAuthCode() (resp *PreAuthCodeResp) {
+func (s *Server) PreAuthCode() (resp *PreAuthCodeResp) {
 	resp = &PreAuthCodeResp{}
-	accessToken, err := srv.Token()
+	accessToken, err := s.Token()
 	if err != nil {
 		resp.Err(err)
 		return
 	}
 	req := &PreAuthCodeReq{
-		ComponentAppid: srv.cfg.AppID,
+		ComponentAppid: s.cfg.AppID,
 	}
 	resp.Err(core.PostJson(getCompleteUrl(PREAUTH_CODE_URL, accessToken), req, resp))
 	return
@@ -46,19 +46,19 @@ func (srv *Server) PreAuthCode() (resp *PreAuthCodeResp) {
 
 //说明
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Before_Develop/Authorization_Process_Technical_Description.html
-func (srv *Server) AuthUrl(isWebAuth bool, redirectUri string, authType AuthType, bizAppid *string) (u string, err error) {
+func (s *Server) AuthUrl(isWebAuth bool, redirectUri string, authType AuthType, bizAppid *string) (u string, err error) {
 	var (
 		resp *PreAuthCodeResp
 	)
-	resp = srv.PreAuthCode()
+	resp = s.PreAuthCode()
 	if !resp.Success() {
 		err = errors.New(resp.ErrMsg)
 		return
 	}
 	if isWebAuth {
-		u = fmt.Sprintf(WEB_AUTH_URL, srv.cfg.AppID, resp.PreAuthCode, redirectUri, authType)
+		u = fmt.Sprintf(WEB_AUTH_URL, s.cfg.AppID, resp.PreAuthCode, redirectUri, authType)
 	} else {
-		u = fmt.Sprintf(MOBILE_AUTH_URL, srv.cfg.AppID, resp.PreAuthCode, redirectUri, authType)
+		u = fmt.Sprintf(MOBILE_AUTH_URL, s.cfg.AppID, resp.PreAuthCode, redirectUri, authType)
 		if bizAppid != nil && *bizAppid != "" {
 			u = u + "&biz_appid=" + *bizAppid
 		}
@@ -88,15 +88,15 @@ type QueryAuthResp struct {
 }
 
 // 返回授权数据
-func (srv *Server) QueryAuth(code string) (resp *QueryAuthResp) {
+func (s *Server) QueryAuth(code string) (resp *QueryAuthResp) {
 	resp = &QueryAuthResp{}
-	accessToken, err := srv.Token()
+	accessToken, err := s.Token()
 	if err != nil {
 		resp.Err(err)
 		return
 	}
 	req := &QueryAuthReq{
-		ComponentAppid:    srv.cfg.AppID,
+		ComponentAppid:    s.cfg.AppID,
 		AuthorizationCode: code,
 	}
 	resp.Err(core.PostJson(getCompleteUrl(QUERY_AUTH_URL, accessToken), req, resp))
@@ -116,19 +116,34 @@ type RefreshTokenResp struct {
 }
 
 // 刷新token
-func (srv *Server) RefreshToken(appID, refreshToken string) (resp *RefreshTokenResp) {
+func (s *Server) RefreshToken(authAppID, refreshToken string) (resp *RefreshTokenResp) {
 	resp = &RefreshTokenResp{}
-	accessToken, err := srv.Token()
+	accessToken, err := s.Token()
 	if err != nil {
 		resp.Err(err)
 		return
 	}
 	req := &RefreshTokenReq{
-		ComponentAppid:         srv.cfg.AppID,
-		AuthorizerAppid:        appID,
+		ComponentAppid:         s.cfg.AppID,
+		AuthorizerAppid:        authAppID,
 		AuthorizerRefreshToken: refreshToken,
 	}
 	resp.Err(core.PostJson(getCompleteUrl(REFRESH_TOKEN_URL, accessToken), req, resp))
+	return
+}
+
+// 启动ticket推送服务
+// https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/ThirdParty/token/component_verify_ticket_service.html
+func (s *Server) ApiStartPushTicket() (resp *core.Error) {
+	var (
+		u   = CGIUrl + "/component/api_start_push_ticket"
+		req = &struct {
+			ComponentAppid  string `json:"component_appid"`
+			ComponentSecret string `json:"component_secret"`
+		}{ComponentAppid: s.cfg.AppID, ComponentSecret: s.cfg.AppSecret}
+	)
+	resp = &core.Error{}
+	resp.Err(core.PostJson(u, req, resp))
 	return
 }
 
