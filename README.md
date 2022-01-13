@@ -18,7 +18,7 @@
 #### 2.1: 引入
     go get -u github.com/l306287405/wechat3rd@master
     or
-    go get -u github.com/l306287405/wechat3rd@v1.7.4 (请选择最新版本)
+    go get -u github.com/l306287405/wechat3rd@v1.7.5 (请选择最新版本)
     v1.6.0版本开始Service提供的所有方法仅在resp返回对象中提供错误信息
 
 #### 2.2: 使用NewService方法来创建一个service
@@ -137,26 +137,38 @@
 
 	c.Ctx.HTML("授权成功")
 
-### 3.Service方法说明：
-
-    ServeHTTP: 处理消息与事件接收URL的推送 例如:获取component_verify_ticket, 小程序审核, 类目审核等结果推送
-    Token: 获取第三方平台的token
-    AuthorizerInfo: 获取授权详情
-    AuthorizerOption： 获取选项信息
-    SetAuthorizerOption： 设置选项
-    AuthorizerList： 选项列表
-    PostJson： 提交json数据
-    PreAuthCode： 获取令牌
-    AuthUrl： 获取授权连接
-    QueryAuth: 获取授权公众号信息， 注意返回的token,appid等信息需要自行保存，后面代小程序或公众号实现业务时使用
-    RefreshToken: 刷新授权用户的token
-    AESDecryptData: 用于解密数据
-
 ### 4. API实现
 #### openApi管理
 * ClearQuota: 清空api的调用quota
 * QuotaGet: 查询openApi调用quota
 * RidGet: 查询rid信息
+
+#### 第三方平台域名管理
+* ModifyWxaServerDomain: 设置第三方平台服务器域名
+* GetDomainConfirmFile: 获取第三方业务域名的校验文件
+* ModifyWxaJumpDomain: 设置第三方平台业务域名
+
+#### 小程序用户隐私保护指引
+以下接口注意:accessToken(authorizerAccessToken)为授权方token!!!
+* SetPrivacySetting: 设置小程序用户隐私保护指引
+* GetPrivacySetting: 查询小程序用户隐私保护指引
+* UploadPrivacyExtFile: 上传小程序用户隐私保护指引
+
+#### 授权相关接口：
+* ServeHTTP: 处理消息与事件接收URL的推送 例如:获取component_verify_ticket,授权变更通知推送, 小程序审核, 类目审核等结果推送
+* ApiStartPushTicket: 启动ticket推送服务
+* AccessTokenServer.Token: 获取令牌
+* Token: 获取第三方平台的token
+* AuthUrl： 获取授权连接
+* PreAuthCode： 获取预授权码
+* QueryAuth: 使用授权码获取授权信息， 注意返回的token,appid等信息需要自行保存，后面代小程序或公众号实现业务时使用
+* RefreshToken: 获取/刷新接口调用令牌
+* AuthorizerInfo: 获取授权账号信息
+
+#### 授权方账号管理
+* AuthorizerList： 拉取所有已授权的帐号信息
+* AuthorizerOption： 获取授权方选项信息
+* SetAuthorizerOption： 设置授权方选项信息
 
 #### 其他小程序相关接口
 * Jscode2session: 获取用户openid , session_key
@@ -180,10 +192,7 @@
 * ModifyDomain: 设置服务器域名
 * SetWebviewDomain: 设置业务域名
 
-### 小程序用户隐私保护指引(全部完成)
-* SetPrivacySetting: 设置小程序用户隐私保护指引
-* GetPrivacySetting: 查询小程序用户隐私保护指引
-* UploadPrivacyExtFile: 上传小程序用户隐私保护指引
+
 
 ### 小程序类目管理接口 (全部完成)
 * GetMiniProgramAllCategory: 获取可以设置的所有类目
@@ -238,6 +247,10 @@
 
 ### 插件管理
 * Plugin: 小程序插件管理
+
+#### 工具
+* PostJson： 提交json数据
+* AESDecryptData: 用于解密数据
 
 ## todo
     * 代小程序实现业务(部分完成)

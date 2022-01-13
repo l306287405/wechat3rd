@@ -74,16 +74,17 @@ type AuthorizerInfoResp struct {
 	} `json:"authorization_info"`
 }
 
-// 获取授权法信息
-func (srv *Server) AuthorizerInfo(authorizerAppid string) (resp *AuthorizerInfoResp) {
+// 获取授权账号信息
+// https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/ThirdParty/token/api_get_authorizer_info.html
+func (s *Server) AuthorizerInfo(authorizerAppid string) (resp *AuthorizerInfoResp) {
 	resp = &AuthorizerInfoResp{}
-	accessToken, err := srv.Token()
+	accessToken, err := s.Token()
 	if err != nil {
 		resp.Err(err)
 		return
 	}
 	req := &AuthorizerInfoReq{
-		ComponentAppid:  srv.cfg.AppID,
+		ComponentAppid:  s.cfg.AppID,
 		AuthorizerAppid: authorizerAppid,
 	}
 	resp.Err(core.PostJson(getCompleteUrl(AuthorizerInfoUrl, accessToken), req, resp))
@@ -113,15 +114,15 @@ type AuthorizerOptionResp struct {
 }
 
 // 获取选项信息
-func (srv *Server) AuthorizerOption(authorizerAppid string, optionName AuthorizeOption) (resp *AuthorizerOptionResp) {
+func (s *Server) AuthorizerOption(authorizerAppid string, optionName AuthorizeOption) (resp *AuthorizerOptionResp) {
 	resp = &AuthorizerOptionResp{}
-	accessToken, err := srv.Token()
+	accessToken, err := s.Token()
 	if err != nil {
 		resp.Err(err)
 		return
 	}
 	req := &AuthorizerOptionReq{
-		ComponentAppid:  srv.cfg.AppID,
+		ComponentAppid:  s.cfg.AppID,
 		AuthorizerAppid: authorizerAppid,
 		OptionName:      optionName,
 	}
@@ -139,16 +140,16 @@ type SetAuthorizerOptionResp struct {
 }
 
 // 设置选项信息
-func (srv *Server) SetAuthorizerOption(authorizerAppid string, optionName AuthorizeOption, optionValue string) (resp *SetAuthorizerOptionResp) {
+func (s *Server) SetAuthorizerOption(authorizerAppid string, optionName AuthorizeOption, optionValue string) (resp *SetAuthorizerOptionResp) {
 	resp = &SetAuthorizerOptionResp{}
-	accessToken, err := srv.Token()
+	accessToken, err := s.Token()
 	if err != nil {
 		resp.Err(err)
 		return
 	}
 	req := &SetAuthorizerOptionReq{
 		AuthorizerOptionReq: AuthorizerOptionReq{
-			ComponentAppid:  srv.cfg.AppID,
+			ComponentAppid:  s.cfg.AppID,
 			AuthorizerAppid: authorizerAppid,
 			OptionName:      optionName,
 		},
@@ -175,15 +176,15 @@ type AuthorizerListResp struct {
 }
 
 // 拉取用户授权列表
-func (srv *Server) AuthorizerList(offset, count int) (resp *AuthorizerListResp) {
+func (s *Server) AuthorizerList(offset, count int) (resp *AuthorizerListResp) {
 	resp = &AuthorizerListResp{}
-	accessToken, err := srv.Token()
+	accessToken, err := s.Token()
 	if err != nil {
 		resp.Err(err)
 		return
 	}
 	req := &AuthorizerListReq{
-		ComponentAppid: srv.cfg.AppID,
+		ComponentAppid: s.cfg.AppID,
 		Offset:         offset,
 		Count:          count,
 	}

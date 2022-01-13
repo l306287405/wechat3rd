@@ -27,7 +27,8 @@ type DefaultAccessTokenServer struct {
 	ExpiresIn            int64  `json:"expires_in"` // 当前时间 + 过期时间
 }
 
-// token不使用不获取
+// 获取令牌   token不使用不获取
+// https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/ThirdParty/token/component_access_token.html
 func (d *DefaultAccessTokenServer) Token() (token string, err error) {
 	var (
 		ticket string
