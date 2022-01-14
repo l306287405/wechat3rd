@@ -3,6 +3,8 @@ package wechat3rd
 import (
 	"errors"
 	"fmt"
+	"net/url"
+
 	"github.com/l306287405/wechat3rd/core"
 )
 
@@ -55,10 +57,12 @@ func (srv *Server) AuthUrl(isWebAuth bool, redirectUri string, authType AuthType
 		err = errors.New(resp.ErrMsg)
 		return
 	}
+	tPreAuthCode := url.QueryEscape(resp.PreAuthCode)
+	redirectUri = url.QueryEscape(redirectUri)
 	if isWebAuth {
-		u = fmt.Sprintf(WEB_AUTH_URL, srv.cfg.AppID, resp.PreAuthCode, redirectUri, authType)
+		u = fmt.Sprintf(WEB_AUTH_URL, srv.cfg.AppID, tPreAuthCode, redirectUri, authType)
 	} else {
-		u = fmt.Sprintf(MOBILE_AUTH_URL, srv.cfg.AppID, resp.PreAuthCode, redirectUri, authType)
+		u = fmt.Sprintf(MOBILE_AUTH_URL, srv.cfg.AppID, tPreAuthCode, redirectUri, authType)
 		if bizAppid != nil && *bizAppid != "" {
 			u = u + "&biz_appid=" + *bizAppid
 		}
