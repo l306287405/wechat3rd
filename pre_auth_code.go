@@ -32,7 +32,7 @@ type PreAuthCodeResp struct {
 
 func (s *Server) PreAuthCode() (resp *PreAuthCodeResp) {
 	resp = &PreAuthCodeResp{}
-	accessToken, err := s.Token()
+	token, err := s.Token()
 	if err != nil {
 		resp.Err(err)
 		return
@@ -40,7 +40,7 @@ func (s *Server) PreAuthCode() (resp *PreAuthCodeResp) {
 	req := &PreAuthCodeReq{
 		ComponentAppid: s.cfg.AppID,
 	}
-	resp.Err(core.PostJson(getCompleteUrl(PREAUTH_CODE_URL, accessToken), req, resp))
+	resp.Err(core.PostJson(getCompleteUrl(PREAUTH_CODE_URL, token), req, resp))
 	return
 }
 
@@ -90,7 +90,7 @@ type QueryAuthResp struct {
 // 返回授权数据
 func (s *Server) QueryAuth(code string) (resp *QueryAuthResp) {
 	resp = &QueryAuthResp{}
-	accessToken, err := s.Token()
+	token, err := s.Token()
 	if err != nil {
 		resp.Err(err)
 		return
@@ -99,7 +99,7 @@ func (s *Server) QueryAuth(code string) (resp *QueryAuthResp) {
 		ComponentAppid:    s.cfg.AppID,
 		AuthorizationCode: code,
 	}
-	resp.Err(core.PostJson(getCompleteUrl(QUERY_AUTH_URL, accessToken), req, resp))
+	resp.Err(core.PostJson(getCompleteUrl(QUERY_AUTH_URL, token), req, resp))
 	return
 }
 
@@ -118,7 +118,7 @@ type RefreshTokenResp struct {
 // 刷新token
 func (s *Server) RefreshToken(authAppID, refreshToken string) (resp *RefreshTokenResp) {
 	resp = &RefreshTokenResp{}
-	accessToken, err := s.Token()
+	token, err := s.Token()
 	if err != nil {
 		resp.Err(err)
 		return
@@ -128,7 +128,7 @@ func (s *Server) RefreshToken(authAppID, refreshToken string) (resp *RefreshToke
 		AuthorizerAppid:        authAppID,
 		AuthorizerRefreshToken: refreshToken,
 	}
-	resp.Err(core.PostJson(getCompleteUrl(REFRESH_TOKEN_URL, accessToken), req, resp))
+	resp.Err(core.PostJson(getCompleteUrl(REFRESH_TOKEN_URL, token), req, resp))
 	return
 }
 

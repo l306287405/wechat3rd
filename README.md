@@ -18,7 +18,7 @@
 #### 2.1: 引入
     go get -u github.com/l306287405/wechat3rd@master
     or
-    go get -u github.com/l306287405/wechat3rd@v1.7.5 (请选择最新版本)
+    go get -u github.com/l306287405/wechat3rd@v1.7.6 (请选择最新版本)
     v1.6.0版本开始Service提供的所有方法仅在resp返回对象中提供错误信息
 
 #### 2.2: 使用NewService方法来创建一个service
@@ -137,7 +137,12 @@
 
 	c.Ctx.HTML("授权成功")
 
-### 4. API实现
+### 3. API实现
+**注意:**
+调用以下api前,请详细查询相关文档,通常都必备令牌参数,分以下两种:
+* component_access_token: 指的是"第三方平台令牌",通常对应方法不需要使用者提供,如有特殊需要则调用service的Token()方法获取.
+* authorizer_access_token: 指的是"第三方平台接口调用令牌",通常对应方法需要使用者提供授权小程序的授权token.
+
 #### openApi管理
 * ClearQuota: 清空api的调用quota
 * QuotaGet: 查询openApi调用quota
@@ -149,13 +154,17 @@
 * ModifyWxaJumpDomain: 设置第三方平台业务域名
 
 #### 小程序用户隐私保护指引
-以下接口注意:accessToken(authorizerAccessToken)为授权方token!!!
 * SetPrivacySetting: 设置小程序用户隐私保护指引
 * GetPrivacySetting: 查询小程序用户隐私保护指引
 * UploadPrivacyExtFile: 上传小程序用户隐私保护指引
 
 #### 授权相关接口：
-* ServeHTTP: 处理消息与事件接收URL的推送 例如:获取component_verify_ticket,授权变更通知推送, 小程序审核, 类目审核等结果推送
+* ServeHTTP: 处理消息与事件接收URL的推送 例如:
+    * 获取component_verify_ticket
+    * 授权变更通知推送
+    * 小程序审核
+    * 类目审核
+    * 等等
 * ApiStartPushTicket: 启动ticket推送服务
 * AccessTokenServer.Token: 获取令牌
 * Token: 获取第三方平台的token
@@ -176,13 +185,21 @@
 * OpenUnbind: 将公众号/小程序从开放平台帐号下解绑
 * OpenGet: 获取公众号/小程序所绑定的开放平台帐号
 
+#### 代商家注册小程序
+* FastRegisterOrgWeapp: 快速注册企业小程序
+* QueryOrgWeapp: 查询注册企业创建任务状态
+* FastRegisterPersonalWeapp: 快速注册个人小程序
+* QueryPersonalWeapp: 查询个人小程序创建任务状态
+
+#### 创建试用小程序
+* FastRegisterBetaWeapp: 创建试用小程序
+* VerifyBetaWeapp: 试用小程序快速认证
+* SetBetaWeappNickname: 修改试用小程序名称
+
 #### 其他小程序相关接口
 * Jscode2session: 获取用户openid , session_key
 * AESCBCDecrypt: 用于解密用户数据, 例如解密前端获取手机号时获取的加密信息
 
-### 5.代平台方实现业务
-* FastRegisterWeapp: 快速创建小程序
-* SearchWeapp: 查询创建任务状态
 
 ### 小程序模板接口 (全部完成)
 * GetTemplateDraftList: 获取代码草稿列表
@@ -197,7 +214,6 @@
 * GetAccountBasicInfo: 获取基本信息
 * ModifyDomain: 设置服务器域名
 * SetWebviewDomain: 设置业务域名
-
 
 
 ### 小程序类目管理接口 (全部完成)
