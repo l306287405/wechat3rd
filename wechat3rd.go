@@ -203,10 +203,10 @@ func (s *Server) ServeHTTP(r *http.Request) (resp *MixedMsg, err error) {
 	if err = xml.Unmarshal(msgPlaintext, resp); err != nil {
 		return
 	}
-	//
-	//hand, exist = srv.handlerMap[resp.InfoType]
+	// TODO 将在1.8版本重做推送结果处理
+	//hand, exist = s.handlerMap[resp.InfoType]
 	//if !exist {
-	//	err = errors.New("match handler failed :"+resp.InfoType)
+	//	err = errors.New("match handler failed :" + resp.InfoType)
 	//	return
 	//}
 	//hand(resp)

@@ -78,7 +78,7 @@ type AuthorizerInfoResp struct {
 // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/ThirdParty/token/api_get_authorizer_info.html
 func (s *Server) AuthorizerInfo(authorizerAppid string) (resp *AuthorizerInfoResp) {
 	resp = &AuthorizerInfoResp{}
-	accessToken, err := s.Token()
+	token, err := s.Token()
 	if err != nil {
 		resp.Err(err)
 		return
@@ -87,7 +87,7 @@ func (s *Server) AuthorizerInfo(authorizerAppid string) (resp *AuthorizerInfoRes
 		ComponentAppid:  s.cfg.AppID,
 		AuthorizerAppid: authorizerAppid,
 	}
-	resp.Err(core.PostJson(getCompleteUrl(AuthorizerInfoUrl, accessToken), req, resp))
+	resp.Err(core.PostJson(getCompleteUrl(AuthorizerInfoUrl, token), req, resp))
 	return
 }
 
@@ -116,7 +116,7 @@ type AuthorizerOptionResp struct {
 // 获取选项信息
 func (s *Server) AuthorizerOption(authorizerAppid string, optionName AuthorizeOption) (resp *AuthorizerOptionResp) {
 	resp = &AuthorizerOptionResp{}
-	accessToken, err := s.Token()
+	token, err := s.Token()
 	if err != nil {
 		resp.Err(err)
 		return
@@ -126,7 +126,7 @@ func (s *Server) AuthorizerOption(authorizerAppid string, optionName AuthorizeOp
 		AuthorizerAppid: authorizerAppid,
 		OptionName:      optionName,
 	}
-	resp.Err(core.PostJson(getCompleteUrl(AuthorizerOptionUrl, accessToken), req, resp))
+	resp.Err(core.PostJson(getCompleteUrl(AuthorizerOptionUrl, token), req, resp))
 	return
 }
 
@@ -142,7 +142,7 @@ type SetAuthorizerOptionResp struct {
 // 设置选项信息
 func (s *Server) SetAuthorizerOption(authorizerAppid string, optionName AuthorizeOption, optionValue string) (resp *SetAuthorizerOptionResp) {
 	resp = &SetAuthorizerOptionResp{}
-	accessToken, err := s.Token()
+	token, err := s.Token()
 	if err != nil {
 		resp.Err(err)
 		return
@@ -155,7 +155,7 @@ func (s *Server) SetAuthorizerOption(authorizerAppid string, optionName Authoriz
 		},
 		OptionValue: optionValue,
 	}
-	resp.Err(core.PostJson(getCompleteUrl(SetAuthorizerOptionUrl, accessToken), req, resp))
+	resp.Err(core.PostJson(getCompleteUrl(SetAuthorizerOptionUrl, token), req, resp))
 	return
 }
 
@@ -178,7 +178,7 @@ type AuthorizerListResp struct {
 // 拉取用户授权列表
 func (s *Server) AuthorizerList(offset, count int) (resp *AuthorizerListResp) {
 	resp = &AuthorizerListResp{}
-	accessToken, err := s.Token()
+	token, err := s.Token()
 	if err != nil {
 		resp.Err(err)
 		return
@@ -188,6 +188,6 @@ func (s *Server) AuthorizerList(offset, count int) (resp *AuthorizerListResp) {
 		Offset:         offset,
 		Count:          count,
 	}
-	resp.Err(core.PostJson(getCompleteUrl(AuthorizerListUrl, accessToken), req, resp))
+	resp.Err(core.PostJson(getCompleteUrl(AuthorizerListUrl, token), req, resp))
 	return
 }
