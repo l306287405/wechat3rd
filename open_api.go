@@ -4,7 +4,7 @@ import "github.com/l306287405/wechat3rd/core"
 
 //清空api的调用quota
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/openApi/clear_quota.html
-func (s *Server) ClearQuota(accessToken string, appId string) (resp *core.Error) {
+func (s *Server) ClearQuota(authorizerAccessToken string, appId string) (resp *core.Error) {
 	var (
 		u   = CGIUrl + "/clear_quota?"
 		req = &struct {
@@ -12,7 +12,7 @@ func (s *Server) ClearQuota(accessToken string, appId string) (resp *core.Error)
 		}{AppId: appId}
 	)
 	resp = &core.Error{}
-	resp.Err(core.PostJson(s.AuthToken2url(u, accessToken), req, resp))
+	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), req, resp))
 	return
 }
 
@@ -27,7 +27,7 @@ type QuotaGetResp struct {
 
 //查询openApi调用quota
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/openApi/get_api_quota.html
-func (s *Server) QuotaGet(accessToken string, cgiPath string) (resp *QuotaGetResp) {
+func (s *Server) QuotaGet(authorizerAccessToken string, cgiPath string) (resp *QuotaGetResp) {
 	var (
 		u   = CGIUrl + "/openapi/quota/get?"
 		req = &struct {
@@ -35,7 +35,7 @@ func (s *Server) QuotaGet(accessToken string, cgiPath string) (resp *QuotaGetRes
 		}{CgiPath: cgiPath}
 	)
 	resp = &QuotaGetResp{}
-	resp.Err(core.PostJson(s.AuthToken2url(u, accessToken), req, resp))
+	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), req, resp))
 	return
 }
 
@@ -52,7 +52,7 @@ type RidGetResp struct {
 
 //查询rid信息
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/openApi/get_rid_info.html
-func (s *Server) RidGet(accessToken string, rid string) (resp *RidGetResp) {
+func (s *Server) RidGet(authorizerAccessToken string, rid string) (resp *RidGetResp) {
 	var (
 		u   = CGIUrl + "/openapi/rid/get?"
 		req = &struct {
@@ -60,6 +60,6 @@ func (s *Server) RidGet(accessToken string, rid string) (resp *RidGetResp) {
 		}{Rid: rid}
 	)
 	resp = &RidGetResp{}
-	resp.Err(core.PostJson(s.AuthToken2url(u, accessToken), req, resp))
+	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), req, resp))
 	return
 }

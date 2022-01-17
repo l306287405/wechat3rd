@@ -28,12 +28,12 @@ type AllCategory struct {
 
 //获取可以设置的所有类目
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/category/getallcategories.html
-func (s *Server) GetMiniProgramAllCategory(accessToken string) (resp *GetAllCategoryResp) {
+func (s *Server) GetMiniProgramAllCategory(authorizerAccessToken string) (resp *GetAllCategoryResp) {
 	var (
 		u = CGIUrl + "/wxopen/getallcategories?"
 	)
 	resp = &GetAllCategoryResp{}
-	resp.Err(core.GetRequest(u, core.AuthTokenUrlValues(accessToken), resp))
+	resp.Err(core.GetRequest(u, core.AuthTokenUrlValues(authorizerAccessToken), resp))
 	return
 }
 
@@ -54,12 +54,12 @@ type GetCategoryResp struct {
 
 //获取已设置的所有类目
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/category/getcategory.html
-func (s *Server) GetMiniProgramCategory(accessToken string) (resp *GetCategoryResp) {
+func (s *Server) GetMiniProgramCategory(authorizerAccessToken string) (resp *GetCategoryResp) {
 	var (
 		u = CGIUrl + "/wxopen/getcategory?"
 	)
 	resp = &GetCategoryResp{}
-	resp.Err(core.GetRequest(u, core.AuthTokenUrlValues(accessToken), resp))
+	resp.Err(core.GetRequest(u, core.AuthTokenUrlValues(authorizerAccessToken), resp))
 	return
 }
 
@@ -72,7 +72,7 @@ type GetCategoriesByTypeResp struct {
 
 //获取不同主体类型的类目
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/category/getcategorybytype.html
-func (s *Server) GetMiniProgramCategoriesByType(accessToken string, verifyType ...int8) (resp *GetCategoriesByTypeResp) {
+func (s *Server) GetMiniProgramCategoriesByType(authorizerAccessToken string, verifyType ...int8) (resp *GetCategoriesByTypeResp) {
 	var (
 		u   = CGIUrl + "/wxopen/getcategoriesbytype?"
 		req = &struct {
@@ -83,7 +83,7 @@ func (s *Server) GetMiniProgramCategoriesByType(accessToken string, verifyType .
 	if verifyType != nil {
 		req.VerifyType = verifyType[0]
 	}
-	resp.Err(core.PostJson(s.AuthToken2url(u, accessToken), req, resp))
+	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), req, resp))
 	return
 }
 
@@ -100,7 +100,7 @@ type CategoryCertCate struct {
 
 //添加类目
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/category/addcategory.html
-func (s *Server) AddMiniProgramCategory(accessToken string, categories []*Categories) (resp *core.Error) {
+func (s *Server) AddMiniProgramCategory(authorizerAccessToken string, categories []*Categories) (resp *core.Error) {
 	var (
 		u   = CGIUrl + "/wxopen/addcategory?"
 		req = &struct {
@@ -108,7 +108,7 @@ func (s *Server) AddMiniProgramCategory(accessToken string, categories []*Catego
 		}{Categories: categories}
 	)
 	resp = &core.Error{}
-	resp.Err(core.PostJson(s.AuthToken2url(u, accessToken), req, resp))
+	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), req, resp))
 	return
 }
 
@@ -119,23 +119,23 @@ type DeleteCategoryReq struct {
 
 //删除类目
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/category/deletecategory.html
-func (s *Server) DeleteMiniProgramCategory(accessToken string, req *DeleteCategoryReq) (resp *core.Error) {
+func (s *Server) DeleteMiniProgramCategory(authorizerAccessToken string, req *DeleteCategoryReq) (resp *core.Error) {
 	var (
 		u = CGIUrl + "/wxopen/addcategory?"
 	)
 	resp = &core.Error{}
-	resp.Err(core.PostJson(s.AuthToken2url(u, accessToken), req, resp))
+	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), req, resp))
 	return
 }
 
 //修改类目资质信息
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/category/modifycategory.html
-func (s *Server) ModifyMiniProgramCategory(accessToken string, categories *Categories) (resp *core.Error) {
+func (s *Server) ModifyMiniProgramCategory(authorizerAccessToken string, categories *Categories) (resp *core.Error) {
 	var (
 		u = CGIUrl + "/wxopen/modifycategory?"
 	)
 	resp = &core.Error{}
-	resp.Err(core.PostJson(s.AuthToken2url(u, accessToken), categories, resp))
+	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), categories, resp))
 	return
 }
 
@@ -153,11 +153,11 @@ type CategoriesResp struct {
 
 //获取审核时可填写的类目信息
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/category/get_category.html
-func (s *Server) GetMiniProgramAuditCategory(accessToken string) (resp *CategoriesResp) {
+func (s *Server) GetMiniProgramAuditCategory(authorizerAccessToken string) (resp *CategoriesResp) {
 	var (
 		u = CGIUrl + "/wxa/get_category?"
 	)
 	resp = &CategoriesResp{}
-	resp.Err(core.GetRequest(u, core.AuthTokenUrlValues(accessToken), resp))
+	resp.Err(core.GetRequest(u, core.AuthTokenUrlValues(authorizerAccessToken), resp))
 	return
 }

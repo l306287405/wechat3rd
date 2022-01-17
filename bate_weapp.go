@@ -41,7 +41,7 @@ type VerifyBetaWeappReq struct {
 
 // 试用小程序快速认证
 // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/beta_Mini_Programs/fastverify.html
-func (s *Server) VerifyBetaWeapp(accessToken string, req *VerifyBetaWeappReq) (resp *core.Error) {
+func (s *Server) VerifyBetaWeapp(authorizerAccessToken string, req *VerifyBetaWeappReq) (resp *core.Error) {
 	var (
 		u = WECHAT_API_URL + "/wxa/verifybetaweapp?"
 		r = struct {
@@ -49,13 +49,13 @@ func (s *Server) VerifyBetaWeapp(accessToken string, req *VerifyBetaWeappReq) (r
 		}{VerifyInfo: req}
 	)
 	resp = &core.Error{}
-	resp.Err(core.PostJson(s.AuthToken2url(u, accessToken), r, resp))
+	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), r, resp))
 	return
 }
 
 // 修改试用小程序名称
 // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/beta_Mini_Programs/fastmodify.html
-func (s *Server) SetBetaWeappNickname(accessToken string, name string) (resp *core.Error) {
+func (s *Server) SetBetaWeappNickname(authorizerAccessToken string, name string) (resp *core.Error) {
 	var (
 		u = WECHAT_API_URL + "/wxa/setbetaweappnickname?"
 		r = struct {
@@ -63,6 +63,6 @@ func (s *Server) SetBetaWeappNickname(accessToken string, name string) (resp *co
 		}{Name: name}
 	)
 	resp = &core.Error{}
-	resp.Err(core.PostJson(s.AuthToken2url(u, accessToken), r, resp))
+	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), r, resp))
 	return
 }
