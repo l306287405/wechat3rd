@@ -191,29 +191,36 @@
 * FastRegisterPersonalWeapp: 快速注册个人小程序
 * QueryPersonalWeapp: 查询个人小程序创建任务状态
 
-#### 创建试用小程序
+#### 试用小程序
 * FastRegisterBetaWeapp: 创建试用小程序
 * VerifyBetaWeapp: 试用小程序快速认证
 * SetBetaWeappNickname: 修改试用小程序名称
 
-#### 其他小程序相关接口
-* Jscode2session: 获取用户openid , session_key
-* AESCBCDecrypt: 用于解密用户数据, 例如解密前端获取手机号时获取的加密信息
-
-
-### 小程序模板接口 (全部完成)
+### 小程序模板接口
 * GetTemplateDraftList: 获取代码草稿列表
 * AddToTemplate: 将草稿添加到代码模板库
 * GetTemplateList: 获取代码模板列表
 * DeleteTemplate: 删除指定代码模板
 
-### 6.代小程序实现业务
-**!!!以下接口注意:accessToken(authorizerAccessToken)为授权方token!!!**
-
-### 基础信息设置 (部分完成)
+### 基础信息设置
 * GetAccountBasicInfo: 获取基本信息
+* OpenHave: 查询公众号/小程序是否绑定open帐号
 * ModifyDomain: 设置服务器域名
 * SetWebviewDomain: 设置业务域名
+* SetNickname: 设置名称
+* CheckWxVerifyNickname: 微信认证名称检测
+* QueryNickname: 查询改名审核状态
+* ModifyHeadImage: 修改头像
+* ModifySignature: 修改简介
+* GetWxaSearchStatus: 查询搜索设置
+* ChangeWxaSearchStatus: 修改隐私设置
+* FetchDataSettingGet: 获取数据拉取配置 (忽略action参数)
+* FetchDataSettingSetPreFetch: 设置预拉取数据 (忽略action参数)
+* FetchDataSettingSetPeriodFetch: 设置周期性拉取数据 (忽略action参数)
+
+### 其他小程序相关接口
+* Jscode2session: 获取用户openid , session_key
+* AESCBCDecrypt: 用于解密用户数据, 例如解密前端获取手机号时获取的加密信息
 
 
 ### 小程序类目管理接口 (全部完成)

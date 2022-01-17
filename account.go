@@ -38,12 +38,28 @@ type GetAccountBasicInfoResp struct {
 
 //获取基本信息
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Mini_Program_Basic_Info/Mini_Program_Information_Settings.html
-func (s *Server) GetAccountBasicInfo(authToken string) (resp *GetAccountBasicInfoResp) {
+func (s *Server) GetAccountBasicInfo(authorizerAccessToken string) (resp *GetAccountBasicInfoResp) {
 	var (
 		u = CGIUrl + "/account/getaccountbasicinfo?"
 	)
 	resp = &GetAccountBasicInfoResp{}
-	resp.Err(core.GetRequest(u, core.AuthTokenUrlValues(authToken), resp))
+	resp.Err(core.GetRequest(u, core.AuthTokenUrlValues(authorizerAccessToken), resp))
+	return
+}
+
+type OpenHaveResp struct {
+	core.Error
+	HaveOpen bool `json:"have_open"`
+}
+
+// 查询公众号/小程序是否绑定open帐号
+// https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Mini_Program_Basic_Info/getbindopeninfo.html
+func (s *Server) OpenHave(authorizerAccessToken string) (resp *OpenHaveResp) {
+	var (
+		u = CGIUrl + "/open/have?"
+	)
+	resp = &OpenHaveResp{}
+	resp.Err(core.GetRequest(u, core.AuthTokenUrlValues(authorizerAccessToken), resp))
 	return
 }
 
@@ -76,12 +92,12 @@ type ModifyDomainResp struct {
 
 //设置服务器域名
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Mini_Program_Basic_Info/Server_Address_Configuration.html
-func (s *Server) ModifyDomain(authToken string, req *ModifyDomainReq) (resp *ModifyDomainResp) {
+func (s *Server) ModifyDomain(authorizerAccessToken string, req *ModifyDomainReq) (resp *ModifyDomainResp) {
 	var (
 		u = WECHAT_API_URL + "/wxa/modify_domain?"
 	)
 	resp = &ModifyDomainResp{}
-	resp.Err(core.PostJson(s.AuthToken2url(u, authToken), req, resp))
+	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), req, resp))
 	return
 }
 
@@ -92,11 +108,226 @@ type SetWebviewDomainReq struct {
 
 //设置业务域名
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Mini_Program_Basic_Info/setwebviewdomain.html
-func (s *Server) SetWebviewDomain(authToken string, req *SetWebviewDomainReq) (resp *core.Error) {
+func (s *Server) SetWebviewDomain(authorizerAccessToken string, req *SetWebviewDomainReq) (resp *core.Error) {
 	var (
 		u = WECHAT_API_URL + "/wxa/setwebviewdomain?"
 	)
 	resp = &core.Error{}
-	resp.Err(core.PostJson(s.AuthToken2url(u, authToken), req, resp))
+	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), req, resp))
+	return
+}
+
+type SetNicknameReq struct {
+	Nickname          string  `json:"nick_name"`
+	IdCard            *string `json:"id_card,omitempty"`
+	License           *string `json:"license,omitempty"`
+	NamingOtherStuff1 *string `json:"naming_other_stuff_1,omitempty"`
+	NamingOtherStuff2 *string `json:"naming_other_stuff_2,omitempty"`
+	NamingOtherStuff3 *string `json:"naming_other_stuff_3,omitempty"`
+	NamingOtherStuff4 *string `json:"naming_other_stuff_4,omitempty"`
+	NamingOtherStuff5 *string `json:"naming_other_stuff_5,omitempty"`
+}
+
+type SetNicknameResp struct {
+	core.Error
+	Wording string `json:"wording"`
+	AuditId int    `json:"auditId"`
+}
+
+// 设置名称
+// https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Mini_Program_Basic_Info/setnickname.html
+func (s *Server) SetNickname(authorizerAccessToken string, req *SetNicknameReq) (resp *SetNicknameResp) {
+	var (
+		u = WECHAT_API_URL + "/wxa/setwebviewdomain?"
+	)
+	resp = &SetNicknameResp{}
+	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), req, resp))
+	return
+}
+
+type CheckWxVerifyNicknameResp struct {
+	core.Error
+	HitCondition bool   `json:"hit_condition"`
+	Wording      string `json:"wording"`
+}
+
+// 微信认证名称检测
+// https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Mini_Program_Basic_Info/wxverify_checknickname.html
+func (s *Server) CheckWxVerifyNickname(authorizerAccessToken string, Nickname string) (resp *CheckWxVerifyNicknameResp) {
+	var (
+		u   = CGIUrl + "/wxverify/checkwxverifynickname?"
+		req = &struct {
+			Nickname string `json:"nick_name"`
+		}{Nickname: Nickname}
+	)
+	resp = &CheckWxVerifyNicknameResp{}
+	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), req, resp))
+	return
+}
+
+type QueryNicknameResp struct {
+	core.Error
+	Nickname   string `json:"nickname"`
+	AuditStat  int8   `json:"audit_stat"`
+	FailReason string `json:"fail_reason"`
+	CreateTime int64  `json:"create_time"`
+	AuditTime  int64  `json:"audit_time"`
+}
+
+// 查询改名审核状态
+// https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Mini_Program_Basic_Info/api_wxa_querynickname.html
+func (s *Server) QueryNickname(authorizerAccessToken string, auditId int) (resp *QueryNicknameResp) {
+	var (
+		u   = WECHAT_API_URL + "/wxa/api_wxa_querynickname?"
+		req = &struct {
+			AuditId int `json:"audit_id"`
+		}{AuditId: auditId}
+	)
+	resp = &QueryNicknameResp{}
+	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), req, resp))
+	return
+}
+
+type ModifyHeadImageReq struct {
+	HeadImgMediaId string `json:"head_img_media_id"`
+	X1             string `json:"x1"`
+	Y1             string `json:"y1"`
+	X2             string `json:"x2"`
+	Y2             string `json:"y2"`
+}
+
+// 修改头像
+// https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Mini_Program_Basic_Info/modifyheadimage.html
+func (s *Server) ModifyHeadImage(authorizerAccessToken string, req *ModifyHeadImageReq) (resp *core.Error) {
+	var (
+		u = CGIUrl + "/account/modifyheadimage?"
+	)
+	resp = &core.Error{}
+	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), req, resp))
+	return
+}
+
+// 修改简介
+// https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Mini_Program_Basic_Info/modifysignature.html
+func (s *Server) ModifySignature(authorizerAccessToken string, signature string) (resp *core.Error) {
+	var (
+		u   = CGIUrl + "/account/modifysignature?"
+		req = &struct {
+			Signature string `json:"signature"`
+		}{Signature: signature}
+	)
+	resp = &core.Error{}
+	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), req, resp))
+	return
+}
+
+type GetWxaSearchStatusResp struct {
+	core.Error
+	Status int8 `json:"status"`
+}
+
+// 查询搜索设置
+// https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Mini_Program_Basic_Info/getwxasearchstatus.html
+func (s *Server) GetWxaSearchStatus(authorizerAccessToken string) (resp *GetWxaSearchStatusResp) {
+	var (
+		u = WECHAT_API_URL + "/wxa/getwxasearchstatus?"
+	)
+	resp = &GetWxaSearchStatusResp{}
+	resp.Err(core.GetRequest(u, core.AuthTokenUrlValues(authorizerAccessToken), resp))
+	return
+}
+
+// 修改搜索设置
+// https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Mini_Program_Basic_Info/changewxasearchstatus.html
+func (s *Server) ChangeWxaSearchStatus(authorizerAccessToken string, status int8) (resp *core.Error) {
+	var (
+		u   = WECHAT_API_URL + "/wxa/changewxasearchstatus?"
+		req = &struct {
+			Status int8 `json:"status"`
+		}{Status: status}
+	)
+	resp = &core.Error{}
+	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), req, resp))
+	return
+}
+
+type FetchDataSettingGetResp struct {
+	core.Error
+	IsPreFetchOpen     bool   `json:"is_pre_fetch_open"`
+	PreFetchType       int8   `json:"pre_fetch_type"`
+	PreFetchUrl        string `json:"pre_fetch_url,omitempty"`
+	PreEnv             string `json:"pre_env"`
+	PreFunctionName    string `json:"pre_function_name"`
+	IsPeriodFetchOpen  bool   `json:"is_period_fetch_open"`
+	PeriodFetchType    int8   `json:"period_fetch_type"`
+	PeriodFetchUrl     string `json:"period_fetch_url"`
+	PeriodEnv          string `json:"period_env"`
+	PeriodFunctionName string `json:"period_function_name"`
+}
+
+// 获取数据拉取配置
+// https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Mini_Program_Basic_Info/get_fetchdatasetting.html
+func (s *Server) FetchDataSettingGet(authorizerAccessToken string) (resp *FetchDataSettingGetResp) {
+	var (
+		u   = WECHAT_API_URL + "/wxa/fetchdatasetting?"
+		req = &struct {
+			Action string `json:"action"`
+		}{Action: "get"}
+	)
+	resp = &FetchDataSettingGetResp{}
+	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), req, resp))
+	return
+}
+
+type FetchDataSettingSetPreFetchReq struct {
+	IsPreFetchOpen  bool   `json:"is_pre_fetch_open"`
+	PreFetchType    int8   `json:"pre_fetch_type"`
+	PreFetchUrl     string `json:"pre_fetch_url,omitempty"`
+	PreEnv          string `json:"pre_env"`
+	PreFunctionName string `json:"pre_function_name"`
+	//IsPeriodFetchOpen  bool   `json:"is_period_fetch_open"`
+	//PeriodFetchType    int8   `json:"period_fetch_type"`
+	//PeriodFetchUrl     string `json:"period_fetch_url"`
+	//PeriodEnv          string `json:"period_env"`
+	//PeriodFunctionName string `json:"period_function_name"`
+}
+type fetchDataSettingSetPreFetchReqWithAction struct {
+	Action string `json:"action"`
+	FetchDataSettingSetPreFetchReq
+}
+
+// 设置预拉取数据
+// https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Mini_Program_Basic_Info/set_pre_fetchdatasetting.html
+func (s *Server) FetchDataSettingSetPreFetch(authorizerAccessToken string, req *FetchDataSettingSetPreFetchReq) (resp *core.Error) {
+	var (
+		u  = WECHAT_API_URL + "/wxa/fetchdatasetting?"
+		fr = &fetchDataSettingSetPreFetchReqWithAction{Action: "set_pre_fetch", FetchDataSettingSetPreFetchReq: *req}
+	)
+	resp = &core.Error{}
+	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), fr, resp))
+	return
+}
+
+type FetchDataSettingSetPeriodFetchReq struct {
+	IsPeriodFetchOpen  bool   `json:"is_period_fetch_open"`
+	PeriodFetchType    int8   `json:"period_fetch_type"`
+	PeriodFetchUrl     string `json:"period_fetch_url,omitempty"`
+	PeriodEnv          string `json:"period_env,omitempty"`
+	PeriodFunctionName string `json:"period_function_name,omitempty"`
+}
+type fetchDataSettingSetPeriodFetchReqWithAction struct {
+	Action string `json:"action"`
+	FetchDataSettingSetPeriodFetchReq
+}
+
+// 设置周期性拉取数据
+// https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Mini_Program_Basic_Info/set_period_fetchdatasetting.html
+func (s *Server) FetchDataSettingSetPeriodFetch(authorizerAccessToken string, req *FetchDataSettingSetPeriodFetchReq) (resp *core.Error) {
+	var (
+		u  = WECHAT_API_URL + "/wxa/fetchdatasetting?"
+		fr = &fetchDataSettingSetPeriodFetchReqWithAction{Action: "set_period_fetch", FetchDataSettingSetPeriodFetchReq: *req}
+	)
+	resp = &core.Error{}
+	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), fr, resp))
 	return
 }
