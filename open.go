@@ -9,7 +9,7 @@ type OpenCreateOrGetResp struct {
 
 // 创建开放平台帐号并绑定公众号/小程序
 // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/account/create.html
-func (s *Server) OpenCreate(accessToken string, appId *string) (resp *OpenCreateOrGetResp) {
+func (s *Server) OpenCreate(authorizerAccessToken string, appId *string) (resp *OpenCreateOrGetResp) {
 	var (
 		u   = CGIUrl + "/open/create?"
 		req = &struct {
@@ -20,7 +20,7 @@ func (s *Server) OpenCreate(accessToken string, appId *string) (resp *OpenCreate
 		req.AppId = appId
 	}
 	resp = &OpenCreateOrGetResp{}
-	resp.Err(core.PostJson(s.AuthToken2url(u, accessToken), req, resp))
+	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), req, resp))
 	return
 }
 
@@ -31,29 +31,29 @@ type OpenBindOrUnbindReq struct {
 
 // 将公众号/小程序绑定到开放平台帐号下
 // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/account/create.html
-func (s *Server) OpenBind(accessToken string, req *OpenBindOrUnbindReq) (resp *core.Error) {
+func (s *Server) OpenBind(authorizerAccessToken string, req *OpenBindOrUnbindReq) (resp *core.Error) {
 	var (
 		u = CGIUrl + "/open/bind?"
 	)
 	resp = &core.Error{}
-	resp.Err(core.PostJson(s.AuthToken2url(u, accessToken), req, resp))
+	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), req, resp))
 	return
 }
 
 // 将公众号/小程序从开放平台帐号下解绑
 // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/account/unbind.html
-func (s *Server) OpenUnbind(accessToken string, req *OpenBindOrUnbindReq) (resp *core.Error) {
+func (s *Server) OpenUnbind(authorizerAccessToken string, req *OpenBindOrUnbindReq) (resp *core.Error) {
 	var (
 		u = CGIUrl + "/open/unbind?"
 	)
 	resp = &core.Error{}
-	resp.Err(core.PostJson(s.AuthToken2url(u, accessToken), req, resp))
+	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), req, resp))
 	return
 }
 
 // 获取公众号/小程序所绑定的开放平台帐号
 // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/account/get.html
-func (s *Server) OpenGet(accessToken string, appId *string) (resp *OpenCreateOrGetResp) {
+func (s *Server) OpenGet(authorizerAccessToken string, appId *string) (resp *OpenCreateOrGetResp) {
 	var (
 		u   = CGIUrl + "/open/get?"
 		req = &struct {
@@ -64,6 +64,6 @@ func (s *Server) OpenGet(accessToken string, appId *string) (resp *OpenCreateOrG
 		req.AppId = appId
 	}
 	resp = &OpenCreateOrGetResp{}
-	resp.Err(core.PostJson(s.AuthToken2url(u, accessToken), req, resp))
+	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), req, resp))
 	return
 }
