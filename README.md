@@ -1,8 +1,10 @@
 # 项目地址
 [l306287405/wechat3rd](https://github.com/l306287405/wechat3rd)
 
-### 感谢
-项目基于 [owen-gxz/open-wechat](https://github.com/owen-gxz/open-wechat) 做了原方法改动以及添加对新接口的支持并补充使用说明.
+### Todo
+    * v1.7代小程序实现业务扫尾(仅剩不常用的 扫码关注公众号 与 扫普通链接二维码打开小程序)
+    * v1.8 将会重写异步回调部分逻辑,如果近期没写完就是工作还没有着落...
+    * v1.9 代公众号实现业务相关
 
 ### 1.简介
 
@@ -18,7 +20,7 @@
 #### 2.1: 引入
     go get -u github.com/l306287405/wechat3rd@master
     or
-    go get -u github.com/l306287405/wechat3rd@v1.7.7 (请选择最新版本)
+    go get -u github.com/l306287405/wechat3rd@v1.7.8 (请选择最新版本)
     v1.6.0版本开始Service提供的所有方法仅在resp返回对象中提供错误信息
 
 #### 2.2: 使用NewService方法来创建一个service
@@ -51,7 +53,7 @@
     if ticket!=""{
         err=service.SetTicket(ticket)
         if err!=nil{
-            common.Log.Error("设置微信isp的ticket失败:",err.Error()," 等待自动获取")
+            log.Error("设置微信isp的ticket失败:",err.Error()," 等待自动获取")
         }
     }
 
@@ -196,13 +198,13 @@
 * VerifyBetaWeapp: 试用小程序快速认证
 * SetBetaWeappNickname: 修改试用小程序名称
 
-### 小程序模板接口
+#### 小程序模板接口
 * GetTemplateDraftList: 获取代码草稿列表
 * AddToTemplate: 将草稿添加到代码模板库
 * GetTemplateList: 获取代码模板列表
 * DeleteTemplate: 删除指定代码模板
 
-### 基础信息设置
+#### 基础信息设置
 * GetAccountBasicInfo: 获取基本信息
 * OpenHave: 查询公众号/小程序是否绑定open帐号
 * ModifyDomain: 设置服务器域名
@@ -218,12 +220,10 @@
 * FetchDataSettingSetPreFetch: 设置预拉取数据 (忽略action参数)
 * FetchDataSettingSetPeriodFetch: 设置周期性拉取数据 (忽略action参数)
 
-### 其他小程序相关接口
-* Jscode2session: 获取用户openid , session_key
-* AESCBCDecrypt: 用于解密用户数据, 例如解密前端获取手机号时获取的加密信息
+#### 获取小程序码
+* GetWxaCodeUnLimit: 获取unlimited小程序码
 
-
-### 小程序类目管理接口 (全部完成)
+#### 小程序类目管理接口
 * GetMiniProgramAllCategory: 获取可以设置的所有类目
 * GetMiniProgramCategory: 获取已设置的所有类目
 * GetMiniProgramCategoriesByType: 获取不同主体类型的类目
@@ -232,24 +232,24 @@
 * ModifyMiniProgramCategory: 修改类目资质信息
 * GetMiniProgramAuditCategory: 获取审核时可填写的类目信息
 
-### 成员管理 (全部完成)
+#### 小程序成员管理
 * BindTester: 绑定体验者
 * UnbindTester: 解除绑定体验者
-* Memberauth: 获取体验者列表
+* Memberauth: 获取已绑定的体验者列表
 
-### 代码管理 (全部完成)
+#### 小程序代码管理
 * Commit: 上传代码
 * GetPage: 获取已上传的代码的页面列表
 * GetQrcode: 获取体验版二维码
 * SubmitAudit: 提交审核
 * GetAuditStatus: 查询指定发布审核单的审核状态
 * GetLatestAuditStatus: 查询最新一次提交的审核状态
-* UndoCodeAudit: 小程序审核撤回
+* UndoCodeAudit: 审核撤回
 * Release: 发布已通过审核的小程序
 * RevertCodeRelease: 小程序版本回退
 * GetRevertCodeRelease: 获取可回退的小程序版本
 * GrayRelease: 分阶段发布(灰度发布)
-* GetGrayReleasePlan: 查询当前分阶段发布详情
+* GetGrayReleasePlan: 查询分阶段发布详情
 * RevertGrayRelease: 取消分阶段发布
 * ChangeVisitStatus: 修改小程序服务状态
 * GetWeappSupportVersion: 查询当前设置的最低基础库版本及各版本用户占比
@@ -257,7 +257,15 @@
 * QueryQuota: 查询服务商的当月提审限额（quota）和加急次数
 * SpeedupAudit: 加急审核申请
 
-### 订阅消息设置  (全部完成)
+#### 违规和申诉管理
+* GetIllegalRecords: 获取小程序违规处罚记录
+* GetAppealRecords: 获取小程序申诉记录
+
+#### 其他小程序相关接口
+* Jscode2session: 获取用户openid , session_key
+* AESCBCDecrypt: 用于解密用户数据, 例如解密前端获取手机号时获取的加密信息
+
+#### 订阅消息设置 
 * GetCategory: 获取当前帐号所设置的类目信息
 * GetPubTemplateTitles: 获取模板标题列表
 * GetPubTemplateKeywords: 获取模板标题下的关键词库
@@ -266,22 +274,17 @@
 * DelTemplate: 删除帐号下的某个模板
 * SubscribeSend: 发送订阅消息
 
-### 支付后获取 Unionid
+#### 支付后获取 Unionid
 * GetPaidUnionId: 支付后获取用户 Unionid 接口
 
-### 素材管理
+#### 素材管理
 * MediaUpload: 新增临时素材
 * MediaGet: 获取临时素材
 * GetMaterial: 获取永久素材
 
-### 插件管理
+#### 插件管理
 * Plugin: 小程序插件管理
 
 #### 工具
 * PostJson： 提交json数据
 * AESDecryptData: 用于解密数据
-
-## todo
-    * 代小程序实现业务(部分完成)
-    * 开放平台账号管理
-    * 代公众号实现业务
