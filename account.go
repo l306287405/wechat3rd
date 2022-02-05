@@ -331,3 +331,35 @@ func (s *Server) FetchDataSettingSetPeriodFetch(authorizerAccessToken string, re
 	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), fr, resp))
 	return
 }
+
+type RGB struct {
+	R int `json:"r"`
+	G int `json:"g"`
+	B int `json:"b"`
+}
+
+type GetWxaCodeUnLimitReq struct {
+	Scene     string `json:"scene"`                 //最大32个可见字符，只支持数字，大小写英文以及部分特殊字符：!#$&'()*+,/:;=?@-._~，其它字符请自行编码为合法字符（因不支持%，中文无法使用 urlencode 处理，请使用其他编码方式）
+	Page      string `json:"page,omitempty"`        //默认值:主页, 必须是已经发布的小程序存在的页面（否则报错），例如 pages/index/index, 根路径前不要填加 /, 不能携带参数（参数请放在scene字段里），如果不填写这个字段，默认跳主页面
+	Width     int    `json:"width,omitempty"`       //默认值:430 二维码的宽度，单位 px，最小 280px，最大 1280px
+	AutoColor bool   `json:"auto_color,omitempty"`  //默认值:false 自动配置线条颜色，如果颜色依然是黑色，则说明不建议配置主色调，默认 false
+	LineColor *RGB   `json:"line_color,omitempty"`  //auto_color 为 false 时生效，使用 rgb 设置颜色 例如 { "r":"xxx", "g":"xxx", "b":"xxx"} 十进制表示
+	IsHyaLine bool   `json:"is_hya_line,omitempty"` //默认值:false 是否需要透明底色，为 true 时，生成透明底色的小程序
+}
+
+type GetWxaCodeUnLimitResp struct {
+	core.Error
+	Buffer      []byte `json:"buffer"`
+	ContentType string `json:"contentType"`
+}
+
+// 获取unlimited小程序码
+// https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/qrcode/getwxacodeunlimit.html
+func (s *Server) GetWxaCodeUnLimit(authorizerAccessToken string, req *GetWxaCodeUnLimitReq) (resp *GetWxaCodeUnLimitResp) {
+	var (
+		u = WECHAT_API_URL + "/wxa/getwxacodeunlimit?"
+	)
+	resp = &GetWxaCodeUnLimitResp{}
+	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), req, resp))
+	return
+}
