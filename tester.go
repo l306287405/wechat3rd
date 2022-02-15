@@ -13,12 +13,12 @@ type BindTesterResp struct {
 
 //绑定微信用户为体验者
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Mini_Program_AdminManagement/Admin.html
-func (s *Server) BindTester(accessToken string, req *BindTesterReq) (resp *BindTesterResp) {
+func (s *Server) BindTester(authorizerAccessToken string, req *BindTesterReq) (resp *BindTesterResp) {
 	var (
 		u = WECHAT_API_URL + "/wxa/bind_tester?"
 	)
 	resp = &BindTesterResp{}
-	resp.Err(core.PostJson(s.AuthToken2url(u, accessToken), req, resp))
+	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), req, resp))
 	return
 }
 
@@ -29,12 +29,12 @@ type UnbindTesterReq struct {
 
 //解除绑定体验者
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Mini_Program_AdminManagement/unbind_tester.html
-func (s *Server) UnbindTester(accessToken string, req *UnbindTesterReq) (resp *core.Error) {
+func (s *Server) UnbindTester(authorizerAccessToken string, req *UnbindTesterReq) (resp *core.Error) {
 	var (
 		u = WECHAT_API_URL + "/wxa/unbind_tester?"
 	)
 	resp = &core.Error{}
-	resp.Err(core.PostJson(s.AuthToken2url(u, accessToken), req, resp))
+	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), req, resp))
 	return
 }
 
@@ -49,7 +49,7 @@ type MemberAuthResp struct {
 
 //获取体验者列表
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Mini_Program_AdminManagement/memberauth.html
-func (s *Server) MemberAuth(accessToken string) (resp *MemberAuthResp) {
+func (s *Server) MemberAuth(authorizerAccessToken string) (resp *MemberAuthResp) {
 	var (
 		u   = WECHAT_API_URL + "/wxa/memberauth?"
 		req = &struct {
@@ -57,6 +57,6 @@ func (s *Server) MemberAuth(accessToken string) (resp *MemberAuthResp) {
 		}{Action: "get_experiencer"}
 	)
 	resp = &MemberAuthResp{}
-	resp.Err(core.PostJson(s.AuthToken2url(u, accessToken), req, resp))
+	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), req, resp))
 	return
 }

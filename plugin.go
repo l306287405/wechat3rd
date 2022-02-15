@@ -22,11 +22,11 @@ type PluginResp struct {
 
 //小程序插件管理
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Business/pluginManager.html
-func (s *Server) Plugin(accessToken string, req *PluginReq) (resp *PluginResp) {
+func (s *Server) Plugin(authorizerAccessToken string, req *PluginReq) (resp *PluginResp) {
 	var (
 		u = WECHAT_API_URL + "/wxa/plugin?"
 	)
 	resp = &PluginResp{}
-	resp.Err(core.PostJson(s.AuthToken2url(u, accessToken), req, resp))
+	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), req, resp))
 	return
 }
