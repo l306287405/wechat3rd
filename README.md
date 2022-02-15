@@ -4,7 +4,7 @@
 ### Todo
     * v1.7代小程序实现业务扫尾(仅剩不常用的 扫码关注公众号 与 扫普通链接二维码打开小程序)
     * v1.8 将会重写异步回调部分逻辑,如果近期没写完就是工作还没有着落...
-    * v1.9 代公众号实现业务相关
+    * v1.9 微服务化sdk
 
 ### 1.简介
 
@@ -20,7 +20,7 @@
 #### 2.1: 引入
     go get -u github.com/l306287405/wechat3rd@master
     or
-    go get -u github.com/l306287405/wechat3rd@v1.7.8 (请选择最新版本)
+    go get -u github.com/l306287405/wechat3rd@v1.7.9 (请选择最新版本)
     v1.6.0版本开始Service提供的所有方法仅在resp返回对象中提供错误信息
 
 #### 2.2: 使用NewService方法来创建一个service
@@ -190,6 +190,8 @@
 #### 代商家注册小程序
 * FastRegisterOrgWeapp: 快速注册企业小程序
 * QueryOrgWeapp: 查询注册企业创建任务状态
+* FastRegister: 复用公众号主体快速注册小程序
+* GetMPAuthUrl: 获取微信公众平台授权页面链接
 * FastRegisterPersonalWeapp: 快速注册个人小程序
 * QueryPersonalWeapp: 查询个人小程序创建任务状态
 
