@@ -17,13 +17,13 @@ type Jscode2sessionResp struct {
 
 func (s *Server) Jscode2session(appId, jsCode string) (resp *Jscode2sessionResp) {
 	var (
-		req         = make(url.Values)
-		u           = "https://api.weixin.qq.com/sns/component/jscode2session?"
-		accessToken string
-		err         error
+		req   = make(url.Values)
+		u     = "https://api.weixin.qq.com/sns/component/jscode2session?"
+		token string
+		err   error
 	)
 	resp = &Jscode2sessionResp{}
-	accessToken, err = s.Token()
+	token, err = s.Token()
 	if err != nil {
 		resp.Err(err)
 		return
@@ -32,7 +32,7 @@ func (s *Server) Jscode2session(appId, jsCode string) (resp *Jscode2sessionResp)
 	req.Set("js_code", jsCode)
 	req.Set("grant_type", "authorization_code")
 	req.Set("component_appid", s.cfg.AppID)
-	req.Set("component_access_token", accessToken)
+	req.Set("component_access_token", token)
 
 	resp.Err(core.GetRequest(u, req, resp))
 	return
@@ -41,9 +41,9 @@ func (s *Server) Jscode2session(appId, jsCode string) (resp *Jscode2sessionResp)
 // 解密用户信息
 func (s *Server) AESCBCDecrypt(encryptData, key, iv string) (data []byte, err error) {
 	var (
-		encBytes, keyBytes, ivBytes  []byte
-		block    cipher.Block
-		mode     cipher.BlockMode
+		encBytes, keyBytes, ivBytes []byte
+		block                       cipher.Block
+		mode                        cipher.BlockMode
 	)
 	encBytes, err = base64.StdEncoding.DecodeString(encryptData)
 	if err != nil {

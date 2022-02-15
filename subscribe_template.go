@@ -17,12 +17,12 @@ type Category struct {
 
 //获取当前帐号所设置的类目信息
 //https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/subscribe-message/subscribeMessage.getCategory.html
-func (s *Server) GetCategory(accessToken string) (resp *GetcategoryResp) {
+func (s *Server) GetCategory(authorizerAccessToken string) (resp *GetcategoryResp) {
 	var (
 		u = WECHAT_API_URL + "/wxaapi/newtmpl/getcategory?"
 	)
 	resp = &GetcategoryResp{}
-	resp.Err(core.GetRequest(u, core.AuthTokenUrlValues(accessToken), resp))
+	resp.Err(core.GetRequest(u, core.AuthTokenUrlValues(authorizerAccessToken), resp))
 	return
 }
 
@@ -47,10 +47,10 @@ type CategoryTitle struct {
 
 //获取模板标题列表
 //https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/subscribe-message/subscribeMessage.getPubTemplateTitleList.html
-func (s *Server) GetPubTemplateTitles(accessToken string, req *GetPubTemplateTitlesReq) (resp *GetPubTemplateTitlesResp) {
+func (s *Server) GetPubTemplateTitles(authorizerAccessToken string, req *GetPubTemplateTitlesReq) (resp *GetPubTemplateTitlesResp) {
 	var (
 		u = WECHAT_API_URL + "/wxaapi/newtmpl/getpubtemplatetitles?"
-		v = core.AuthTokenUrlValues(accessToken)
+		v = core.AuthTokenUrlValues(authorizerAccessToken)
 	)
 	resp = &GetPubTemplateTitlesResp{}
 	v.Set("ids", req.Ids)
@@ -74,10 +74,10 @@ type CategoryKeyword struct {
 
 //获取模板标题下的关键词库
 //https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/subscribe-message/subscribeMessage.getPubTemplateKeyWordsById.html
-func (s *Server) GetPubTemplateKeywords(accessToken string, tid int) (resp *GetPubTemplateKeywordsResp) {
+func (s *Server) GetPubTemplateKeywords(authorizerAccessToken string, tid int) (resp *GetPubTemplateKeywordsResp) {
 	var (
 		u = WECHAT_API_URL + "/wxaapi/newtmpl/getpubtemplatekeywords?"
-		v = core.AuthTokenUrlValues(accessToken)
+		v = core.AuthTokenUrlValues(authorizerAccessToken)
 	)
 	resp = &GetPubTemplateKeywordsResp{}
 	v.Set("tid", strconv.Itoa(tid))
@@ -98,12 +98,12 @@ type AddTemplateResp struct {
 
 //组合模板并添加到个人模板库
 //https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/subscribe-message/subscribeMessage.addTemplate.html
-func (s *Server) AddTemplate(accessToken string, req *AddTemplateReq) (resp *AddTemplateResp) {
+func (s *Server) AddTemplate(authorizerAccessToken string, req *AddTemplateReq) (resp *AddTemplateResp) {
 	var (
 		u = WECHAT_API_URL + "/wxaapi/newtmpl/addtemplate?"
 	)
 	resp = &AddTemplateResp{}
-	resp.Err(core.PostJson(s.AuthToken2url(u, accessToken), req, resp))
+	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), req, resp))
 	return
 }
 
@@ -122,18 +122,18 @@ type PriTemplate struct {
 
 //获取帐号下的模板列表
 //https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/subscribe-message/subscribeMessage.getTemplateList.html
-func (s *Server) GetTemplate(accessToken string) (resp *GetTemplateResp) {
+func (s *Server) GetTemplate(authorizerAccessToken string) (resp *GetTemplateResp) {
 	var (
 		u = WECHAT_API_URL + "/wxaapi/newtmpl/gettemplate?"
 	)
 	resp = &GetTemplateResp{}
-	resp.Err(core.GetRequest(u, core.AuthTokenUrlValues(accessToken), resp))
+	resp.Err(core.GetRequest(u, core.AuthTokenUrlValues(authorizerAccessToken), resp))
 	return
 }
 
 //删除帐号下的某个模板
 //https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/subscribe-message/subscribeMessage.deleteTemplate.html
-func (s *Server) DelTemplate(accessToken, priTmplId string) (resp *core.Error) {
+func (s *Server) DelTemplate(authorizerAccessToken, priTmplId string) (resp *core.Error) {
 	var (
 		u   = WECHAT_API_URL + "/wxaapi/newtmpl/deltemplate?"
 		req = &struct {
@@ -141,7 +141,7 @@ func (s *Server) DelTemplate(accessToken, priTmplId string) (resp *core.Error) {
 		}{PriTmplId: priTmplId}
 	)
 	resp = &core.Error{}
-	resp.Err(core.PostJson(s.AuthToken2url(u, accessToken), req, resp))
+	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), req, resp))
 	return
 }
 
@@ -161,7 +161,7 @@ type SubscribeSendReq struct {
 
 //发送订阅消息
 //https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/subscribe-message/subscribeMessage.send.html
-func (s *Server) SubscribeSend(accessToken string, req *SubscribeSendReq) (resp *core.Error) {
+func (s *Server) SubscribeSend(authorizerAccessToken string, req *SubscribeSendReq) (resp *core.Error) {
 	var (
 		u = CGIUrl + "/message/subscribe/send?"
 	)
@@ -177,6 +177,6 @@ func (s *Server) SubscribeSend(accessToken string, req *SubscribeSendReq) (resp 
 			}{Value: v}
 		}
 	}
-	resp.Err(core.PostJson(s.AuthToken2url(u, accessToken), req, resp))
+	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), req, resp))
 	return
 }

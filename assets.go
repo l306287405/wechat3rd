@@ -19,11 +19,11 @@ type MediaUploadResp struct {
 
 //新增临时素材
 //https://developers.weixin.qq.com/doc/offiaccount/Asset_Management/New_temporary_materials.html
-func (s *Server) MediaUpload(accessToken string, req *MediaUploadReq) (resp *MediaUploadResp) {
+func (s *Server) MediaUpload(authorizerAccessToken string, req *MediaUploadReq) (resp *MediaUploadResp) {
 	var (
 		u = CGIUrl + "/media/upload?"
 	)
-	u = s.AuthToken2url(u, accessToken) + "&type=" + req.Type
+	u = s.AuthToken2url(u, authorizerAccessToken) + "&type=" + req.Type
 	resp = &MediaUploadResp{}
 	resp.Err(core.PostFile(u, req.Path, "media", resp))
 	return
@@ -36,14 +36,14 @@ type MediaGetResp struct {
 
 //获取临时素材
 //https://developers.weixin.qq.com/doc/offiaccount/Asset_Management/Get_temporary_materials.html
-func (s *Server) MediaGet(accessToken string, mediaId string) (resp *MediaGetResp) {
+func (s *Server) MediaGet(authorizerAccessToken string, mediaId string) (resp *MediaGetResp) {
 	var (
 		u   = CGIUrl + "/media/get?"
 		req = url.Values{}
 	)
 	req.Set("media_id", mediaId)
 	resp = &MediaGetResp{}
-	resp.Err(core.GetRequest(s.AuthToken2url(u, accessToken), req, resp))
+	resp.Err(core.GetRequest(s.AuthToken2url(u, authorizerAccessToken), req, resp))
 	return
 }
 
@@ -71,7 +71,7 @@ type GetMaterialResp struct {
 
 //获取永久素材
 //https://developers.weixin.qq.com/doc/offiaccount/Asset_Management/Adding_Permanent_Assets.html
-func (s *Server) GetMaterial(accessToken string, mediaId string) (resp *GetMaterialResp) {
+func (s *Server) GetMaterial(authorizerAccessToken string, mediaId string) (resp *GetMaterialResp) {
 	var (
 		u   = CGIUrl + "/material/get_material?"
 		req = &struct {
@@ -79,6 +79,6 @@ func (s *Server) GetMaterial(accessToken string, mediaId string) (resp *GetMater
 		}{MediaId: mediaId}
 	)
 	resp = &GetMaterialResp{}
-	resp.Err(core.PostJson(s.AuthToken2url(u, accessToken), req, resp))
+	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), req, resp))
 	return
 }
