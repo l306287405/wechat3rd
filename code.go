@@ -2,11 +2,13 @@ package wechat3rd
 
 import (
 	"errors"
-	"github.com/l306287405/wechat3rd/core"
 	"net/http"
 	"net/url"
 	"os"
+	"strconv"
 	"strings"
+
+	"github.com/l306287405/wechat3rd/core"
 )
 
 type CommitReq struct {
@@ -206,18 +208,23 @@ func (s *Server) Release(authorizerAccessToken string) (resp *core.Error) {
 
 //版本回退
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/revertcoderelease.html
-func (s *Server) RevertCodeRelease(authorizerAccessToken string) (resp *core.Error) {
+func (s *Server) RevertCodeRelease(authorizerAccessToken string, appVersion int) (resp *core.Error) {
 	var (
-		u = WECHAT_API_URL + "/wxa/revertcoderelease?"
+		u      = WECHAT_API_URL + "/wxa/revertcoderelease?"
+		params = core.AuthTokenUrlValues(authorizerAccessToken)
 	)
+	//版本为零则回退到上一个版本
+	if appVersion != 0 {
+		params.Set("app_version", strconv.Itoa(appVersion))
+	}
 	resp = &core.Error{}
-	resp.Err(core.GetRequest(u, core.AuthTokenUrlValues(authorizerAccessToken), resp))
+	resp.Err(core.GetRequest(u, params, resp))
 	return
 }
 
 type GetRevertCodeReleaseResp struct {
 	core.Error
-	TemplateList []*RevertTemplate `json:"template_list"` //模板信息列表
+	TemplateList []*RevertTemplate `json:"version_list"` //版本信息列表
 }
 
 type RevertTemplate struct {
