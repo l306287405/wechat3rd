@@ -20,7 +20,7 @@
 #### 2.1: 引入
     go get -u github.com/l306287405/wechat3rd@master
     or
-    go get -u github.com/l306287405/wechat3rd@v1.7.9 (请选择最新版本)
+    go get -u github.com/l306287405/wechat3rd@v1.7.10 (请选择最新版本)
     v1.6.0版本开始Service提供的所有方法仅在resp返回对象中提供错误信息
 
 #### 2.2: 使用NewService方法来创建一个service
@@ -159,6 +159,10 @@
 * SetPrivacySetting: 设置小程序用户隐私保护指引
 * GetPrivacySetting: 查询小程序用户隐私保护指引
 * UploadPrivacyExtFile: 上传小程序用户隐私保护指引
+
+#### 地理位置接口申请
+* ApplyPrivacyInterface: 申请地理位置接口
+* GetPrivacyInterface: 获取地理位置接口列表
 
 #### 授权相关接口：
 * ServeHTTP: 处理消息与事件接收URL的推送 例如:
