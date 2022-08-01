@@ -39,7 +39,7 @@ type GetPrivacyInterfaceResp struct {
 		FailReason string `json:"fail_reason,omitempty"` //申请被驳回原因或者无权限，该字段申请驳回时才会有
 		ApiLink    string `json:"api_link"`              //api文档链接
 		GroupName  string `json:"group_name"`            //分组名
-	}
+	} `json:"interface_list"`
 }
 
 //获取地理位置接口列表
