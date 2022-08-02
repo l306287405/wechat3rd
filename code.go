@@ -18,7 +18,7 @@ type CommitReq struct {
 	UserDesc    string `json:"user_desc"`    //代码描述，开发者可自定义
 }
 
-//上传小程序代码
+// Commit 上传小程序代码
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/commit.html
 func (s *Server) Commit(authorizerAccessToken string, req *CommitReq) (resp *core.Error) {
 	var (
@@ -34,7 +34,7 @@ type GetPageResp struct {
 	PageList []string `json:"page_list"` //page_list 页面配置列表
 }
 
-//获取已上传的代码的页面列表
+// GetPage 获取已上传的代码的页面列表
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/get_page.html
 func (s *Server) GetPage(authorizerAccessToken string) (resp *GetPageResp) {
 	var (
@@ -45,7 +45,7 @@ func (s *Server) GetPage(authorizerAccessToken string) (resp *GetPageResp) {
 	return
 }
 
-//获取体验版二维码 参数path 为官方参数 ,参数saveDir为二维码图片存储路径 参数fileName 为二维码图片存储名称请勿包含名称
+// GetQrcode 获取体验版二维码 参数path 为官方参数 ,参数saveDir为二维码图片存储路径 参数fileName 为二维码图片存储名称请勿包含名称
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/get_qrcode.html
 func (s *Server) GetQrcode(authorizerAccessToken string, path, saveDir, fileName *string) (filePath string, err error) {
 	var (
@@ -132,7 +132,7 @@ type SubmitAuditResp struct {
 	AuditId int `json:"auditid"`
 }
 
-//提交审核
+// SubmitAudit 提交审核
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/submit_audit.html
 func (s *Server) SubmitAudit(authorizerAccessToken string, req *SubmitAuditReq) (resp *SubmitAuditResp) {
 	var (
@@ -150,7 +150,7 @@ type GetAuditStatusResp struct {
 	Screenshot string `json:"screenshot"`
 }
 
-//查询指定发布审核单的审核状态
+// GetAuditStatus 查询指定发布审核单的审核状态
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/get_auditstatus.html
 func (s *Server) GetAuditStatus(authorizerAccessToken string, auditId int) (resp *GetAuditStatusResp) {
 	var (
@@ -172,7 +172,7 @@ type GetLatestAuditStatusResp struct {
 	ScreenShot string `json:"screen_shot"`
 }
 
-//查询最新一次提交的审核状态
+// GetLatestAuditStatus 查询最新一次提交的审核状态
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/get_latest_auditstatus.html
 func (s *Server) GetLatestAuditStatus(authorizerAccessToken string) (resp *GetLatestAuditStatusResp) {
 	var (
@@ -183,7 +183,7 @@ func (s *Server) GetLatestAuditStatus(authorizerAccessToken string) (resp *GetLa
 	return
 }
 
-//小程序审核撤回
+// UndoCodeAudit 小程序审核撤回
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/undocodeaudit.html
 func (s *Server) UndoCodeAudit(authorizerAccessToken string) (resp *core.Error) {
 	var (
@@ -194,8 +194,8 @@ func (s *Server) UndoCodeAudit(authorizerAccessToken string) (resp *core.Error) 
 	return
 }
 
-//发布已通过审核的小程序
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/release.html
+// Release 发布已通过审核的小程序
+// https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/release.html
 func (s *Server) Release(authorizerAccessToken string) (resp *core.Error) {
 	var (
 		u   = WECHAT_API_URL + "/wxa/release?"
@@ -206,8 +206,9 @@ func (s *Server) Release(authorizerAccessToken string) (resp *core.Error) {
 	return
 }
 
-//版本回退
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/revertcoderelease.html
+// RevertCodeRelease 版本回退
+// https://developers.weixin.qq.com/doc/oplatform/openApi/OpenApiDoc/miniprogram-management/code-management/revertCodeRelease.html
+// Deprecated: 转用 RevertCodeReleaseV2 方法
 func (s *Server) RevertCodeRelease(authorizerAccessToken string, appVersion int) (resp *core.Error) {
 	var (
 		u      = WECHAT_API_URL + "/wxa/revertcoderelease?"
@@ -218,6 +219,42 @@ func (s *Server) RevertCodeRelease(authorizerAccessToken string, appVersion int)
 		params.Set("app_version", strconv.Itoa(appVersion))
 	}
 	resp = &core.Error{}
+	resp.Err(core.GetRequest(u, params, resp))
+	return
+}
+
+type RevertCodeReleaseReq struct {
+	Action     *string `json:"action,omitempty"`      //只能填get_history_version。表示获取可回退的小程序版本。该参数为 URL 参数，非 Body 参数。
+	AppVersion *string `json:"app_version,omitempty"` //默认是回滚到上一个版本；也可回滚到指定的小程序版本，可通过get_history_version获取app_version。该参数为 URL 参数，非 Body 参数。
+}
+
+type RevertCodeReleaseResp struct {
+	core.Error
+	VersionList []*struct {
+		AppVersion  int    `json:"app_version"`  //小程序版本
+		UserVersion string `json:"user_version"` //模板版本号，开发者自定义字段
+		UserDesc    string `json:"user_desc"`    //模板描述，开发者自定义字段
+		CommitTime  int64  `json:"commit_time"`  //更新时间，时间戳
+	} `json:"version_list,omitempty"`
+}
+
+// RevertCodeReleaseV2 版本回退
+// https://developers.weixin.qq.com/doc/oplatform/openApi/OpenApiDoc/miniprogram-management/code-management/revertCodeRelease.html
+func (s *Server) RevertCodeReleaseV2(authorizerAccessToken string, req *RevertCodeReleaseReq) (resp *RevertCodeReleaseResp) {
+	var (
+		u      = WECHAT_API_URL + "/wxa/revertcoderelease?"
+		params = core.AuthTokenUrlValues(authorizerAccessToken)
+	)
+	//版本为零则回退到上一个版本
+	if req != nil {
+		if req.AppVersion != nil {
+			params.Set("app_version", *req.AppVersion)
+		}
+		if req.Action != nil {
+			params.Set("action", *req.Action)
+		}
+	}
+	resp = &RevertCodeReleaseResp{}
 	resp.Err(core.GetRequest(u, params, resp))
 	return
 }
@@ -234,7 +271,7 @@ type RevertTemplate struct {
 	AppVersion  int    `json:"app_version"`  //小程序版本
 }
 
-//获取可回退的小程序版本
+// GetRevertCodeRelease 获取可回退的小程序版本
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/get_history_version.html
 func (s *Server) GetRevertCodeRelease(authorizerAccessToken string) (resp *GetRevertCodeReleaseResp) {
 	var (
@@ -259,7 +296,7 @@ type GetPaidUnionIdResp struct {
 	UnionId string `json:"unionid,omitempty"`
 }
 
-//支付后获取用户 Unionid 接口
+// GetPaidUnionId 支付后获取用户 Unionid 接口
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/User_Management.html
 func (s *Server) GetPaidUnionId(authorizerAccessToken string, req *GetPaidUnionIdReq) (resp *GetPaidUnionIdResp) {
 	var (
@@ -286,7 +323,7 @@ func (s *Server) GetPaidUnionId(authorizerAccessToken string, req *GetPaidUnionI
 	return
 }
 
-//分阶段发布
+// GrayRelease 分阶段发布
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/grayrelease.html
 func (s *Server) GrayRelease(authorizerAccessToken string, grayPercentage int8) (resp *core.Error) {
 	var (
@@ -311,7 +348,7 @@ type GrayReleasePlan struct {
 	GrayPercentage  int8  `json:"gray_percentage"`  //当前的灰度比例
 }
 
-//查询当前分阶段发布详情
+// GetGrayReleasePlan 查询当前分阶段发布详情
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/getgrayreleaseplan.html
 func (s *Server) GetGrayReleasePlan(authorizerAccessToken string) (resp *GetGrayReleasePlanResp) {
 	var (
@@ -322,7 +359,7 @@ func (s *Server) GetGrayReleasePlan(authorizerAccessToken string) (resp *GetGray
 	return
 }
 
-//取消分阶段发布
+// RevertGrayRelease 取消分阶段发布
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/revertgrayrelease.html
 func (s *Server) RevertGrayRelease(authorizerAccessToken string) (resp *core.Error) {
 	var (
@@ -333,7 +370,7 @@ func (s *Server) RevertGrayRelease(authorizerAccessToken string) (resp *core.Err
 	return
 }
 
-//修改小程序服务状态
+// ChangeVisitStatus 修改小程序服务状态
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/change_visitstatus.html
 func (s *Server) ChangeVisitStatus(authorizerAccessToken string, action string) (resp *core.Error) {
 	var (
@@ -364,7 +401,7 @@ type GetWeappSupportVersionResp struct {
 	} `json:"uv_info"`
 }
 
-//查询当前设置的最低基础库版本及各版本用户占比
+// GetWeappSupportVersion 查询当前设置的最低基础库版本及各版本用户占比
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/getweappsupportversion.html
 func (s *Server) GetWeappSupportVersion(authorizerAccessToken string) (resp *GetWeappSupportVersionResp) {
 	var (
@@ -377,7 +414,7 @@ func (s *Server) GetWeappSupportVersion(authorizerAccessToken string) (resp *Get
 	return
 }
 
-//设置最低基础库版本
+// SetWeappSupportVersion 设置最低基础库版本
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/setweappsupportversion.html
 func (s *Server) SetWeappSupportVersion(authorizerAccessToken string, version string) (resp *core.Error) {
 	var (
@@ -400,7 +437,7 @@ type QueryQuotaResp struct {
 	SpeedupLimit int `json:"speedup_limit"` //当月分配加急次数
 }
 
-//查询服务商的当月提审限额（quota）和加急次数
+// QueryQuota 查询服务商的当月提审限额（quota）和加急次数
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/query_quota.html
 func (s *Server) QueryQuota(authorizerAccessToken string) (resp *QueryQuotaResp) {
 	var (
@@ -411,7 +448,7 @@ func (s *Server) QueryQuota(authorizerAccessToken string) (resp *QueryQuotaResp)
 	return
 }
 
-//加急审核申请
+// SpeedupAudit 加急审核申请
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/speedup_audit.html
 func (s *Server) SpeedupAudit(authorizerAccessToken string, auditId int) (resp *core.Error) {
 	var (

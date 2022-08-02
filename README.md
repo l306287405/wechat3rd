@@ -20,7 +20,7 @@
 #### 2.1: 引入
     go get -u github.com/l306287405/wechat3rd@master
     or
-    go get -u github.com/l306287405/wechat3rd@v1.7.11 (请选择最新版本)
+    go get -u github.com/l306287405/wechat3rd@v1.7.12 (请选择最新版本)
     v1.6.0版本开始Service提供的所有方法仅在resp返回对象中提供错误信息
 
 #### 2.2: 使用NewService方法来创建一个service
@@ -252,7 +252,8 @@
 * GetLatestAuditStatus: 查询最新一次提交的审核状态
 * UndoCodeAudit: 审核撤回
 * Release: 发布已通过审核的小程序
-* RevertCodeRelease: 小程序版本回退
+* ~~RevertCodeRelease: 小程序版本回退~~
+* RevertCodeReleaseV2: 小程序版本回退
 * GetRevertCodeRelease: 获取可回退的小程序版本
 * GrayRelease: 分阶段发布(灰度发布)
 * GetGrayReleasePlan: 查询分阶段发布详情
