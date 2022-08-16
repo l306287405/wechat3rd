@@ -26,7 +26,7 @@ func (c *Config) check() error {
 		return errors.New("the length of base64AESKey must equal to 43")
 	}
 
-	if len(c.Token) != 32 {
+	if len(c.Token) < 1 {
 		return errors.New("token was not set for Server, see NewServer function or Server.SetToken method")
 	}
 
