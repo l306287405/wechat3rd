@@ -122,6 +122,24 @@ func (s *Server) SetWebviewDomain(authorizerAccessToken string, req *SetWebviewD
 	return
 }
 
+type GetWebviewDomainConfirmFileResp struct {
+	core.Error
+	FileName    string `json:"file_name"`
+	FileContent string `json:"file_content"`
+}
+
+// 获取业务域名校验文件
+// https://developers.weixin.qq.com/doc/oplatform/openApi/OpenApiDoc/miniprogram-management/domain-management/getJumpDomainConfirmFile.html
+func (s *Server) GetWebviewDomainConfirmFile(authorizerAccessToken string) (resp *GetWebviewDomainConfirmFileResp) {
+	var (
+		u   = WECHAT_API_URL + "/wxa/get_webviewdomain_confirmfile?"
+		req = &struct{}{}
+	)
+	resp = &GetWebviewDomainConfirmFileResp{}
+	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), req, resp))
+	return
+}
+
 type SetNicknameReq struct {
 	Nickname          string  `json:"nick_name"`
 	IdCard            *string `json:"id_card,omitempty"`
