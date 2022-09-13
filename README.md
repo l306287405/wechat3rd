@@ -20,7 +20,7 @@
 #### 2.1: 引入
     go get -u github.com/l306287405/wechat3rd@master
     or
-    go get -u github.com/l306287405/wechat3rd@v1.7.15 (请选择最新版本)
+    go get -u github.com/l306287405/wechat3rd@v1.7.16 (请选择最新版本)
     v1.6.0版本开始Service提供的所有方法仅在resp返回对象中提供错误信息
 
 #### 2.2: 使用NewService方法来创建一个service
@@ -228,6 +228,9 @@
 
 #### 获取小程序码
 * GetWxaCodeUnLimit: 获取unlimited小程序码
+
+#### 小程序域名管理
+* GetWebviewDomainConfirmFile: 获取业务域名校验文件
 
 #### 小程序类目管理接口
 * GetMiniProgramAllCategory: 获取可以设置的所有类目
