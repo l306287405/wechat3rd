@@ -42,7 +42,7 @@ type GetDomainConfirmFileResp struct {
 //https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/ThirdParty/domain/get_domain_confirmfile.html
 func (s *Server) GetDomainConfirmFile() (resp *GetDomainConfirmFileResp) {
 	var (
-		u   = CGIUrl + "/component/modify_wxa_server_domain?"
+		u   = CGIUrl + "/component/get_domain_confirmfile?"
 		req = &struct{}{}
 	)
 	token, err := s.Token()
