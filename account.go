@@ -106,13 +106,18 @@ type SetWebviewDomainReq struct {
 	Webviewdomain []string `json:"webviewdomain,omitempty"`
 }
 
+type SetWebviewDomainResp struct {
+	core.Error
+	Webviewdomain []string `json:"webviewdomain"`
+}
+
 // 设置业务域名
 // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Mini_Program_Basic_Info/setwebviewdomain.html
-func (s *Server) SetWebviewDomain(authorizerAccessToken string, req *SetWebviewDomainReq) (resp *core.Error) {
+func (s *Server) SetWebviewDomain(authorizerAccessToken string, req *SetWebviewDomainReq) (resp *SetWebviewDomainResp) {
 	var (
 		u = WECHAT_API_URL + "/wxa/setwebviewdomain?"
 	)
-	resp = &core.Error{}
+	resp = &SetWebviewDomainResp{}
 	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), req, resp))
 	return
 }
