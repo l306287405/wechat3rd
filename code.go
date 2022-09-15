@@ -94,12 +94,13 @@ func (s *Server) GetQrcode(authorizerAccessToken string, path, saveDir, fileName
 }
 
 type SubmitAuditReq struct {
-	ItemList      []*SubmitAuditItem      `json:"item_list,omitempty"`
-	PreviewInfo   *SubmitAuditPreviewInfo `json:"preview_info,omitempty"`
-	VersionDesc   *string                 `json:"version_desc,omitempty"`
-	FeedbackInfo  *string                 `json:"feedback_info,omitempty"`
-	FeedbackStuff *string                 `json:"feedback_stuff,omitempty"`
-	UgcDeclare    *SubmitAuditUgcDeclare  `json:"ugc_declare,omitempty"`
+	ItemList         []*SubmitAuditItem      `json:"item_list,omitempty"`
+	PreviewInfo      *SubmitAuditPreviewInfo `json:"preview_info,omitempty"`
+	VersionDesc      *string                 `json:"version_desc,omitempty"`
+	FeedbackInfo     *string                 `json:"feedback_info,omitempty"`
+	FeedbackStuff    *string                 `json:"feedback_stuff,omitempty"`
+	UgcDeclare       *SubmitAuditUgcDeclare  `json:"ugc_declare,omitempty"`
+	PrivacyApiNotUse *bool                   `json:"privacy_api_not_use,omitempty"`
 }
 
 type SubmitAuditUgcDeclare struct {
