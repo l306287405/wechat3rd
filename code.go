@@ -2,6 +2,7 @@ package wechat3rd
 
 import (
 	"errors"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"os"
@@ -91,6 +92,32 @@ func (s *Server) GetQrcode(authorizerAccessToken string, path, saveDir, fileName
 
 	_, err = fp.ReadFrom(httpResp.Body)
 	return filePath, err
+}
+
+// GetQrcodeReturnBytes 获取体验版二维码 参数path 为官方参数 ,返回二进制byte数组,提供更灵活的使用
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/code/get_qrcode.html
+func (s *Server) GetQrcodeReturnBytes(authorizerAccessToken string, path *string) (qrcode []byte, err error) {
+	var (
+		u        = WECHAT_API_URL + "/wxa/get_qrcode?"
+		p        = core.AuthTokenUrlValues(authorizerAccessToken)
+		httpResp *http.Response
+	)
+
+	if path != nil {
+		p.Set("path", url.QueryEscape(*path))
+	}
+	httpResp, err = http.Get(u + p.Encode())
+	if err != nil {
+		return
+	}
+	defer httpResp.Body.Close()
+
+	if httpResp.StatusCode != http.StatusOK {
+		err = errors.New("http.Status:" + httpResp.Status)
+		return
+	}
+	qrcode, err = ioutil.ReadAll(httpResp.Body)
+	return
 }
 
 type SubmitAuditReq struct {
