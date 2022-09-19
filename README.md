@@ -213,8 +213,6 @@
 #### 基础信息设置
 * GetAccountBasicInfo: 获取基本信息
 * OpenHave: 查询公众号/小程序是否绑定open帐号
-* ModifyDomain: 设置服务器域名
-* SetWebviewDomain: 设置业务域名
 * SetNickname: 设置名称
 * CheckWxVerifyNickname: 微信认证名称检测
 * QueryNickname: 查询改名审核状态
@@ -228,9 +226,19 @@
 
 #### 获取小程序码
 * GetWxaCodeUnLimit: 获取unlimited小程序码
+* GetWxaCode: 获取小程序码
 
 #### 小程序域名管理
+* ModifyDomain: 设置服务器域名
+* SetWebviewDomain: 设置业务域名
 * GetWebviewDomainConfirmFile: 获取业务域名校验文件
+
+#### 扫普通二维码打开小程序
+* GetJumpQRCode: 获取已设置的二维码规则
+* AddJumpQRCode: 增加或修改二维码规则
+* PublishJumpQRCode: 发布已设置的二维码规则
+* DeleteJumpQRCode: 删除已设置的二维码规则
+* DownloadQRCodeText: 获取二维码规则校验文件名称及内容
 
 #### 小程序类目管理接口
 * GetMiniProgramAllCategory: 获取可以设置的所有类目
