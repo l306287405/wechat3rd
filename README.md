@@ -2,7 +2,7 @@
 [l306287405/wechat3rd](https://github.com/l306287405/wechat3rd)
 
 ### Todo
-    * v1.7代小程序实现业务扫尾(仅剩不常用的 扫码关注公众号 与 扫普通链接二维码打开小程序)
+    * v1.7代小程序实现业务扫尾(仅剩不常用的 扫码关注公众号)
     * v1.8 将会重写异步回调部分逻辑,如果近期没写完就是工作还没有着落...
     * v1.9 微服务化sdk
 
@@ -159,7 +159,7 @@
 * SetPrivacySetting: 设置小程序用户隐私保护指引
 * GetPrivacySetting: 查询小程序用户隐私保护指引
 * UploadPrivacyExtFile: 上传小程序用户隐私保护指引
-
+* UploadPrivacyExtFileDirectly: 上传小程序用户隐私保护指引
 #### 地理位置接口申请
 * ApplyPrivacyInterface: 申请地理位置接口
 * GetPrivacyInterface: 获取地理位置接口列表
@@ -258,6 +258,7 @@
 * Commit: 上传代码
 * GetPage: 获取已上传的代码的页面列表
 * GetQrcode: 获取体验版二维码
+* GetQrcodeReturnBytes: 获取体验版二维码(字节数组)
 * SubmitAudit: 提交审核
 * GetAuditStatus: 查询指定发布审核单的审核状态
 * GetLatestAuditStatus: 查询最新一次提交的审核状态
@@ -274,6 +275,7 @@
 * SetWeappSupportVersion: 设置最低基础库版本
 * QueryQuota: 查询服务商的当月提审限额（quota）和加急次数
 * SpeedupAudit: 加急审核申请
+* UploadMediaToCodeAudit: 上传提审素材
 
 #### 违规和申诉管理
 * GetIllegalRecords: 获取小程序违规处罚记录

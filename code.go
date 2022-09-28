@@ -2,6 +2,7 @@ package wechat3rd
 
 import (
 	"errors"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -488,5 +489,22 @@ func (s *Server) SpeedupAudit(authorizerAccessToken string, auditId int) (resp *
 
 	resp = &core.Error{}
 	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), req, resp))
+	return
+}
+
+type UploadMediaToCodeAuditResp struct {
+	core.Error
+	Type    string `json:"type"`
+	Mediaid string `json:"mediaid"`
+}
+
+// UploadMediaToCodeAudit 上传提审素材
+// https://developers.weixin.qq.com/doc/oplatform/openApi/OpenApiDoc/miniprogram-management/code-management/uploadMediaToCodeAudit.html
+func (s *Server) UploadMediaToCodeAudit(authorizerAccessToken string, file io.Reader, fileName string) (resp *UploadMediaToCodeAuditResp) {
+	var (
+		u = WECHAT_API_URL + "/wxa/uploadmedia?"
+	)
+	resp = &UploadMediaToCodeAuditResp{}
+	resp.Err(core.PostFileDirectly(s.AuthToken2url(u, authorizerAccessToken), file, fileName, "media", resp))
 	return
 }
