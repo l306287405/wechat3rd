@@ -1,11 +1,15 @@
 package wechat3rd
 
-import "github.com/l306287405/wechat3rd/core"
+import (
+	"github.com/l306287405/wechat3rd/core"
+	"io"
+)
 
 type SetPrivacySettingReq struct {
-	PrivacyVer   *int                `json:"privacy_ver,omitempty"`
-	OwnerSetting PrivacyOwnerSetting `json:"owner_setting"`
-	SettingList  []*PrivacySetting   `json:"setting_list,omitempty"`
+	PrivacyVer         *int                  `json:"privacy_ver,omitempty"`
+	OwnerSetting       PrivacyOwnerSetting   `json:"owner_setting"`
+	SettingList        []*PrivacySetting     `json:"setting_list,omitempty"`
+	SdkPrivacyInfoList []*SdkPrivacyInfoList `json:"sdk_privacy_info_list,omitempty"`
 }
 
 type PrivacyOwnerSetting struct {
@@ -23,6 +27,16 @@ type PrivacySetting struct {
 	PrivacyText  string  `json:"privacy_text"`
 	PrivacyLabel *string `json:"privacy_label,omitempty"`
 	PrivacyDesc  *string `json:"privacy_desc,omitempty"`
+}
+
+type SdkPrivacyInfoList struct {
+	SdkName    string     `json:"sdk_name"`
+	SdkBizName string     `json:"sdk_biz_name"`
+	SdkList    []*SdkList `json:"sdk_list"`
+}
+type SdkList struct {
+	PrivacyKey  string `json:"privacy_key"`
+	PrivacyText string `json:"privacy_text"`
 }
 
 //设置小程序用户隐私保护指引
@@ -46,6 +60,7 @@ type GetPrivacySettingResp struct {
 	PrivacyDesc  struct {
 		PrivacyDescList []*PrivacySetting `json:"privacy_desc_list"`
 	} `json:"privacy_desc"`
+	SdkPrivacyInfoList []*SdkPrivacyInfoList `json:"sdk_privacy_info_list"`
 }
 
 //查询小程序用户隐私保护指引
@@ -78,5 +93,16 @@ func (s *Server) UploadPrivacyExtFile(authorizerAccessToken string, filePath str
 	)
 	resp = &UploadPrivacyExtFileResp{}
 	resp.Err(core.PostFile(s.AuthToken2url(u, authorizerAccessToken), filePath, "file", resp))
+	return
+}
+
+//上传小程序用户隐私保护指引,直接传入文件io数据,文件获取交给上层业务代码,使用更灵活，更直接
+//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/privacy_config/set_privacy_setting.html
+func (s *Server) UploadPrivacyExtFileDirectly(authorizerAccessToken string, file io.Reader, fileName string) (resp *UploadPrivacyExtFileResp) {
+	var (
+		u = CGIUrl + "/component/uploadprivacyextfile?"
+	)
+	resp = &UploadPrivacyExtFileResp{}
+	resp.Err(core.PostFileDirectly(s.AuthToken2url(u, authorizerAccessToken), file, fileName, "file", resp))
 	return
 }

@@ -91,3 +91,31 @@ func PostFile(url string, filePath string, fileParameterName string, response in
 	}
 	return json.NewDecoder(httpResp.Body).Decode(response)
 }
+
+func PostFileDirectly(url string, file io.Reader, fileName, fileParameterName string, response interface{}) error {
+	bodyBuf := &bytes.Buffer{}
+	bodyWriter := multipart.NewWriter(bodyBuf)
+
+	fileWriter, err := bodyWriter.CreateFormFile(fileParameterName, fileName)
+	if err != nil {
+		fmt.Println("error writing to buffer")
+		return err
+	}
+	//iocopy
+	_, err = io.Copy(fileWriter, file)
+	if err != nil {
+		return err
+	}
+	contentType := bodyWriter.FormDataContentType()
+	bodyWriter.Close()
+
+	httpResp, err := http.Post(url, contentType, bodyBuf)
+	if err != nil {
+		return err
+	}
+	defer httpResp.Body.Close()
+	if httpResp.StatusCode != http.StatusOK {
+		return errors.New("http.Status:" + httpResp.Status)
+	}
+	return json.NewDecoder(httpResp.Body).Decode(response)
+}
