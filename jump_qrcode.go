@@ -19,12 +19,11 @@ type GetJumpQRCodeResp struct {
 }
 
 type Rule struct {
-	Prefix        string   `json:"prefix"`
-	OpenVersion   string   `json:"open_version"`
-	State         int      `json:"state"`
-	PermitSubRule int      `json:"permit_sub_rule"`
-	Path          int      `json:"path"`
-	DebugUrl      []string `json:"debug_url"`
+	Prefix      string   `json:"prefix"`
+	OpenVersion string   `json:"open_version"`
+	State       int      `json:"state"`
+	Path        string   `json:"path"`
+	DebugUrl    []string `json:"debug_url"`
 }
 
 //获取已设置的二维码规则
