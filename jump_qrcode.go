@@ -20,7 +20,7 @@ type GetJumpQRCodeResp struct {
 
 type Rule struct {
 	Prefix      string   `json:"prefix"`
-	OpenVersion string   `json:"open_version"`
+	OpenVersion int      `json:"open_version"`
 	State       int      `json:"state"`
 	Path        string   `json:"path"`
 	DebugUrl    []string `json:"debug_url"`
