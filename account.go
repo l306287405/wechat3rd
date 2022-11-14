@@ -414,3 +414,35 @@ func (s *Server) GetWxaCode(authorizerAccessToken string, req *GetWxaCodeReq) (r
 	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), req, resp))
 	return
 }
+
+type GetUserPhoneNumberReq struct {
+	Code string `json:"code"` //手机号获取凭证
+}
+
+type PhoneInfo struct {
+	PhoneNumber     string     `json:"phoneNumber"`     //用户绑定的手机号（国外手机号会有区号）
+	PurePhoneNumber string     `json:"purePhoneNumber"` //没有区号的手机号
+	CountryCode     string     `json:"countryCode"`     //区号
+	Watermark       *Watermark `json:"watermark"`       //数据水印
+}
+
+type Watermark struct {
+	Appid     string `json:"appid"`     //小程序appid
+	Timestamp int64  `json:"timestamp"` //用户获取手机号操作的时间戳
+}
+
+type GetUserPhoneNumberResp struct {
+	core.Error
+	PhoneInfo *PhoneInfo `json:"phoneInfo"` //用户手机号信息
+}
+
+// 获取用户手机号。每个 code 只能使用一次，code的有效期为5min
+// https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/phonenumber/phonenumber.getPhoneNumber.html
+func (s *Server) GetUserPhoneNumber(authorizerAccessToken string, req *GetUserPhoneNumberReq) (resp *GetUserPhoneNumberResp) {
+	var (
+		u = WECHAT_API_URL + "/wxa/business/getuserphonenumber?"
+	)
+	resp = &GetUserPhoneNumberResp{}
+	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), req, resp))
+	return
+}
