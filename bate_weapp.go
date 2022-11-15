@@ -20,11 +20,11 @@ func (s *Server) FastRegisterBetaWeapp(req *FastRegisterBetaWeappReq) (resp *Fas
 		u = WECHAT_API_URL + "/wxa/component/fastregisterbetaweapp?"
 	)
 	token, err := s.Token()
+	resp = &FastRegisterBetaWeappResp{}
 	if err != nil {
 		resp.Err(err)
 		return
 	}
-	resp = &FastRegisterBetaWeappResp{}
 	resp.Err(core.PostJson(s.AuthToken2url(u, token), req, resp))
 	return
 }
