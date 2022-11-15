@@ -433,7 +433,7 @@ type Watermark struct {
 
 type GetUserPhoneNumberResp struct {
 	core.Error
-	PhoneInfo *PhoneInfo `json:"phoneInfo"` //用户手机号信息
+	PhoneInfo *PhoneInfo `json:"phone_info"` //用户手机号信息
 }
 
 // 获取用户手机号。每个 code 只能使用一次，code的有效期为5min
