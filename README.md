@@ -282,6 +282,7 @@
 #### 其他小程序相关接口
 * Jscode2session: 获取用户openid , session_key
 * AESCBCDecrypt: 用于解密用户数据, 例如解密前端获取手机号时获取的加密信息
+* GetUserPhoneNumber: code换取用户手机号
 
 #### 订阅消息设置 
 * GetCategory: 获取当前帐号所设置的类目信息

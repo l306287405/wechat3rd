@@ -15,19 +15,19 @@ type ModifyWxaServerDomainResp struct {
 	InvalidWxaServerDomain   *string `json:"invalid_wxa_server_domain,omitempty"`   //未通过验证的域名。如果不存在未通过验证的域名，该字段不会返回。
 }
 
-//设置第三方平台服务器域名
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/ThirdParty/domain/modify_server_domain.html
+// 设置第三方平台服务器域名
+// https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/ThirdParty/domain/modify_server_domain.html
 func (s *Server) ModifyWxaServerDomain(req *ModifyWxaServerDomainReq) (resp *ModifyWxaServerDomainResp) {
 	var (
 		u = CGIUrl + "/component/modify_wxa_server_domain?"
 	)
 	token, err := s.Token()
+	resp = &ModifyWxaServerDomainResp{}
 	if err != nil {
 		resp.Err(err)
 		return
 	}
 
-	resp = &ModifyWxaServerDomainResp{}
 	resp.Err(core.PostJson(s.AuthToken2url(u, token), req, resp))
 	return
 }
@@ -38,19 +38,19 @@ type GetDomainConfirmFileResp struct {
 	FileContent string `json:"file_content"`
 }
 
-//获取第三方业务域名的校验文件
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/ThirdParty/domain/get_domain_confirmfile.html
+// 获取第三方业务域名的校验文件
+// https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/ThirdParty/domain/get_domain_confirmfile.html
 func (s *Server) GetDomainConfirmFile() (resp *GetDomainConfirmFileResp) {
 	var (
 		u   = CGIUrl + "/component/get_domain_confirmfile?"
 		req = &struct{}{}
 	)
 	token, err := s.Token()
+	resp = &GetDomainConfirmFileResp{}
 	if err != nil {
 		resp.Err(err)
 		return
 	}
-	resp = &GetDomainConfirmFileResp{}
 	resp.Err(core.PostJson(s.AuthToken2url(u, token), req, resp))
 	return
 }
@@ -68,19 +68,19 @@ type ModifyWxaJumpDomainResp struct {
 	InvalidWxaJumpH5Domain   *string `json:"invalid_wxa_jump_h5_domain,omitempty"`   //未通过验证的域名。如果不存在未通过验证的域名，该字段不会返回。
 }
 
-//设置第三方平台业务域名
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/ThirdParty/domain/modify_jump_domain.html
+// 设置第三方平台业务域名
+// https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/ThirdParty/domain/modify_jump_domain.html
 func (s *Server) ModifyWxaJumpDomain(req *ModifyWxaJumpDomainReq) (resp *ModifyWxaJumpDomainResp) {
 	var (
 		u = CGIUrl + "/component/modify_wxa_jump_domain?"
 	)
 	token, err := s.Token()
+	resp = &ModifyWxaJumpDomainResp{}
 	if err != nil {
 		resp.Err(err)
 		return
 	}
 
-	resp = &ModifyWxaJumpDomainResp{}
 	resp.Err(core.PostJson(s.AuthToken2url(u, token), req, resp))
 	return
 }
