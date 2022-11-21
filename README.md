@@ -274,6 +274,7 @@
 * QueryQuota: 查询服务商的当月提审限额（quota）和加急次数
 * SpeedupAudit: 加急审核申请
 * UploadMediaToCodeAudit: 上传提审素材
+* GetCodePrivacyInfo: 获得隐私接口检测结果
 
 #### 违规和申诉管理
 * GetIllegalRecords: 获取小程序违规处罚记录
