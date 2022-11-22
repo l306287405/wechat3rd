@@ -355,10 +355,56 @@ func (s *Server) FetchDataSettingSetPeriodFetch(authorizerAccessToken string, re
 	return
 }
 
+type CreateWxaQrcodeReq struct {
+	Path  string `json:"path"`            //扫码进入的小程序页面路径，最大长度 128 字节，不能为空；对于小游戏，可以只传入 query 部分，来实现传参效果，如：传入 "?foo=bar"，即可在 wx.getLaunchOptionsSync 接口中的 query 参数获取到 {foo:"bar"}。
+	Width int    `json:"width,omitempty"` //默认值:430 二维码的宽度，单位 px，最小 280px，最大 1280px
+}
+
+type CreateWxaQrcodeResp struct {
+	core.Error
+	Buffer []byte `json:"buffer"`
+}
+
+// 获取小程序二维码，适用于需要的码数量较少的业务场景。通过该接口生成的小程序码，永久有效，有数量限制
+// https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/qr-code/wxacode.createQRCode.html
+func (s *Server) CreateWxaQrcode(authorizerAccessToken string, req *CreateWxaQrcodeReq) (resp *CreateWxaQrcodeResp) {
+	var (
+		u = CGIUrl + "/wxaapp/createwxaqrcode?"
+	)
+	resp = &CreateWxaQrcodeResp{}
+	resp.Err(core.PostJsonReturnBuffer(s.AuthToken2url(u, authorizerAccessToken), req, resp))
+	return
+}
+
 type RGB struct {
 	R int `json:"r"`
 	G int `json:"g"`
 	B int `json:"b"`
+}
+
+type GetWxaCodeReq struct {
+	Path       string `json:"path"`                  //默认值:主页, 必须是已经发布的小程序存在的页面（否则报错）;最大长度 128 字节，不能为空；对于小游戏，可以只传入 query 部分，来实现传参效果，如：传入 "?foo=bar"，即可在 wx.getLaunchOptionsSync 接口中的 query 参数获取到 {foo:"bar"}。
+	EnvVersion string `json:"env_version,omitempty"` //默认值:release, 要打开的小程序版本。正式版为 release，体验版为 trial，开发版为 develop
+	Width      int    `json:"width,omitempty"`       //默认值:430 二维码的宽度，单位 px，最小 280px，最大 1280px
+	AutoColor  bool   `json:"auto_color,omitempty"`  //默认值:false 自动配置线条颜色，如果颜色依然是黑色，则说明不建议配置主色调，默认 false
+	LineColor  *RGB   `json:"line_color,omitempty"`  //auto_color 为 false 时生效，使用 rgb 设置颜色 例如 { "r":"xxx", "g":"xxx", "b":"xxx"} 十进制表示
+	IsHyaLine  bool   `json:"is_hya_line,omitempty"` //默认值:false 是否需要透明底色，为 true 时，生成透明底色的小程序
+}
+
+type GetWxaCodeResp struct {
+	core.Error
+	Buffer []byte `json:"buffer"`
+}
+
+// 获取小程序码，适用于需要的码数量较少的业务场景。通过该接口生成的小程序码，永久有效，有数量限制
+// https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/qr-code/wxacode.get.html
+func (s *Server) GetWxaCode(authorizerAccessToken string, req *GetWxaCodeReq) (resp *GetWxaCodeResp) {
+	var (
+		u = WECHAT_API_URL + "/wxa/getwxacode?"
+	)
+	resp = &GetWxaCodeResp{}
+	resp.Err(core.PostJsonReturnBuffer(s.AuthToken2url(u, authorizerAccessToken), req, resp))
+	return
 }
 
 type GetWxaCodeUnLimitReq struct {
@@ -374,8 +420,7 @@ type GetWxaCodeUnLimitReq struct {
 
 type GetWxaCodeUnLimitResp struct {
 	core.Error
-	Buffer      []byte `json:"buffer"`
-	ContentType string `json:"contentType"`
+	Buffer []byte `json:"buffer"`
 }
 
 // 获取unlimited小程序码，适用于需要的码数量极多的业务场景。通过该接口生成的小程序码，永久有效，数量暂无限制
@@ -385,33 +430,7 @@ func (s *Server) GetWxaCodeUnLimit(authorizerAccessToken string, req *GetWxaCode
 		u = WECHAT_API_URL + "/wxa/getwxacodeunlimit?"
 	)
 	resp = &GetWxaCodeUnLimitResp{}
-	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), req, resp))
-	return
-}
-
-type GetWxaCodeReq struct {
-	Path       string `json:"path"`                  //默认值:主页, 必须是已经发布的小程序存在的页面（否则报错）;最大长度 128 字节，不能为空；对于小游戏，可以只传入 query 部分，来实现传参效果，如：传入 "?foo=bar"，即可在 wx.getLaunchOptionsSync 接口中的 query 参数获取到 {foo:"bar"}。
-	EnvVersion string `json:"env_version,omitempty"` //默认值:release, 要打开的小程序版本。正式版为 release，体验版为 trial，开发版为 develop
-	Width      int    `json:"width,omitempty"`       //默认值:430 二维码的宽度，单位 px，最小 280px，最大 1280px
-	AutoColor  bool   `json:"auto_color,omitempty"`  //默认值:false 自动配置线条颜色，如果颜色依然是黑色，则说明不建议配置主色调，默认 false
-	LineColor  *RGB   `json:"line_color,omitempty"`  //auto_color 为 false 时生效，使用 rgb 设置颜色 例如 { "r":"xxx", "g":"xxx", "b":"xxx"} 十进制表示
-	IsHyaLine  bool   `json:"is_hya_line,omitempty"` //默认值:false 是否需要透明底色，为 true 时，生成透明底色的小程序
-}
-
-type GetWxaCodeResp struct {
-	core.Error
-	Buffer      []byte `json:"buffer"`
-	ContentType string `json:"contentType"`
-}
-
-// 获取小程序码，适用于需要的码数量较少的业务场景。通过该接口生成的小程序码，永久有效，有数量限制
-// https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/qr-code/wxacode.get.html
-func (s *Server) GetWxaCode(authorizerAccessToken string, req *GetWxaCodeReq) (resp *GetWxaCodeResp) {
-	var (
-		u = WECHAT_API_URL + "/wxa/getwxacode?"
-	)
-	resp = &GetWxaCodeResp{}
-	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), req, resp))
+	resp.Err(core.PostJsonReturnBuffer(s.AuthToken2url(u, authorizerAccessToken), req, resp))
 	return
 }
 
