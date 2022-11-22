@@ -223,6 +223,7 @@
 * FetchDataSettingSetPeriodFetch: 设置周期性拉取数据 (忽略action参数)
 
 #### 获取小程序码
+* CreateWxaQrcode: 获取小程序二维码
 * GetWxaCodeUnLimit: 获取unlimited小程序码
 * GetWxaCode: 获取小程序码
 
