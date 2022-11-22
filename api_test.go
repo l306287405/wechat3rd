@@ -1,16 +1,24 @@
 package wechat3rd
 
 import (
+	"fmt"
+	"io/ioutil"
 	"log"
 	"testing"
 )
 
 func TestName(t *testing.T) {
-	token := "63_vKrfyQ39H0f0fFJWSLcsIaTCOZD5KvFBtGrPkl9QxtzkDW5g7Y_R6CvZ4zxkZCqDpC6wfjl6RX4vCYQqiK9WfGprVcJQPS17K-2h-NBB0j_Kr1eHjs9ETpqOtnRurWOWrLpzdVnrgDgN1LksSLJaAIDJCA"
+	token := "63_vV-1ucItNdryGAAVjtt9uAi-q3bSXXqwQvudlG6D-Iq2H5pCazfUOHy0xqUJJ9Y8NiuwskHkdivpfWiY86wmsK1eAui_Y4tM"
 	req := &GetWxaCodeUnLimitReq{
 		Scene: "aaa",
+		Page:  "pages/xxxx",
 	}
 	s := Server{}
-	limit := s.GetWxaCodeUnLimit(token, req)
-	log.Print(limit)
+	resp := s.GetWxaCodeUnLimit(token, req)
+	fileName := "./test.jpeg"
+	err := ioutil.WriteFile(fileName, resp.Buffer, 0666)
+	if err != nil {
+		fmt.Println("write fail")
+	}
+	log.Print(resp)
 }
