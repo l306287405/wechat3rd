@@ -39,6 +39,7 @@ func PostJsonReturnBuffer(incompleteURL string, request interface{}, response in
 	if err := encoder.Encode(request); err != nil {
 		return err
 	}
+
 	httpResp, err := http.Post(incompleteURL, "application/json; charset=utf-8", &buf)
 	if err != nil {
 		return err
@@ -48,23 +49,26 @@ func PostJsonReturnBuffer(incompleteURL string, request interface{}, response in
 	if httpResp.StatusCode != http.StatusOK {
 		return errors.New("http.Status:" + httpResp.Status)
 	}
-	if err = json.NewDecoder(httpResp.Body).Decode(response); err != nil {
+	contentType := httpResp.Header.Get("content-type")
+	if contentType == "image/jpeg" {
 		buffer, err := io.ReadAll(httpResp.Body)
 		if err != nil {
 			return err
 		}
-		m := make(map[string]interface{})
-		m["errcode"] = 0
-		m["errmsg"] = ""
-		m["buffer"] = buffer
-		jsonBytes, err := json.Marshal(m)
+		if len(buffer) < 200 {
+			return errors.New("二维码数据错误")
+		}
+		resMap := make(map[string]interface{})
+		resMap["errcode"] = 0
+		resMap["buffer"] = buffer
+		mapToJson, err := json.Marshal(resMap)
 		if err != nil {
 			return err
 		}
-		json.Unmarshal(jsonBytes, &response)
-		return nil
+		return json.Unmarshal(mapToJson, response)
+	} else {
+		return json.NewDecoder(httpResp.Body).Decode(response)
 	}
-	return nil
 }
 
 func GetRequest(u string, request url.Values, response interface{}) error {
