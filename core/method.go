@@ -32,39 +32,30 @@ func PostJson(incompleteURL string, request interface{}, response interface{}) e
 	return json.NewDecoder(httpResp.Body).Decode(response)
 }
 
-func PostJsonReturnBuffer(incompleteURL string, request interface{}, response interface{}) error {
+func PostJsonReturnBuffer(incompleteURL string, request interface{}, response interface{}) (buffer []byte, err error) {
 	var buf bytes.Buffer
 	encoder := json.NewEncoder(&buf)
 	encoder.SetEscapeHTML(false)
-	if err := encoder.Encode(request); err != nil {
-		return err
+	if err = encoder.Encode(request); err != nil {
+		return nil, err
 	}
 	httpResp, err := http.Post(incompleteURL, "application/json; charset=utf-8", &buf)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer httpResp.Body.Close()
 
 	if httpResp.StatusCode != http.StatusOK {
-		return errors.New("http.Status:" + httpResp.Status)
+		return nil, errors.New("http.Status:" + httpResp.Status)
 	}
 	if err = json.NewDecoder(httpResp.Body).Decode(response); err != nil {
-		buffer, err := io.ReadAll(httpResp.Body)
+		buffer, err = io.ReadAll(httpResp.Body)
 		if err != nil {
-			return err
+			return nil, err
 		}
-		m := make(map[string]interface{})
-		m["errcode"] = 0
-		m["errmsg"] = ""
-		m["buffer"] = buffer
-		jsonBytes, err := json.Marshal(m)
-		if err != nil {
-			return err
-		}
-		json.Unmarshal(jsonBytes, &response)
-		return nil
+		return buffer, nil
 	}
-	return nil
+	return nil, nil
 }
 
 func GetRequest(u string, request url.Values, response interface{}) error {

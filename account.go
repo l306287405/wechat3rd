@@ -372,8 +372,14 @@ func (s *Server) CreateWxaQrcode(authorizerAccessToken string, req *CreateWxaQrc
 		u = CGIUrl + "/wxaapp/createwxaqrcode?"
 	)
 	resp = &CreateWxaQrcodeResp{}
-	resp.Err(core.PostJsonReturnBuffer(s.AuthToken2url(u, authorizerAccessToken), req, resp))
-	return
+	buffer, err := core.PostJsonReturnBuffer(s.AuthToken2url(u, authorizerAccessToken), req, resp)
+	if err != nil {
+		resp.Err(err)
+		return
+	} else {
+		resp.Buffer = buffer
+		return
+	}
 }
 
 type RGB struct {
@@ -403,8 +409,14 @@ func (s *Server) GetWxaCode(authorizerAccessToken string, req *GetWxaCodeReq) (r
 		u = WECHAT_API_URL + "/wxa/getwxacode?"
 	)
 	resp = &GetWxaCodeResp{}
-	resp.Err(core.PostJsonReturnBuffer(s.AuthToken2url(u, authorizerAccessToken), req, resp))
-	return
+	buffer, err := core.PostJsonReturnBuffer(s.AuthToken2url(u, authorizerAccessToken), req, resp)
+	if err != nil {
+		resp.Err(err)
+		return
+	} else {
+		resp.Buffer = buffer
+		return
+	}
 }
 
 type GetWxaCodeUnLimitReq struct {
@@ -430,8 +442,14 @@ func (s *Server) GetWxaCodeUnLimit(authorizerAccessToken string, req *GetWxaCode
 		u = WECHAT_API_URL + "/wxa/getwxacodeunlimit?"
 	)
 	resp = &GetWxaCodeUnLimitResp{}
-	resp.Err(core.PostJsonReturnBuffer(s.AuthToken2url(u, authorizerAccessToken), req, resp))
-	return
+	buffer, err := core.PostJsonReturnBuffer(s.AuthToken2url(u, authorizerAccessToken), req, resp)
+	if err != nil {
+		resp.Err(err)
+		return
+	} else {
+		resp.Buffer = buffer
+		return
+	}
 }
 
 type GetUserPhoneNumberReq struct {
