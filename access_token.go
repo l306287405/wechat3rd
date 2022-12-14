@@ -3,6 +3,8 @@ package wechat3rd
 import (
 	"errors"
 	"fmt"
+	"github.com/l306287405/wechat3rd/cache"
+	"sync"
 	"time"
 
 	"github.com/l306287405/wechat3rd/core"
@@ -14,61 +16,76 @@ const (
 
 type AccessTokenServer interface {
 	Token() (token string, err error)
-	GetToken() (token string, expiresIn int64, err error)
-	RestoreToken(token string, expiresIn int64) (err error)
+	SetToken(token string, expiresIn int64) (err error)
+	RefreshToken() (token string, err error)
 }
 
 type DefaultAccessTokenServer struct {
+	mux   sync.Mutex
+	Cache cache.Cache
 	TicketServer
 	AppID     string
 	AppSecret string
-
-	ComponentAccessToken string `json:"component_access_token"`
-	ExpiresIn            int64  `json:"expires_in"` // 当前时间 + 过期时间
+	Cfg       Config
+	refresh   bool
 }
 
 // 获取令牌   token不使用不获取
 // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/ThirdParty/token/component_access_token.html
 func (d *DefaultAccessTokenServer) Token() (token string, err error) {
+
+	if d.refresh {
+		return d.token()
+	}
+	if cacheToken := d.Cache.Get(d.getCacheKey()); cacheToken != nil {
+		return cacheToken.(string), nil
+	}
+	return d.token()
+}
+
+func (d *DefaultAccessTokenServer) token() (token string, err error) {
 	var (
-		ticket string
-		resp   *AccessTokenResp
+		resp *AccessTokenResp
 	)
 
-	if d.ExpiresIn <= time.Now().Unix()-30 {
-		ticket, err = d.GetTicket()
-		if err != nil {
-			return
-		}
-		resp = newAccessToken(&AccessTokenReq{
-			ComponentAppid:        d.AppID,
-			ComponentAppsecret:    d.AppSecret,
-			ComponentVerifyTicket: ticket,
-		})
-		if !resp.Success() {
-			err = errors.New(fmt.Sprintf("get component_access_token errcode: %d,errmsg: %s", resp.ErrCode, resp.ErrMsg))
-			return
-		}
-		d.ExpiresIn = time.Now().Unix() + resp.ExpiresIn
-		d.ComponentAccessToken = resp.ComponentAccessToken
+	ticket, err := d.GetTicket()
+	if err != nil {
+		return
 	}
-	return d.ComponentAccessToken, nil
+
+	d.mux.Lock()
+	defer d.mux.Unlock()
+
+	resp = newAccessToken(&AccessTokenReq{
+		ComponentAppid:        d.AppID,
+		ComponentAppsecret:    d.AppSecret,
+		ComponentVerifyTicket: ticket,
+	})
+	if !resp.Success() {
+		err = errors.New(fmt.Sprintf("get component_access_token errcode: %d,errmsg: %s", resp.ErrCode, resp.ErrMsg))
+		return
+	}
+
+	_ = d.SetToken(resp.ComponentAccessToken, resp.ExpiresIn)
+
+	return resp.ComponentAccessToken, nil
 }
 
 // 从别处恢复token
-func (d *DefaultAccessTokenServer) RestoreToken(token string, expiresIn int64) (err error) {
-	d.ExpiresIn = expiresIn
-	d.ComponentAccessToken = token
+func (d *DefaultAccessTokenServer) RefreshToken() (token string, err error) {
+	d.refresh = true
+	token, err = d.Token()
+	d.refresh = false
 	return
 }
 
 // 获取令牌（component_access_token),带有过期时间的时间戳。
-func (d *DefaultAccessTokenServer) GetToken() (token string, expiresIn int64, err error) {
-	if token, err = d.Token(); err == nil {
-		expiresIn = d.ExpiresIn
-	}
+func (d *DefaultAccessTokenServer) SetToken(token string, expiresIn int64) (err error) {
+	return d.Cache.Set(d.getCacheKey(), token, time.Duration(expiresIn-120)*time.Second)
+}
 
-	return
+func (d *DefaultAccessTokenServer) getCacheKey() string {
+	return "wechat_open_platform.access_token." + d.Cfg.AppID
 }
 
 type AccessTokenResp struct {

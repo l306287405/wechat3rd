@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"encoding/xml"
 	"errors"
+	"github.com/l306287405/wechat3rd/cache"
 	"github.com/l306287405/wechat3rd/util"
 	"io/ioutil"
 	"net/http"
@@ -73,7 +74,7 @@ type cipherRequestHttpBody struct {
 	Base64EncryptedMsg []byte   `xml:"Encrypt"`
 }
 
-func NewService(cfg Config, ticket TicketServer, tokenService AccessTokenServer, errHandler WechatErrorer) (s *Server, err error) {
+func NewService(cfg Config, c cache.Cache, errHandler WechatErrorer) (s *Server, err error) {
 	err = cfg.check()
 	if err != nil {
 		return nil, err
@@ -82,12 +83,21 @@ func NewService(cfg Config, ticket TicketServer, tokenService AccessTokenServer,
 	if errHandler == nil {
 		errHandler = DefaultErrorHandler
 	}
-	if ticket == nil {
-		ticket = DefaultTicketServerHandler
+
+	ticket := &DefaultTicketServer{
+		Cache:                c,
+		ComponentTicketCache: "",
+		Cfg:                  cfg,
 	}
-	if tokenService == nil {
-		tokenService = &DefaultAccessTokenServer{TicketServer: ticket, AppID: cfg.AppID, AppSecret: cfg.AppSecret}
+
+	tokenService := &DefaultAccessTokenServer{
+		TicketServer: ticket,
+		AppID:        cfg.AppID,
+		AppSecret:    cfg.AppSecret,
+		Cache:        c,
+		Cfg:          cfg,
 	}
+
 	s = &Server{
 		cfg:          cfg,
 		errorHandler: errHandler,
@@ -95,7 +105,6 @@ func NewService(cfg Config, ticket TicketServer, tokenService AccessTokenServer,
 		TicketServer:      ticket,
 		AccessTokenServer: tokenService,
 	}
-	s.DecodeAesKey, err = base64.StdEncoding.DecodeString(s.cfg.AESKey + "=")
 	if err != nil {
 		return nil, errors.New("Decode base64AESKey failed: " + err.Error())
 	}
@@ -103,7 +112,19 @@ func NewService(cfg Config, ticket TicketServer, tokenService AccessTokenServer,
 	return s, nil
 }
 
-func (s *Server) ServeHTTP(r *http.Request) (resp *MixedMsg, err error) {
+// ServeHTTP
+//
+//	switch parseXML.(type) {
+//		case *wechat3rd.EventComponentVerifyTicket:
+//			// 更新组件的ticket
+//			event := parseXML.(*wechat_open.EventComponentVerifyTicket)
+//			_ = l.svcCtx.OpenPlatformServer.SetTicket(event.ComponentVerifyTicket)
+//	 case *wechat_open.EventAuthorized:
+//			// 授权
+//			event := parseXML.(*wechat_open.EventAuthorized)
+//			//授权状态
+//			l.Errorf("event authorized: %+v", event)
+func (s *Server) ServeHTTP(r *http.Request) (resp interface{}, err error) {
 	var (
 		query = r.URL.Query()
 
@@ -203,6 +224,8 @@ func (s *Server) ServeHTTP(r *http.Request) (resp *MixedMsg, err error) {
 	if err = xml.Unmarshal(msgPlaintext, resp); err != nil {
 		return
 	}
+
+	return ParseXML(msgPlaintext)
 	// TODO 将在1.8版本重做推送结果处理
 	//hand, exist = s.handlerMap[resp.InfoType]
 	//if !exist {
@@ -210,15 +233,15 @@ func (s *Server) ServeHTTP(r *http.Request) (resp *MixedMsg, err error) {
 	//	return
 	//}
 	//hand(resp)
-	return
+	//return
 }
 
-//用于解密数据
+// 用于解密数据
 func (s *Server) AESDecryptData(cipherText, iv []byte) (rawData []byte, err error) {
 	return util.AESDecryptData(cipherText, s.getAESKey(), iv)
 }
 
-//url增加后缀
+// url增加后缀
 func (s *Server) AccessToken2url(u string) (string, error) {
 	token, err := s.Token()
 	if err != nil {
