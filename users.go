@@ -13,6 +13,7 @@ type Jscode2sessionResp struct {
 	core.Error
 	Openid     string `json:"openid,omitempty"`
 	SessionKey string `json:"session_key,omitempty"`
+	Unionid    string `json:"unionid,omitempty"`
 }
 
 func (s *Server) Jscode2session(appId, jsCode string) (resp *Jscode2sessionResp) {
@@ -77,7 +78,7 @@ func (s *Server) AESCBCDecrypt(encryptData, key, iv string) (data []byte, err er
 	return encBytes, nil
 }
 
-//去除填充
+// 去除填充
 func pkcs7UnPadding(origData []byte) []byte {
 	length := len(origData)
 	unpadding := int(origData[length-1])
