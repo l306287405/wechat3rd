@@ -23,8 +23,8 @@ type FastRegisterWeappReq struct {
 }
 
 // FastRegisterWeapp 快速注册小程序
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Register_Mini_Programs/Fast_Registration_Interface_document.html
-//Deprecated: 转用 FastRegisterOrgWeapp 方法
+// https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Register_Mini_Programs/Fast_Registration_Interface_document.html
+// Deprecated: 转用 FastRegisterOrgWeapp 方法
 func (s *Server) FastRegisterWeapp(req *FastRegisterWeappReq) (resp *core.Error) {
 	var (
 		p     = make(url.Values)
@@ -54,7 +54,7 @@ type FastRegisterOrgWeappReq struct {
 }
 
 // FastRegisterOrgWeapp 快速注册小程序
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Register_Mini_Programs/Fast_Registration_Interface_document.html
+// https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Register_Mini_Programs/Fast_Registration_Interface_document.html
 func (s *Server) FastRegisterOrgWeapp(req *FastRegisterWeappReq) (resp *core.Error) {
 	var (
 		p     = make(url.Values)
@@ -81,8 +81,8 @@ type SearchWeappReq struct {
 }
 
 // SearchWeapp 查询创建任务状态
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Register_Mini_Programs/Fast_Registration_Interface_document.html
-//Deprecated: 转用 QueryOrgWeapp 方法
+// https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Register_Mini_Programs/Fast_Registration_Interface_document.html
+// Deprecated: 转用 QueryOrgWeapp 方法
 func (s *Server) SearchWeapp(req *SearchWeappReq) (resp *core.Error) {
 	var (
 		p     = make(url.Values)
@@ -108,7 +108,7 @@ type QueryOrgWeappReq struct {
 }
 
 // QueryOrgWeapp 查询创建任务状态
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Register_Mini_Programs/Fast_Registration_Interface_document.html
+// https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Register_Mini_Programs/Fast_Registration_Interface_document.html
 func (s *Server) QueryOrgWeapp(req *SearchWeappReq) (resp *core.Error) {
 	var (
 		p     = make(url.Values)
@@ -135,13 +135,13 @@ type FastRegisterPersonalWeappReq struct {
 
 type FastRegisterPersonalWeappResp struct {
 	core.Error
-	taskid        string // 任务id，后面query查询需要用到
-	authorize_url string // 给用户扫码认证的验证url
-	status        int    // 任务的状态
+	TaskId       string `json:"taskid"`        // 任务id，后面query查询需要用到
+	AuthorizeUrl string `json:"authorize_url"` // 给用户扫码认证的验证url
+	Status       int    `json:"status"`        // 任务的状态
 }
 
 // FastRegisterPersonalWeapp 快速注册个人小程序
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Register_Mini_Programs/fastregisterpersonalweapp.html
+// https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Register_Mini_Programs/fastregisterpersonalweapp.html
 func (s *Server) FastRegisterPersonalWeapp(req *FastRegisterPersonalWeappReq) (resp *FastRegisterPersonalWeappResp) {
 	var (
 		p     = make(url.Values)
@@ -168,8 +168,8 @@ type QueryPersonalWeappResp struct {
 	Status       int    `json:"status"`
 }
 
-//查询个人小程序创建任务状态接口详情
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Register_Mini_Programs/fastregisterpersonalweapp.html
+// 查询个人小程序创建任务状态接口详情
+// https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Register_Mini_Programs/fastregisterpersonalweapp.html
 func (s *Server) QueryPersonalWeapp(taskId string) (resp *QueryPersonalWeappResp) {
 	var (
 		p     = make(url.Values)
@@ -191,8 +191,8 @@ func (s *Server) QueryPersonalWeapp(taskId string) (resp *QueryPersonalWeappResp
 	return
 }
 
-//获取微信公众平台授权页面链接
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Register_Mini_Programs/fast_registration_of_mini_program.html
+// 获取微信公众平台授权页面链接
+// https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Register_Mini_Programs/fast_registration_of_mini_program.html
 func (s *Server) GetMPAuthUrl(mpAppID, redirectUri string, copyWxVerify bool) (u string) {
 	p := url.Values{}
 	p.Set("component_appid", s.cfg.AppID)
@@ -207,7 +207,7 @@ func (s *Server) GetMPAuthUrl(mpAppID, redirectUri string, copyWxVerify bool) (u
 	return
 }
 
-//复用公众号主体快速注册小程序
+// 复用公众号主体快速注册小程序
 type FastRegisterReq struct {
 	Ticket string `json:"ticket"` //公众号扫码授权的凭证(公众平台扫码页面回跳到第三方平台时携带)
 }
@@ -219,7 +219,7 @@ type FastRegisterResp struct {
 	IsLinkSucc        bool   `json:"is_link_succ"`       //小程序是否和公众号关联成功
 }
 
-//https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Register_Mini_Programs/fast_registration_of_mini_program.html
+// https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/Register_Mini_Programs/fast_registration_of_mini_program.html
 func (s *Server) FastRegister(accessToken string, req *FastRegisterReq) (resp *FastRegisterResp) {
 	resp = &FastRegisterResp{}
 	tUrl := s.AuthToken2url(FastregisterUrl, accessToken)
