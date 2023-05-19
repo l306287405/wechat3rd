@@ -520,9 +520,8 @@ type GetCodePrivacyInfoResp struct {
 func (s *Server) GetCodePrivacyInfo(authorizerAccessToken string) (resp *GetCodePrivacyInfoResp) {
 	var (
 		u   = WECHAT_API_URL + "/wxa/security/get_code_privacy_info?"
-		req = &struct{}{}
 	)
 	resp = &GetCodePrivacyInfoResp{}
-	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), req, resp))
+	resp.Err(core.GetRequest(u, core.AuthTokenUrlValues(authorizerAccessToken), resp))
 	return
 }

@@ -13,6 +13,7 @@ type Jscode2sessionResp struct {
 	core.Error
 	Openid     string `json:"openid,omitempty"`
 	SessionKey string `json:"session_key,omitempty"`
+    Unionid    string `json:"unionid,omitempty"`
 }
 
 func (s *Server) Jscode2session(appId, jsCode string) (resp *Jscode2sessionResp) {
