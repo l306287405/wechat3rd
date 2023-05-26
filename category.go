@@ -12,7 +12,7 @@ type GetAllCategoryResp struct {
 type AllCategory struct {
 	Id            int    `json:"id"`
 	Name          string `json:"name,omitempty"`
-	Level         string `json:"level,omitempty"`
+	Level         int    `json:"level,omitempty"`
 	Father        int    `json:"father,omitempty"`
 	Children      []int  `json:"children,omitempty"`
 	SensitiveType int8   `json:"sensitive_type,omitempty"`
@@ -121,7 +121,7 @@ type DeleteCategoryReq struct {
 // https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/2.0/api/category/deletecategory.html
 func (s *Server) DeleteMiniProgramCategory(authorizerAccessToken string, req *DeleteCategoryReq) (resp *core.Error) {
 	var (
-		u = CGIUrl + "/wxopen/addcategory?"
+		u = CGIUrl + "/wxopen/deletecategory?"
 	)
 	resp = &core.Error{}
 	resp.Err(core.PostJson(s.AuthToken2url(u, authorizerAccessToken), req, resp))
